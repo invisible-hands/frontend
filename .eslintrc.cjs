@@ -11,7 +11,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'import/extensions': 'off',
+    'import/extensions': 'warn',
     'prettier/prettier': 'error',
   },
 };
