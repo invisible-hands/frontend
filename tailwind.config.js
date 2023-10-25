@@ -12,6 +12,16 @@ export default {
       fontFamily: {
         sans: ['"SUIT-Regular"', ...defaultTheme.fontFamily.sans],
       },
+      colors: {
+        blackish: '#000000',
+        deepblue1: '#1b2f55',
+        deepblue2: '#284377',
+        blue1: '#4a5f90',
+        blue2: '#7e93ba',
+        blue3: '#9fb8d2',
+        whitish: '#ffffff',
+        grayish: '#E7E4E4',
+      },
     },
   },
   plugins: [],
