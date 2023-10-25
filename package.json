@@ -24,7 +24,8 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.17.0",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "tw-elements-react": "^1.0.0-alpha1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.0",
