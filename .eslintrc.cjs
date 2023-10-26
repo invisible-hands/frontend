@@ -11,7 +11,10 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'import/extensions': 'off',
+    'import/extensions': 'warn',
     'prettier/prettier': 'error',
+    'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/interactive-supports-focus': 'off',
   },
 };
