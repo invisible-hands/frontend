@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import image from '../assets/darkLogo.png';
 
-function Header() {
+function Header({ isLoggedIn, nickname }) {
   return (
     <header className="max-w-screen-lg mx-auto">
       <nav
@@ -45,12 +46,24 @@ function Header() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button type="button" className="text-deepblue1 p-2">
-              상품 등록
-            </button>
+            {isLoggedIn ? (
+              <>
+                <span className="text-deepblue1">{nickname} 님</span>
+                <button type="button" className="text-deepblue1 p-2">
+                  마이페이지
+                </button>
+                <button type="button" className="text-deepblue1 p-2">
+                  로그아웃
+                </button>
+              </>
+            ) : (
+              <button type="button" className="text-deepblue1 p-2">
+                로그인
+              </button>
+            )}
 
             <button type="button" className="text-deepblue1 p-2">
-              로그인
+              상품 등록
             </button>
           </div>
         </div>
@@ -58,5 +71,16 @@ function Header() {
     </header>
   );
 }
+
+Header.propTypes = {
+  isLoggedIn: PropTypes.bool,
+  nickname: PropTypes.string,
+};
+
+// defaultProps 설정
+Header.defaultProps = {
+  isLoggedIn: false,
+  nickname: '동군영방국봉',
+};
 
 export default Header;
