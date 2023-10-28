@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import image from '../assets/darkLogo.png';
+import darkLogo from '../assets/darkLogo.png';
 
 function Header({ isLoggedIn, nickname }) {
   return (
@@ -10,7 +10,7 @@ function Header({ isLoggedIn, nickname }) {
         data-te-navbar-ref
       >
         <div className="flex w-full items-center justify-between px-3">
-          <img src={image} alt="Logo" className="w-24 h-auto" />
+          <img src={darkLogo} alt="Logo" className="w-24 h-auto" />
 
           <div className="relative flex flex-wrap items-stretch">
             <input
