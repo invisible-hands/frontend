@@ -4,25 +4,25 @@ import darkLogo from '../assets/darkLogo.png';
 
 function Header({ isLoggedIn, nickname }) {
   return (
-    <header className="max-w-screen-lg mx-auto">
+    <header className="max-w-screen-lg w-clamp-header mx-auto">
       <nav
-        className="relative flex w-full items-center bg-white py-2 text-neutral-600 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-neutral-600 dark:text-neutral-200 md:flex-wrap"
+        className="flex w-full items-center bg-white py-2 text-neutral-600 shadow-lg hover:text-neutral-700 focus:text-neutral-700"
         data-te-navbar-ref
       >
         <div className="flex w-full items-center justify-between px-3">
-          <img src={darkLogo} alt="Logo" className="w-24 h-auto" />
-
-          <div className="relative flex flex-wrap items-stretch">
+          <div className="flex w-72">
+            <img src={darkLogo} alt="Logo" className="flex w-clamp-input" />
+          </div>
+          <div className="flex items-stretch">
             <input
               type="search"
-              className="relative m-0 -mr-0.5 block w-96 flex-auto rounded-l-xl border-2 border-blue3 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0 dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+              className="m-0 -mr-0.5 rounded-l-xl border-2 border-blue3 bg-transparent px-3 py-[0.25rem] text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0"
               placeholder="고르고 입찰하고 쟁취하세요!"
               aria-label="Search"
-              aria-describedby="button-addon1"
             />
 
             <button
-              className="relative z-[2] flex items-center rounded-r-xl pr-4 py-2 text-xs font-medium uppercase leading-tight text-blue1 transition duration-150 ease-in-out border-2 border-blue3 border-l-0 focus:outline-none"
+              className="z-[2] flex items-center rounded-r-xl pr-4 py-2 text-xs font-medium leading-tight text-blue1 transition duration-150 ease-in-out border-2 border-blue3 border-l-0 focus:outline-none"
               type="button"
               id="button-addon1"
               data-te-ripple-init
@@ -45,24 +45,24 @@ function Header({ isLoggedIn, nickname }) {
             </button>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 text-clamp-p-text">
             {isLoggedIn ? (
               <>
                 <span className="text-deepblue1">{nickname} 님</span>
-                <button type="button" className="text-deepblue1 p-2">
+                <button type="button" className="text-deepblue1">
                   마이페이지
                 </button>
-                <button type="button" className="text-deepblue1 p-2">
+                <button type="button" className="text-deepblue1">
                   로그아웃
                 </button>
               </>
             ) : (
-              <button type="button" className="text-deepblue1 p-2">
+              <button type="button" className="text-deepblue1">
                 로그인
               </button>
             )}
 
-            <button type="button" className="text-deepblue1 p-2">
+            <button type="button" className="text-deepblue1">
               상품 등록
             </button>
           </div>
@@ -79,8 +79,8 @@ Header.propTypes = {
 
 // defaultProps 설정
 Header.defaultProps = {
-  isLoggedIn: false,
-  nickname: '동군영방국봉',
+  isLoggedIn: true,
+  nickname: '새벽다섯시',
 };
 
 export default Header;
