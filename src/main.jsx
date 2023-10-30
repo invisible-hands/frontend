@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 
 import './index.css';
 import ErrorPage from './pages/ErrorPage';
+import Redirection from './pages/Redirection';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: '/profile/:id',
     element: <ProfilePage />,
+  },
+  {
+    path: '/redirection',
+    element: <Redirection />,
   },
 ]);
 

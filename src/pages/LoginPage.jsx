@@ -1,12 +1,20 @@
 import React from 'react';
 
 function LoginPage() {
+  const REST_API_KEY = import.meta.env.VITE_KAKAO_JS_KEY;
+  const REDIRECT_URI = 'http://localhost:5173/redirection';
+  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const handleLoginLink = () => {
+    window.location.href = link;
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-center text-2xl font-bold mb-6">LOGIN</h2>
         <button
           type="button"
+          onClick={handleLoginLink}
           className="flex items-center justify-center bg-yellow-400 text-blackish w-full py-2 rounded font-['Apple SD Gothic Neo'] hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
         >
           <img
