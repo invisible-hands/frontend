@@ -47,6 +47,10 @@ const router = createBrowserRouter([
     path: '/mypage/shopping',
     element: <MyShoppingPage />,
   },
+  {
+    path: '/mypage/shopping/:recordType',
+    element: <MyShoppingPage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
