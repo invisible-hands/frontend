@@ -1,13 +1,19 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import ShoppingRecord from '../components/ShoppingRecord';
+import PurchaseRecord from '../components/PurchaseRecord';
 import SellingRecord from '../components/SellingRecord';
 import AuctionRecord from '../components/AuctionRecord';
-import ErrorPage from './ErrorPage';
+import ShoppingContainer from '../components/ShoppingContainer';
 
 function DefaultContent() {
-  return <ErrorPage />;
+  return (
+    <div className="flex justify-center max-w-2xl mx-auto">
+      <div className="p-10 bg-white max-w-screen-md ">
+        <ShoppingContainer />
+      </div>
+    </div>
+  );
 }
 
 function MyShoppingPage() {
@@ -16,8 +22,8 @@ function MyShoppingPage() {
   let ContentComponent;
 
   switch (recordType) {
-    case 'shopping':
-      ContentComponent = ShoppingRecord;
+    case 'purchase':
+      ContentComponent = PurchaseRecord;
       break;
     case 'selling':
       ContentComponent = SellingRecord;
@@ -30,9 +36,9 @@ function MyShoppingPage() {
   }
 
   return (
-    <div>
+    <div className="flex">
       <Sidebar />
-      <ContentComponent />
+      <ContentComponent className="flex-1" />
     </div>
   );
 }
