@@ -1,7 +1,7 @@
 import React from 'react';
 import { BsFillArrowRightCircleFill as RightArrowIcon } from 'react-icons/bs';
-import sampleImg from '../assets/sample.png';
-import detailBackground from '../assets/detailBackground.jpg';
+import sampleImg from '../../assets/sample.png';
+import detailBackground from '../../assets/detailBackground.jpg';
 
 function HotPreview() {
   return (
