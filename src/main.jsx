@@ -3,7 +3,7 @@ import 'tw-elements-react/dist/css/tw-elements-react.min.css';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
-import LoginPage from './pages/LoginPage';
+import LoginModal from './components/LoginModal';
 import SignupPage from './pages/SignupPage';
 import ProductPage from './pages/ProductPage';
 import ProductRegistrationPage from './pages/ProductRegistrationPage';
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <LoginPage />,
+    element: <LoginModal />,
   },
   {
     path: '/signup',
