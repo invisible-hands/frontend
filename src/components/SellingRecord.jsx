@@ -1,7 +1,7 @@
 import React from 'react';
 
 function SellingRecord() {
-  return <div>SellingRecord</div>;
+  return <div>판매 목록</div>;
 }
 
 export default SellingRecord;
