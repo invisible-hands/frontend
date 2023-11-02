@@ -1,5 +1,5 @@
 import React from 'react';
-import iconLogo from '../../public/bettingground.ico';
+import iconLogo from '../assets/bettingground.png';
 
 function Footer() {
   return (
