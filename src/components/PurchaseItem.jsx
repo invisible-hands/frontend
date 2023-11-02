@@ -78,7 +78,7 @@ export function AuctionItem({
 }) {
   return (
     <div className="p-1 bg-white rounded-xl ">
-      <div className="text-sm font-bold mt-2 mb-4">참여 중인 구매 목록</div>
+      <div className="text-sm font-bold mt-2 mb-4">참여 중인 경매 목록</div>
       <div className="flex justify-between items-center mb-4 pl-5">
         <img
           src={imageUrl}
