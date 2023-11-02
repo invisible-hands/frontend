@@ -9,16 +9,23 @@ function Redirection() {
   const { logIn } = loginStore(state => ({ logIn: state.logIn }));
 
   useEffect(() => {
-    console.log(import.meta.env.VITE_APP_URL);
-    axios.get(`${import.meta.env.VITE_APP_URL}?code=${code}`).then(r => {
-      logIn(r.data.nickName, r.data.accessToken);
+    const login = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_URL}?code=${code}`,
+        );
 
-      localStorage.setItem('nickname', r.data.nickname);
-      localStorage.setItem('accessToken', r.data.accessToken);
-      // 상태유지
+        logIn(response.data.nickName, response.data.accessToken);
+        localStorage.setItem('nickname', response.data.nickname);
+        localStorage.setItem('accessToken', response.data.accessToken);
 
-      navigate('/');
-    });
+        navigate('/');
+      } catch (error) {
+        console.error('로그인 중 오류 발생:', error);
+      }
+    };
+
+    login();
   }, []);
 
   return (

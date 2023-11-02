@@ -16,16 +16,14 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('localStorage의 토큰:', token);
+
     if (!token) {
-      console.log('토큰이 없어!');
       // 인가 코드가 URL에 있는지 확인
       const code = getCodeFromURL();
       if (code) {
         axios
           .get(`${import.meta.env.VITE_APP_URL}kakaoLogin?code=${code}`)
           .then(r => {
-            console.log('응답 데이터:', r.data);
             if (r.data && r.data.nickname && r.data.accessToken) {
               logIn(r.data.nickname, r.data.accessToken);
               localStorage.setItem('nickname', r.data.nickname);
@@ -45,6 +43,7 @@ function App() {
       }
     }
   }, [logIn]);
+
   return <MainPage />;
 }
 
