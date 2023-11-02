@@ -1,26 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import darkLogo from '../assets/darkLogo.png';
+import LoginModal from './LoginModal';
 
 function Header({ isLoggedIn, nickname }) {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const openLoginModal = () => setShowLoginModal(true);
+  const closeLoginModal = () => setShowLoginModal(false);
+
+  // 상품등록 버튼을 클릭했을 때의 로직입니다.
+  const handleProductRegistration = () => {
+    if (isLoggedIn) {
+      window.location.href = '/product-registration'; // sample
+    } else {
+      openLoginModal();
+    }
+  };
+
   return (
-    <header className="max-w-screen-lg w-clamp-header mx-auto">
+    <header className="max-w-screen-lg mx-auto">
       <nav
         className="flex w-full items-center bg-white py-2 text-neutral-600 shadow-lg hover:text-neutral-700 focus:text-neutral-700"
         data-te-navbar-ref
       >
-        <div className="flex w-full items-center justify-between px-3">
-          <div className="flex w-72">
-            <img src={darkLogo} alt="Logo" className="flex w-clamp-input" />
-          </div>
+        <div className="flex w-full items-center justify-between px-7">
+          <div className="flex max-w-32 w-32 h-16 bg-center bg-no-repeat bg-contain bg-dark-logo" />
           <div className="flex items-stretch">
             <input
               type="search"
-              className="m-0 -mr-0.5 rounded-l-xl border-2 border-blue3 bg-transparent px-3 py-[0.25rem] text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0"
+              className="m-0 -mr-0.5 w-72 rounded-l-xl border-2 border-blue3 bg-transparent px-3 py-[0.25rem] text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0"
               placeholder="고르고 입찰하고 쟁취하세요!"
               aria-label="Search"
             />
-
             <button
               className="z-[2] flex items-center rounded-r-xl pr-4 py-2 text-xs font-medium leading-tight text-blue1 transition duration-150 ease-in-out border-2 border-blue3 border-l-0 focus:outline-none"
               type="button"
@@ -45,7 +56,7 @@ function Header({ isLoggedIn, nickname }) {
             </button>
           </div>
 
-          <div className="flex items-center space-x-2 text-clamp-p-text">
+          <div className="flex items-center space-x-2">
             {isLoggedIn ? (
               <>
                 <span className="text-deepblue1">{nickname} 님</span>
@@ -57,15 +68,25 @@ function Header({ isLoggedIn, nickname }) {
                 </button>
               </>
             ) : (
-              <button type="button" className="text-deepblue1">
+              <button
+                type="button"
+                className="text-deepblue1"
+                onClick={openLoginModal}
+              >
                 로그인
               </button>
             )}
 
-            <button type="button" className="text-deepblue1">
+            <button
+              type="button"
+              className="text-deepblue1"
+              onClick={handleProductRegistration}
+            >
               상품 등록
             </button>
           </div>
+
+          {showLoginModal && <LoginModal onClose={closeLoginModal} />}
         </div>
       </nav>
     </header>
@@ -79,7 +100,7 @@ Header.propTypes = {
 
 // defaultProps 설정
 Header.defaultProps = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   nickname: '새벽다섯시',
 };
 
