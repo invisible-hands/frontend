@@ -31,14 +31,8 @@ export default {
         blue2: '#7e93ba',
         blue3: '#9fb8d2',
       },
-      width: {
-        'clamp-header': 'clamp(300px, 100%, 1200px)',
-        'clamp-logo': 'clamp(200px, 250px, 300px)',
-        'clamp-input': 'clamp(50px, 200px, 800px)',
-      },
-      fontSize: {
-        'clamp-input-text': 'clamp(0.8rem, 1rem, 1.2rem)',
-        'clamp-p-text': 'clamp(0.5rem, 1rem, 1.3rem)',
+      backgroundImage: {
+        'dark-logo': "url('/src/assets/darkLogo.png')",
       },
     },
   },
