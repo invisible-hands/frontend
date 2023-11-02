@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import LoginModal from './LoginModal';
 
 function Header({ isLoggedIn, nickname }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn);
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
 
-  // 상품등록 버튼을 클릭했을 때의 로직입니다.
   const handleProductRegistration = () => {
-    if (isLoggedIn) {
-      window.location.href = '/product-registration'; // sample
+    if (loggedIn) {
+      navigate('/product/registration');
     } else {
       openLoginModal();
     }
+  };
+
+  const handleProfilePage = () => {
+    if (loggedIn) {
+      navigate('/profile');
+    } else {
+      openLoginModal();
+    }
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
   };
 
   return (
@@ -56,14 +70,22 @@ function Header({ isLoggedIn, nickname }) {
             </button>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 select-none">
             {isLoggedIn ? (
               <>
-                <span className="text-deepblue1">{nickname} 님</span>
-                <button type="button" className="text-deepblue1">
+                <span className="text-deepblue1 ">{nickname} 님</span>
+                <button
+                  type="button"
+                  className="text-deepblue1"
+                  onClick={handleProfilePage}
+                >
                   마이페이지
                 </button>
-                <button type="button" className="text-deepblue1">
+                <button
+                  type="button"
+                  className="text-deepblue1"
+                  onClick={handleLogout}
+                >
                   로그아웃
                 </button>
               </>
@@ -100,7 +122,7 @@ Header.propTypes = {
 
 // defaultProps 설정
 Header.defaultProps = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   nickname: '새벽다섯시',
 };
 
