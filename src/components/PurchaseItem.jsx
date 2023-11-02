@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import InvoiceInputModal from './InvoiceInputModal';
+import PurchaseConfirmModal from './PurchaseConfirmModal';
+import ComplainModal from './ComplainModal';
 
 const truncateProductName = name => {
   if (name.length > 15) {
@@ -15,6 +18,8 @@ export function PurchaseItem({
   totalPrice,
   status,
 }) {
+  const [isPurchaseModalOpen, setPurchaseModalOpen] = useState(false);
+  const [isComplainModalOpen, setComplainModalOpen] = useState(false);
   return (
     <div className="p-1 bg-white rounded-xl ">
       <div className="text-sm font-bold mt-2 mb-4">구매 확정 대기 상품</div>
@@ -32,15 +37,30 @@ export function PurchaseItem({
         <div className="flex flex-col items-center">
           <div className="pt-4 text-sm text-danger">{status}</div>
           <div className="flex pt-1">
-            <button type="button" className="bg-grayish text-xs px-1 rounded">
-              구매 확정
-            </button>
             <button
               type="button"
-              className="bg-grayish text-xs px-1 rounded ml-2"
+              className="bg-grayish text-xs px-1 rounded
+            "
+              onClick={() => setPurchaseModalOpen(true)}
+            >
+              구매 확정
+            </button>
+            <PurchaseConfirmModal
+              isModalOpen={isPurchaseModalOpen}
+              setIsModalOpen={setPurchaseModalOpen}
+            />
+            <button
+              type="button"
+              className="bg-grayish text-xs px-1 rounded ml-1
+              "
+              onClick={() => setComplainModalOpen(true)}
             >
               신고
             </button>
+            <ComplainModal
+              isModalOpen={isComplainModalOpen}
+              setIsModalOpen={setComplainModalOpen}
+            />
           </div>
         </div>
       </div>
@@ -80,6 +100,7 @@ export function AuctionItem({
 }
 
 export function SellingItem({ imageUrl, productName, totalPrice, status }) {
+  const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
   return (
     <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
       <div className="text-sm font-bold mt-2 mb-4">송장 번호 입력 상품</div>
@@ -101,9 +122,14 @@ export function SellingItem({ imageUrl, productName, totalPrice, status }) {
             <button
               type="button"
               className="bg-grayish text-xs px-1 rounded ml-2"
+              onClick={() => setInvoiceModalOpen(true)}
             >
               송장 번호 입력
             </button>
+            <InvoiceInputModal
+              isModalOpen={isInvoiceModalOpen}
+              setIsModalOpen={setInvoiceModalOpen}
+            />
           </div>
         </div>
       </div>

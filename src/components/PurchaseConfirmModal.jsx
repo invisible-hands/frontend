@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
+function PurchaseConfirmModal({ isModalOpen, setIsModalOpen }) {
   const modalRef = useRef();
   const closeModal = () => {
     setIsModalOpen(false);
@@ -43,9 +43,9 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
   );
 }
 
-InvoiceInputModal.propTypes = {
+PurchaseConfirmModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
 };
 
-export default InvoiceInputModal;
+export default PurchaseConfirmModal;
