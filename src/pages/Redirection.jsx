@@ -1,18 +1,21 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import loginStore from '../loginStore';
 
 function Redirection() {
   const code = new URL(document.location.toString()).searchParams.get('code');
   const navigate = useNavigate();
+  const { logIn } = loginStore(state => ({ logIn: state.logIn }));
 
   useEffect(() => {
     console.log(import.meta.env.VITE_APP_URL);
-    axios.post(`${import.meta.env.VITE_APP_URL}kakaoLogin${code}`).then(r => {
-      console.log(r.data);
+    axios.get(`${import.meta.env.VITE_APP_URL}?code=${code}`).then(r => {
+      logIn(r.data.nickName, r.data.accessToken);
 
-      // 토큰을 받아서 localStorage같은 곳에 저장하는 코드를 여기에 쓴다.
-      localStorage.setItem('name', r.data.user_name); // 일단 이름만 저장했다.
+      localStorage.setItem('nickname', r.data.nickname);
+      localStorage.setItem('accessToken', r.data.accessToken);
+      // 상태유지
 
       navigate('/');
     });
