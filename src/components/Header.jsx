@@ -1,15 +1,45 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import LoginModal from './LoginModal';
 
 function Header({ isLoggedIn, nickname }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(isLoggedIn);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
+
+  const handleSearch = async () => {
+    try {
+      const pageable = {
+        page: 0,
+        size: 1,
+      };
+
+      const response = await axios.get(
+        `https://k77ac60ee78b9a.user-app.krampoline.com/api/auction/search`,
+        {
+          params: {
+            keyword: searchKeyword,
+            page: pageable.page,
+            size: pageable.size,
+          },
+        },
+      );
+
+      if (response.data.status === 'Success') {
+        setSearchResults(response.data.data.items);
+      }
+    } catch (error) {
+      console.error('Error while searching:', error);
+    }
+  };
 
   const handleProductRegistration = () => {
     if (loggedIn) {
@@ -45,10 +75,13 @@ function Header({ isLoggedIn, nickname }) {
               className="m-0 -mr-0.5 w-72 rounded-l-xl border-2 border-blue3 bg-transparent px-3 py-[0.25rem] text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0"
               placeholder="고르고 입찰하고 쟁취하세요!"
               aria-label="Search"
+              value={searchKeyword}
+              onChange={e => setSearchKeyword(e.target.value)}
             />
             <button
               className="z-[2] flex items-center rounded-r-xl pr-4 py-2 text-xs font-medium leading-tight text-blue1 transition duration-150 ease-in-out border-2 border-blue3 border-l-0 focus:outline-none"
               type="button"
+              onClick={handleSearch}
               id="button-addon1"
               data-te-ripple-init
               data-te-ripple-color="light"
@@ -107,6 +140,18 @@ function Header({ isLoggedIn, nickname }) {
               상품 등록
             </button>
           </div>
+
+          {/* 검색 결과 */}
+          {searchResults.length > 0 && (
+            <div>
+              <h2>Search Results:</h2>
+              <ul>
+                {searchResults.map(item => (
+                  <li key={item.auctionId}>{item.title}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {showLoginModal && <LoginModal onClose={closeLoginModal} />}
         </div>
