@@ -17,11 +17,9 @@ export default function PaymentConfirmModal({
   point,
   productName,
 }) {
-  const currentPoint = point.currentPoint.toLocaleString();
-  const pricePoint = point.pricePoint.toLocaleString();
-  const remainValue = point.currentPoint - point.pricePoint;
-  const remainPoint = remainValue.toLocaleString();
-
+  const { currentPoint, instantPoint } = point;
+  const remainValue = point.currentPoint - point.instantPoint;
+  const remainPoint = remainValue;
   return (
     <TEModal show={showModal} setShow={setShowModal}>
       <TEModalDialog centered>
@@ -66,7 +64,7 @@ export default function PaymentConfirmModal({
               </div>
               <div className="flex justify-between">
                 <span>즉시 구매 금액</span>
-                <span>{pricePoint} point</span>
+                <span>{instantPoint} point</span>
               </div>
               <div className="flex justify-between">
                 <span>잔여 포인트</span>
@@ -113,7 +111,7 @@ PaymentConfirmModal.propTypes = {
   setShowPayModal: PropTypes.func.isRequired,
   point: PropTypes.shape({
     currentPoint: PropTypes.number.isRequired,
-    pricePoint: PropTypes.number.isRequired,
+    instantPoint: PropTypes.number.isRequired,
   }).isRequired,
   productName: PropTypes.string.isRequired,
 };

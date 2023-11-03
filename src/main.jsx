@@ -8,7 +8,7 @@ import SignupPage from './pages/SignupPage';
 import ProductPage from './pages/ProductPage';
 import ProductRegistrationPage from './pages/ProductRegistrationPage';
 import ProfilePage from './pages/ProfilePage';
-
+import BidPage from './pages/BidPage';
 import './index.css';
 import ErrorPage from './pages/ErrorPage';
 
@@ -41,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: '/profile/:id',
     element: <ProfilePage />,
+  },
+  {
+    path: '/bid/:id',
+    element: <BidPage />,
   },
 ]);
 
