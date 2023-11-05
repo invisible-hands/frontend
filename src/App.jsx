@@ -1,50 +1,70 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
-import loginStore from './loginStore';
+import 'tw-elements-react/dist/css/tw-elements-react.min.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import LoginModal from './components/LoginModal';
+import SignupPage from './pages/SignupPage';
+import ProductPage from './pages/ProductPage';
+import ProductRegistrationPage from './pages/ProductRegistrationPage';
+import ProfilePage from './pages/ProfilePage';
+import './index.css';
+import ErrorPage from './pages/ErrorPage';
+import Redirection from './pages/Redirection';
+import useAuth from './Auth';
 import MainPage from './pages/MainPage';
+import ProtectedRoute from './ProtectedRoute';
 
-function App() {
-  const { logIn, logOut } = loginStore(state => ({
-    logIn: state.logIn,
-    logOut: state.logOut,
-  }));
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <MainPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/login',
+    element: <LoginModal />,
+  },
+  {
+    path: '/signup',
+    element: <SignupPage />,
+  },
+  {
+    path: '/product',
+    element: <ProductPage />,
+  },
+  {
+    path: '/product/registration',
+    element: (
+      <ProtectedRoute>
+        <ProductRegistrationPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <ProtectedRoute>
+        <ProfilePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/profile/:id',
+    element: <ProfilePage />,
+  },
+  {
+    path: '/redirection',
+    element: <Redirection />,
+  },
+]);
 
-  // URL에서 인가 코드를 가져오는 함수
-  const getCodeFromURL = () => {
-    return new URL(document.location.toString()).searchParams.get('code');
-  };
+// 로그인 해야되는 페이지: 마이 페이지, 입찰 페이지, 상품 등록 페이지 (++)
+
+export default function App() {
+  const { authenticateUser } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    authenticateUser();
+  }, [authenticateUser]);
 
-    if (!token) {
-      // 인가 코드가 URL에 있는지 확인
-      const code = getCodeFromURL();
-      if (code) {
-        axios
-          .get(`${import.meta.env.VITE_APP_URL}kakaoLogin?code=${code}`)
-          .then(r => {
-            if (r.data && r.data.nickname && r.data.accessToken) {
-              logIn(r.data.nickname, r.data.accessToken);
-              localStorage.setItem('nickname', r.data.nickname);
-              localStorage.setItem('token', r.data.accessToken);
-              window.location.href = '/'; // 현재 페이지를 메인 페이지로 리디렉션
-            } else {
-              console.error('응답 데이터에 문제가 있습니다.');
-              logOut();
-            }
-          })
-          .catch(error => {
-            console.error(
-              '인가 코드로 토큰을 받는 과정에서 오류가 발생했습니다:',
-              error,
-            );
-          });
-      }
-    }
-  }, [logIn]);
-
-  return <MainPage />;
+  return <RouterProvider router={router} />;
 }
-
-export default App;

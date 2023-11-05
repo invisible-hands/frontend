@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import loginStore from '../loginStore';
 
+// 카카오 로그인 후 카카오 서버에서 앱으로
 function Redirection() {
   const code = new URL(document.location.toString()).searchParams.get('code');
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ function Redirection() {
         </p>
       </div>
     </div>
+    // 모달로 css 변경 필요
   );
 }
 

@@ -1,39 +1,45 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useModalStore from '../modalStore';
+import useLoginStore from '../loginStore';
 
 function LoginModal() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const REST_API_KEY = import.meta.env.VITE_KAKAO_JS_KEY;
   const REDIRECT_URI = 'http://localhost:5173/redirection';
   const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   const handleLoginLink = () => {
     window.location.href = link;
   };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
+  const navigate = useNavigate();
+  const { loggedIn } = useLoginStore();
+  const { isModalOpen, closeModal } = useModalStore(state => ({
+    isModalOpen: state.isModalOpen,
+    closeModal: state.closeModal,
+  }));
   const modalRef = useRef();
 
-  const handleClickOutside = event => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) {
-      setIsModalOpen(false);
+  const handleClose = () => {
+    closeModal();
+    if (!loggedIn) {
+      navigate('/');
     }
   };
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  // const handleClickOutside = event => {
+  //   if (modalRef.current && !modalRef.current.contains(event.target)) {
+  //     closeModal();
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
 
   return (
     <div>
-      <button type="button" onClick={() => setIsModalOpen(true)}>
-        Login
-      </button>
-
       {isModalOpen && (
         <>
           <div className="fixed inset-0 z-40 bg-black opacity-50" />
@@ -45,7 +51,7 @@ function LoginModal() {
               >
                 <button
                   type="button"
-                  onClick={closeModal}
+                  onClick={handleClose}
                   className="absolute top-4 right-4 m-4"
                 >
                   X

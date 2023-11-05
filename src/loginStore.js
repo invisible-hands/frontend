@@ -1,7 +1,7 @@
 import create from 'zustand';
 
 const useLoginStore = create(set => ({
-  LoggedIn: false,
+  loggedIn: false,
   nickName: null,
   token: null,
 
@@ -15,7 +15,7 @@ const useLoginStore = create(set => ({
 
   logOut: () => {
     set({
-      loggedOut: false,
+      loggedIn: false,
       nickName: null,
       token: null,
     });
