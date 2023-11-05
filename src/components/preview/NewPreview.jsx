@@ -1,9 +1,15 @@
 import React from 'react';
 import { BsFillArrowRightCircleFill as RightArrowIcon } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import sampleImg from '../../assets/sample.png';
 import detailBackground from '../../assets/detailBackground.jpg';
 
-function HotPreview() {
+function NewPreview() {
+  const navigate = useNavigate();
+
+  const handleRightArrowClick = () => {
+    navigate('/new');
+  };
   return (
     <div className="w-full p-6">
       <div className="text-4xl font-extrabold mb-4 text-deepblue2">
@@ -97,6 +103,7 @@ function HotPreview() {
             <RightArrowIcon
               size={48}
               className="cursor-pointer text-blue1 duration-300 bg-whitish rounded-full hover:text-deepblue1"
+              onClick={handleRightArrowClick}
             />
           </div>
         </div>
@@ -105,4 +112,4 @@ function HotPreview() {
   );
 }
 
-export default HotPreview;
+export default NewPreview;

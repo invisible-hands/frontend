@@ -11,6 +11,9 @@ import ProfilePage from './pages/ProfilePage';
 
 import './index.css';
 import ErrorPage from './pages/ErrorPage';
+import HotDetailPage from './pages/HotDetailPage';
+import DeadlineDetailPage from './pages/DeadlineDetailPage';
+import NewDetailPage from './pages/NewDetailPage';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +44,18 @@ const router = createBrowserRouter([
   {
     path: '/profile/:id',
     element: <ProfilePage />,
+  },
+  {
+    path: '/hot',
+    element: <HotDetailPage />,
+  },
+  {
+    path: '/Deadline',
+    element: <DeadlineDetailPage />,
+  },
+  {
+    path: '/new',
+    element: <NewDetailPage />,
   },
 ]);
 
