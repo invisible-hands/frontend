@@ -3,7 +3,7 @@ import iconLogo from '../assets/bettingground.png';
 
 function Footer() {
   return (
-    <footer className="max-w-screen-lg mx-auto bg-neutral-100 text-center text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
+    <footer className="max-w-screen-lg mx-auto bg-neutral-100 text-center text-xs text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
       <div className="mx-6 py-5 text-center md:text-left">
         <div className="flex flex-wrap gap-8">
           <div className="flex-1">

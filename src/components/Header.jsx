@@ -22,6 +22,8 @@ function Header({ isLoggedIn, nickname }) {
         size: 1,
       };
 
+      alert(`검색어: ${searchKeyword}`);
+
       const response = await axios.get(
         `https://k77ac60ee78b9a.user-app.krampoline.com/api/auction/search`,
         {
@@ -57,6 +59,10 @@ function Header({ isLoggedIn, nickname }) {
     }
   };
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   const handleLogout = () => {
     setLoggedIn(false);
   };
@@ -68,13 +74,19 @@ function Header({ isLoggedIn, nickname }) {
         data-te-navbar-ref
       >
         <div className="flex w-full items-center justify-between px-7">
-          <div className="flex max-w-32 w-32 h-16 bg-center bg-no-repeat bg-contain bg-dark-logo" />
-          <div className="flex items-stretch">
+          <div
+            className="flex min-w-28취 w-32 h-16 bg-center bg-no-repeat bg-contain bg-dark-logo cursor-pointer"
+            role="button"
+            aria-label="메인 페이지로 이동"
+            onClick={handleLogoClick}
+          />
+          <div className="flex items-stretch w-72">
             <input
               type="search"
-              className="m-0 -mr-0.5 w-72 rounded-l-xl border-2 border-blue3 bg-transparent px-3 py-[0.25rem] text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0"
+              className="-mr-0.5 w-full rounded-l-xl border-2 border-blue3 bg-transparent px-3 text-base text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0"
               placeholder="고르고 입찰하고 쟁취하세요!"
               aria-label="Search"
+              onClick={handleLogoClick}
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
             />
@@ -103,7 +115,7 @@ function Header({ isLoggedIn, nickname }) {
             </button>
           </div>
 
-          <div className="flex items-center space-x-2 select-none">
+          <div className="flex items-center text-xs	space-x-2 select-none whitespace-nowrap">
             {isLoggedIn ? (
               <>
                 <span className="text-deepblue1 ">{nickname} 님</span>
@@ -165,7 +177,6 @@ Header.propTypes = {
   nickname: PropTypes.string,
 };
 
-// defaultProps 설정
 Header.defaultProps = {
   isLoggedIn: true,
   nickname: '새벽다섯시',
