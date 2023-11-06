@@ -2,23 +2,32 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import useModalStore from '../modalStore';
+import { useMutation } from 'react-query';
 import LoginModal from './LoginModal';
 
 function Header({ isLoggedIn, nickname }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
+
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(isLoggedIn);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const { openModal } = useModalStore(state => ({
-    isModalOpen: state.isModalOpen,
-    openModal: state.openModal,
-    closeModal: state.closeModal,
-  }));
 
-  const openLoginModal = () => setShowLoginModal(true);
-  const closeLoginModal = () => setShowLoginModal(false);
+  const { mutate: openModal } = useMutation(() => {
+    setShowLoginModal(true);
+  });
+
+  const { mutate: closeModal } = useMutation(() => {
+    setShowLoginModal(false);
+  });
+
+  const handleOpenModal = () => {
+    openModal();
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
+  };
 
   const handleSearch = async () => {
     try {
@@ -52,7 +61,7 @@ function Header({ isLoggedIn, nickname }) {
     if (loggedIn) {
       navigate('/product/registration');
     } else {
-      openLoginModal();
+      openModal();
     }
   };
 
@@ -60,7 +69,7 @@ function Header({ isLoggedIn, nickname }) {
     if (loggedIn) {
       navigate('/profile');
     } else {
-      openLoginModal();
+      openModal();
     }
   };
 
@@ -144,14 +153,16 @@ function Header({ isLoggedIn, nickname }) {
                 <button
                   type="button"
                   className="text-deepblue1"
-                  onClick={() => openModal}
+                  onClick={handleOpenModal}
                 >
                   로그인
                 </button>
-                <LoginModal isModalOpen={openModal} />
+                <LoginModal
+                  isModalOpen={showLoginModal}
+                  onClose={handleCloseModal}
+                />
               </>
             )}
-
             <button
               type="button"
               className="text-deepblue1"
@@ -172,8 +183,6 @@ function Header({ isLoggedIn, nickname }) {
               </ul>
             </div>
           )}
-
-          {showLoginModal && <LoginModal onClose={closeLoginModal} />}
         </div>
       </nav>
     </header>
