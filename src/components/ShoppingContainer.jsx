@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function ShoppingContainer() {
+export function PurchaseContainer() {
   return (
     <div className="mb-2">
       <div className="mt-10" />
@@ -9,15 +9,15 @@ export function ShoppingContainer() {
         <div className="flex flex-col justify-center items-center">
           <div className="flex justify-center space-x-12">
             <div className="block pl-10 pr-8">
-              <div className="text-sm text-gray-600">항목</div>
+              <div className="text-sm text-gray-600">전체</div>
               <div className="mt-2 text-sm text-white">0</div>
             </div>
             <div className="block pl-12 pr-8">
-              <div className="text-sm text-gray-600">전체수량</div>
+              <div className="text-sm text-gray-600">진행중</div>
               <div className="mt-2 text-sm text-white">0</div>
             </div>
             <div className="block pl-8 pr-8">
-              <div className="text-sm text-gray-600">가격 합계</div>
+              <div className="text-sm text-gray-600">거래 완료</div>
               <div className="mt-2 text-sm text-white">0</div>
             </div>
           </div>
