@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import useModalStore from '../modalStore';
 import LoginModal from './LoginModal';
 
 function Header({ isLoggedIn, nickname }) {
@@ -11,6 +11,11 @@ function Header({ isLoggedIn, nickname }) {
   const [loggedIn, setLoggedIn] = useState(isLoggedIn);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const { openModal } = useModalStore(state => ({
+    isModalOpen: state.isModalOpen,
+    openModal: state.openModal,
+    closeModal: state.closeModal,
+  }));
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
@@ -75,7 +80,7 @@ function Header({ isLoggedIn, nickname }) {
       >
         <div className="flex w-full items-center justify-between px-7">
           <div
-            className="flex min-w-28취 w-32 h-16 bg-center bg-no-repeat bg-contain bg-dark-logo cursor-pointer"
+            className="flex min-w-28 w-32 h-16 bg-center bg-no-repeat bg-contain bg-dark-logo cursor-pointer"
             role="button"
             aria-label="메인 페이지로 이동"
             onClick={handleLogoClick}
@@ -135,13 +140,16 @@ function Header({ isLoggedIn, nickname }) {
                 </button>
               </>
             ) : (
-              <button
-                type="button"
-                className="text-deepblue1"
-                onClick={openLoginModal}
-              >
-                로그인
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="text-deepblue1"
+                  onClick={() => openModal}
+                >
+                  로그인
+                </button>
+                <LoginModal isModalOpen={openModal} />
+              </>
             )}
 
             <button
@@ -178,7 +186,7 @@ Header.propTypes = {
 };
 
 Header.defaultProps = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   nickname: '새벽다섯시',
 };
 
