@@ -56,7 +56,7 @@ console.log(login);
 export default function ProductPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   console.log(showLoginModal, '로그인 모달 추가할 때 사용');
-  const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
+  const [showBidHistoryModal, setShowBidHistoryModal] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPayModal, setShowPayModal] = useState(false);
   const { productId } = Number(useParams());
