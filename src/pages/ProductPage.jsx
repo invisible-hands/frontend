@@ -51,12 +51,11 @@ const demoData = {
 };
 // 로그인 여부에 따라서 조건부 렌더링 user/visitor/author
 const login = 'user';
-console.log(login);
 
 export default function ProductPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   console.log(showLoginModal, '로그인 모달 추가할 때 사용');
-  const [showBidHistoryModal, setShowBidHistoryModal] = useState(true);
+  const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPayModal, setShowPayModal] = useState(false);
   const { productId } = Number(useParams());

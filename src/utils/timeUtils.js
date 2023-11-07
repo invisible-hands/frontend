@@ -1,22 +1,18 @@
 import dayjs from 'dayjs';
 
-// 시간 계산해주는 코드 2023-11-01 17:41:10
-// 시간 관련된 코드 중에서 필요한 함수를 정리해보자.
-// 1. 경매가 종료되었는지 여부를 확인하는 함수 return true/false
-// 2. 경매가 생성된 지 5분이 되었는 지 여부를 확인할 수 있는 함수 return true/false
-// 3. 경매가 종료되기까지 남은 시간을 계산해주는 함수 return 00:00:00
-
+// 경매 시작한 지 5분 지났는 지 확인하는 함수
 export function isWithinFiveMinute(birthTime) {
   const now = dayjs();
   const startTime = dayjs(birthTime);
   const difference = now.diff(startTime, 'second');
 
-  console.log(difference);
   if (difference <= 300) {
     return true;
   }
   return false;
 }
+
+// 포맷을 변경해주는 함수
 export function formatTime(duration) {
   const hours = Math.floor(duration / 3600);
   const minutes = Math.floor((duration / 3600) % 60);
@@ -29,6 +25,7 @@ export function formatTime(duration) {
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 }
 
+// 경매 끝났는 지 확인하는 함수
 export function isAuctionEnd(endTime) {
   const now = dayjs();
   const end = dayjs(endTime);
@@ -39,6 +36,8 @@ export function isAuctionEnd(endTime) {
   return false;
 }
 
+// 남은 시간을 확인하는 함수
+// 없으면 00:00:00을 반환, 남으면 12:34:56 형식으로 반환
 export function calculateRemainTime(startTime, duration) {
   const now = dayjs();
   const end = dayjs(startTime).add(duration, 'hour');
