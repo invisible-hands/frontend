@@ -1,6 +1,19 @@
-// main.tsx
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import { Outlet, useParams } from 'react-router-dom';
+import Footer from './components/Footer';
+import Header from './components/Header';
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+export default function Main() {
+  const url = useParams();
+  console.log(url);
+  return (
+    <>
+      <Header />
+      <div>
+        <Outlet />
+      </div>
+
+      <Footer />
+    </>
+  );
+}
