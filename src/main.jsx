@@ -12,7 +12,6 @@ export default function Main() {
       <div>
         <Outlet />
       </div>
-
       <Footer />
     </>
   );

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import 'tw-elements-react/dist/css/tw-elements-react.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
 import LoginModal from './components/LoginModal';
 import SignupPage from './pages/SignupPage';
 import ProductPage from './pages/ProductPage';

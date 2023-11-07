@@ -7,7 +7,6 @@ import LoginModal from './LoginModal';
 
 function Header({ isLoggedIn, nickname }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
-
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(isLoggedIn);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -84,28 +83,38 @@ function Header({ isLoggedIn, nickname }) {
   return (
     <header className="max-w-screen-lg mx-auto">
       <nav
-        className="flex w-full items-center bg-white py-2 text-neutral-600 shadow-lg hover:text-neutral-700 focus:text-neutral-700"
+        className="flex w-full items-center bg-white px-3 py-0.5 shadow-lg md:px-7 md:py-2"
         data-te-navbar-ref
       >
-        <div className="flex w-full items-center justify-between px-7">
+        <div className="flex w-full items-center justify-between gap-x-2">
+          {/* 로고 */}
           <div
-            className="flex min-w-28 w-32 h-16 bg-center bg-no-repeat bg-contain bg-dark-logo cursor-pointer"
+            className="transition-all ease-in-out duration-200 flex w-20 h-16 bg-center bg-no-repeat bg-contain bg-dark-logo cursor-pointer md:w-32 md:h-20"
             role="button"
             aria-label="메인 페이지로 이동"
             onClick={handleLogoClick}
           />
-          <div className="flex items-stretch w-72">
+
+          {/* 검색창 */}
+          <div className="flex items-stretch transition-all ease-in-out duration-200 w-48 h-8 text-xs md:w-72 md:h-12 md:text-base">
             <input
               type="search"
-              className="-mr-0.5 w-full rounded-l-xl border-2 border-blue3 bg-transparent px-3 text-base text-neutral-700 outline-none transition duration-200 ease-in-out border-r-0"
+              className="hidden md:block -mr-0.5 w-full rounded-l-xl border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out border-r-0 truncate"
               placeholder="고르고 입찰하고 쟁취하세요!"
+              aria-label="Search-md"
+              value={searchKeyword}
+              onChange={e => setSearchKeyword(e.target.value)}
+            />
+            <input
+              type="search"
+              className="block md:hidden -mr-0.5 w-full rounded-l-xl border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out border-r-0 truncate"
+              placeholder="상품 검색"
               aria-label="Search"
-              onClick={handleLogoClick}
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
             />
             <button
-              className="z-[2] flex items-center rounded-r-xl pr-4 py-2 text-xs font-medium leading-tight text-blue1 transition duration-150 ease-in-out border-2 border-blue3 border-l-0 focus:outline-none"
+              className="transition-all ease-in-out duration-300 z-10 flex items-center rounded-r-xl p-2 font-medium leading-tight text-blue1 border-2 border-blue3 border-l-0 focus:outline-none"
               type="button"
               onClick={handleSearch}
               id="button-addon1"
@@ -118,7 +127,7 @@ function Header({ isLoggedIn, nickname }) {
                 viewBox="0 0 24 24"
                 strokeWidth={2.5}
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="w-4 h-4 md:w-6 md:h-6"
               >
                 <path
                   strokeLinecap="round"
@@ -128,11 +137,12 @@ function Header({ isLoggedIn, nickname }) {
               </svg>
             </button>
           </div>
-
-          <div className="flex items-center text-xs	space-x-2 select-none whitespace-nowrap">
+          <div className="flex items-center transition-all ease-in-out duration-300 text-xs gap-x-1 select-none whitespace-nowrap md:text-base md:gap-x-2">
             {isLoggedIn ? (
               <>
-                <span className="text-deepblue1 ">{nickname} 님</span>
+                <span className="hidden md:inline text-deepblue1">
+                  {nickname} 님
+                </span>
                 <button
                   type="button"
                   className="text-deepblue1"
@@ -195,7 +205,7 @@ Header.propTypes = {
 };
 
 Header.defaultProps = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   nickname: '새벽다섯시',
 };
 
