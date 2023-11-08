@@ -1,20 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TERipple } from 'tw-elements-react';
 import DaumPostcode from 'react-daum-postcode';
+import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
 import profileImg from '../assets/logo-square.png';
 
 function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState('');
-  const [name] = useState('');
+  const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
-  const [email] = useState('');
+  const [email, setEmail] = useState('');
   const [postcode, setPostcode] = useState('');
   const [address, setAddress] = useState('');
   const [addressDetail, setAddressDetail] = useState('');
   const [bankAccount, setBankAccount] = useState('');
+  const [virtualMoney, setVirtualMoney] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  const [nicknameError, setNicknameError] = useState('');
+  const [addressDetailError, setAddressDetailError] = useState('');
+
+  const [isUpdatingNickname, setIsUpdatingNickname] = useState(false);
+
+  const validateNickname = value => {
+    if (value === '') {
+      // 닉네임이 비어있는 경우
+      return '닉네임을 비워둘 수 없습니다.';
+    }
+
+    const regex = /^[a-zA-Z0-9가-힣]+$/;
+    if (!regex.test(value)) {
+      // 닉네임이 정규식 조건에 맞지 않는 경우
+      return '닉네임은 영어, 숫자, 한글(음절)만 포함할 수 있습니다.';
+    }
+
+    // 유효한 닉네임인 경우
+    return '';
+  };
+
+  useEffect(() => {
+    // Mock data
+    const mockData = {
+      name: '김경매',
+      nickname: '!',
+      profileImage: 'image_data_placeholder',
+      bankAccount: '국민은행 1234-5678-9101',
+      roadName: '서울특별시 양천구 목동중앙북로 1길',
+      addressName: '서울특별시 양천구 123-4',
+      zipcode: 19524,
+      detailAddress: '1011호',
+      email: 'betting@gmail.com',
+      virtualMoney: 20000,
+    };
+
+    // 상태 업데이트 함수들을 사용하여 mock data로 상태 설정
+    setName(mockData.name);
+    setNickname(mockData.nickname);
+    setEmail(mockData.email);
+    // setProfileImage(mockData.profileImage); // 주의: 실제 이미지 처리 방식에 따라 다를 수 있습니다.
+    setAddress(mockData.roadName);
+    setAddressDetail(mockData.detailAddress);
+    setBankAccount(mockData.bankAccount);
+    setVirtualMoney(mockData.virtualMoney);
+    setPostcode(mockData.zipcode.toString());
+
+    setNickname(mockData.nickname);
+    const errorMessage = validateNickname(mockData.nickname);
+    setNicknameError(errorMessage);
+  }, []);
+
+  const handleAddressDetailChange = e => {
+    const { value } = e.target;
+    setAddressDetail(value);
+
+    // 상세 주소가 비어있는 경우 오류 메시지 설정
+    if (!value.trim()) {
+      setAddressDetailError('상세 주소를 비워둘 수 없습니다.');
+    } else {
+      // 상세 주소에 입력이 있는 경우 오류 메시지 제거
+      setAddressDetailError('');
+    }
+  };
+
+  const handleNicknameChange = e => {
+    const { value } = e.target;
+    setNickname(value); // 닉네임 상태 업데이트
+
+    // 유효성 검사를 통해 에러 메시지 업데이트
+    const errorMessage = validateNickname(value);
+    setNicknameError(errorMessage);
+  };
 
   // 모달 열기
   const openModal = () => {
@@ -34,6 +110,43 @@ function ProfilePage() {
 
   const toggleTermsAgreement = () => {
     setAgreedToTerms(!agreedToTerms);
+  };
+
+  const isFormValid = () => {
+    // 모든 필드가 유효한지 검증하고
+    return (
+      name &&
+      validateNickname(nickname) === '' &&
+      profileImage &&
+      bankAccount &&
+      address &&
+      addressDetail &&
+      postcode &&
+      email &&
+      agreedToTerms &&
+      !addressDetailError // 상세 주소에 오류가 없어야 함
+    );
+  };
+
+  const updateNickname = async () => {
+    if (isUpdatingNickname) return; // Prevent multiple requests
+    setIsUpdatingNickname(true);
+
+    try {
+      const response = await axios.put(
+        'https://ka1425de5708ea.user-app.krampoline.com/api/user/nickname',
+        { nickname },
+      );
+      // Handle response here
+      console.log(response.data);
+      // Optionally, set some state to show success message
+    } catch (error) {
+      // Handle error here
+      console.error(error);
+      // Optionally, set some state to show error message
+    } finally {
+      setIsUpdatingNickname(false);
+    }
   };
 
   return (
@@ -93,10 +206,25 @@ function ProfilePage() {
             type="text"
             id="nickname"
             value={nickname}
-            onChange={e => setNickname(e.target.value)}
+            onChange={handleNicknameChange}
             placeholder="닉네임"
-            className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
+            className={`mb-2 px-2 py-1 rounded border-2 ${
+              nicknameError ? 'border-red-500' : 'border-gray-300'
+            }`}
           />
+          <button
+            type="button"
+            disabled={nicknameError || !nickname || isUpdatingNickname}
+            onClick={updateNickname}
+            className={`ml-2 ${
+              nicknameError || !nickname ? 'bg-grayish' : 'bg-deepblue2'
+            } text-white px-2 py-1 rounded`}
+          >
+            {isUpdatingNickname ? '수정 중...' : '수정'}
+          </button>
+          {nicknameError && (
+            <p className="text-red-500 text-xs">{nicknameError}</p>
+          )}
         </div>
         <div className="mb-2">
           <input
@@ -138,14 +266,21 @@ function ProfilePage() {
             </button>
           </TERipple>
         </div>
-        <input
-          type="text"
-          id="addressDetail"
-          value={addressDetail}
-          onChange={e => setAddressDetail(e.target.value)}
-          placeholder="상세 주소 입력"
-          className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
-        />
+        <div className="mb-2">
+          <input
+            type="text"
+            id="addressDetail"
+            value={addressDetail}
+            onChange={handleAddressDetailChange}
+            placeholder="상세 주소 입력"
+            className={`truncate mb-2 px-2 py-1 rounded border-2 ${
+              addressDetailError ? 'border-red-500' : 'border-gray-300'
+            }`}
+          />
+          {addressDetailError && (
+            <p className="text-red-500 text-xs">{addressDetailError}</p>
+          )}
+        </div>
         <div className="mb-2">
           <input
             type="text"
@@ -153,13 +288,14 @@ function ProfilePage() {
             value={bankAccount}
             onChange={e => setBankAccount(e.target.value)}
             placeholder="계좌번호"
+            className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
           />
         </div>
         <div className="mb-2">
           <input
             type="text"
             id="virtualMoney"
-            value="10000"
+            value={virtualMoney}
             readOnly
             className="bg-gray-100 text-gray-500 px-2 py-1 rounded"
           />
@@ -190,6 +326,17 @@ function ProfilePage() {
             />
             약관에 동의합니다
           </label>
+        </div>
+        <div className="mb-4">
+          <button
+            type="submit"
+            disabled={!isFormValid()}
+            className={`bg-blue-500 text-white px-4 py-2 rounded ${
+              !isFormValid() ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            프로필 수정
+          </button>
         </div>
       </div>
     </div>
