@@ -112,7 +112,7 @@ export function AuctionItem({
   );
 }
 
-export function SellingItem({ imageUrl, title, price, status }) {
+export function SellingItem({ imageUrl, title, price, status, time }) {
   const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const showConfirmPurchaseButton = status === 'DELIVERY_WAITING';
   const displayStatus = dealStatusOptions[status] || '알 수 없음';
@@ -130,7 +130,7 @@ export function SellingItem({ imageUrl, title, price, status }) {
       <div className="text-sm font-bold text-blackish pl-1">{price}원</div>
       <div className="flex flex-col items-center">
         <div className="pt-4 text-sm text-danger">{displayStatus}</div>
-        <div className="flex pt-1">
+        <div className="flex flex-col items-center pt-1">
           {showConfirmPurchaseButton && (
             <>
               <button
@@ -144,6 +144,7 @@ export function SellingItem({ imageUrl, title, price, status }) {
                 isModalOpen={isInvoiceModalOpen}
                 setIsModalOpen={setInvoiceModalOpen}
               />
+              <div>{time}</div>
             </>
           )}
         </div>
@@ -152,7 +153,7 @@ export function SellingItem({ imageUrl, title, price, status }) {
   );
 }
 
-SellingItem.propTypes = {
+PurchaseItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
@@ -168,9 +169,10 @@ AuctionItem.propTypes = {
   time: PropTypes.string.isRequired,
 };
 
-PurchaseItem.propTypes = {
+SellingItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
 };

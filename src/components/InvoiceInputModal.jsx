@@ -1,8 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [courier, setCourier] = useState('postOffice'); // 초기값 설정
+
   const modalRef = useRef();
   const closeModal = () => {
     setIsModalOpen(false);
@@ -19,6 +23,44 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const handleConfirm = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+
+      if (!accessToken) {
+        alert('로그인이 필요합니다.');
+        window.location.href = '/';
+        return;
+      }
+
+      const response = await axios.post(
+        '/api/delivery',
+        {
+          trackingNumber,
+          courier,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      const responseData = response.data;
+
+      // API 요청 성공 시 처리
+      if (responseData.status === 'success') {
+        setIsSubmitted(true);
+      } else {
+        // 실패 시 처리
+        console.error(responseData.message);
+      }
+    } catch (error) {
+      // API 요청 실패 시 처리
+      console.error('API 요청 실패:', error);
+    }
+  };
 
   return (
     <div>
@@ -59,6 +101,8 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
                         name="courier"
                         id="courier"
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        value={courier}
+                        onChange={e => setCourier(e.target.value)}
                       >
                         <option value="postOffice">우체국택배</option>
                         <option value="cj">CJ대한통운</option>
@@ -81,13 +125,15 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
                         id="trackingNumber"
                         placeholder="송장번호를 입력하세요."
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        value={trackingNumber}
+                        onChange={e => setTrackingNumber(e.target.value)}
                       />
                     </div>
                   </div>
                   <div className="flex mt-7 justify-center">
                     <button
                       type="button"
-                      onClick={() => setIsSubmitted(true)}
+                      onClick={handleConfirm}
                       className="bg-grayish text-xs px-1 rounded"
                     >
                       확인

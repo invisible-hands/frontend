@@ -43,6 +43,16 @@ function DefaultContent() {
           myBidPrice: 50100,
           time: '8:55:38',
         },
+        {
+          auctionId: '4',
+          imageUrl: '/harokIphone.png',
+          title: '아이폰 3',
+          price: 20000,
+          status: 'AUCTION_PROGRESS',
+          currentPrice: 50000,
+          myBidPrice: 50100,
+          time: '8:55:38',
+        },
         // ... 추가 데이터
       ];
 
@@ -83,7 +93,7 @@ function DefaultContent() {
               참여 중인 경매 목록
             </div>
             {items
-              .filter(item => item.status === 'PURCHASE_COMPLETE_WAITING')
+              .filter(item => item.status === 'AUCTION_PROGRESS')
               .map(item => (
                 <AuctionItem
                   key={item.auctionId}
@@ -114,6 +124,7 @@ function DefaultContent() {
                   title={item.title}
                   price={item.price}
                   status={item.status}
+                  time={item.time}
                 />
               ))}
           </div>
