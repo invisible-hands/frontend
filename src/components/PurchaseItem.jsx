@@ -23,6 +23,13 @@ const dealStatusOptions = {
   PURCHASE_CANCEL: '취소',
 };
 
+const auctionStatusOptions = {
+  '': '전체',
+  AUCTION_PROGRESS: '경매 진행중',
+  AUCTION_SUCCESS: '낙찰 성공',
+  AUCTION_FAIL: '낙찰 실패',
+};
+
 export function PurchaseItem({ imageUrl, title, price, status }) {
   const [isPurchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [isComplainModalOpen, setComplainModalOpen] = useState(false);
@@ -77,12 +84,14 @@ export function PurchaseItem({ imageUrl, title, price, status }) {
 
 export function AuctionItem({
   imageUrl,
-  productName,
+  title,
   currentPrice,
-  myPrice,
+  myBidPrice,
   status,
   time,
 }) {
+  const showConfirmPurchaseButton = status === 'AUCTION_PROGRESS';
+  const displayStatus = auctionStatusOptions[status] || '알 수 없음';
   return (
     <div className="flex justify-between items-center mb-4 pl-6">
       <img
@@ -91,20 +100,23 @@ export function AuctionItem({
         className="w-14 h-14 object-cover p-2 pl-3"
       />
       <div className="text-sm font-bold pr-2">
-        제품명: {truncateProductName(productName)}
+        제품명: {truncateProductName(title)}
       </div>
       <div className="text-sm font-bold text-danger pr-2">{currentPrice}원</div>
-      <div className="text-sm font-bold text-blackish">{myPrice}원</div>
+      <div className="text-sm font-bold text-blackish">{myBidPrice}원</div>
       <div className="flex flex-col items-center">
-        <div className="pt-5 text-sm text-danger">{status}</div>
-        <div>{time}</div>
+        <div className="pt-5 text-sm text-danger">{displayStatus}</div>
+        {showConfirmPurchaseButton && <div>{time}</div>}
       </div>
     </div>
   );
 }
 
-export function SellingItem({ imageUrl, productName, totalPrice, status }) {
+export function SellingItem({ imageUrl, title, price, status }) {
   const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
+  const showConfirmPurchaseButton = status === 'DELIVERY_WAITING';
+  const displayStatus = dealStatusOptions[status] || '알 수 없음';
+
   return (
     <div className="flex justify-between items-center mb-4 pl-5">
       <img
@@ -113,23 +125,27 @@ export function SellingItem({ imageUrl, productName, totalPrice, status }) {
         className="w-14 h-14 object-cover p-2 pl-3"
       />
       <div className="text-sm font-bold">
-        제품명: {truncateProductName(productName)}
+        제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-blackish pl-1">{totalPrice}원</div>
+      <div className="text-sm font-bold text-blackish pl-1">{price}원</div>
       <div className="flex flex-col items-center">
-        <div className="pt-4 text-sm text-danger">{status}</div>
+        <div className="pt-4 text-sm text-danger">{displayStatus}</div>
         <div className="flex pt-1">
-          <button
-            type="button"
-            className="bg-grayish text-xs px-1 rounded ml-2"
-            onClick={() => setInvoiceModalOpen(true)}
-          >
-            송장 번호 입력
-          </button>
-          <InvoiceInputModal
-            isModalOpen={isInvoiceModalOpen}
-            setIsModalOpen={setInvoiceModalOpen}
-          />
+          {showConfirmPurchaseButton && (
+            <>
+              <button
+                type="button"
+                className="bg-grayish text-xs px-1 rounded ml-2"
+                onClick={() => setInvoiceModalOpen(true)}
+              >
+                송장 번호 입력
+              </button>
+              <InvoiceInputModal
+                isModalOpen={isInvoiceModalOpen}
+                setIsModalOpen={setInvoiceModalOpen}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -138,16 +154,16 @@ export function SellingItem({ imageUrl, productName, totalPrice, status }) {
 
 SellingItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
-  productName: PropTypes.string.isRequired,
-  totalPrice: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  price: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
 };
 
 AuctionItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
-  productName: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
   currentPrice: PropTypes.string.isRequired,
-  myPrice: PropTypes.string.isRequired,
+  myBidPrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
 };

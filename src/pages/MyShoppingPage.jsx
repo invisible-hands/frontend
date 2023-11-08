@@ -24,18 +24,24 @@ function DefaultContent() {
       // 목 데이터
       const mockData = [
         {
-          id: '아이폰',
+          auctionId: '1',
           imageUrl: '/harokIphone.png',
           title: '아이폰',
           price: 10000,
           status: 'DELIVERY_WAITING',
+          currentPrice: 50000,
+          myBidPrice: 50100,
+          time: '8:55:38',
         },
         {
-          id: '아이폰',
+          auctionId: '2',
           imageUrl: '/harokIphone.png',
           title: '아이폰',
           price: 20000,
           status: 'PURCHASE_COMPLETE_WAITING',
+          currentPrice: 50000,
+          myBidPrice: 50100,
+          time: '8:55:38',
         },
         // ... 추가 데이터
       ];
@@ -60,7 +66,7 @@ function DefaultContent() {
               .filter(item => item.status === 'PURCHASE_COMPLETE_WAITING')
               .map(item => (
                 <PurchaseItem
-                  key={item.title}
+                  key={item.auctionId}
                   imageUrl={item.imageUrl}
                   title={item.title}
                   price={item.price}
@@ -76,14 +82,20 @@ function DefaultContent() {
             <div className="text-sm font-bold mt-2 mb-4">
               참여 중인 경매 목록
             </div>
-            <AuctionItem
-              imageUrl="/harokIphone.png"
-              productName="최하록이 만든 마법의 아이폰"
-              currentPrice="500"
-              myPrice="200"
-              status="경매 진행"
-              time="8:55:03"
-            />
+            {items
+              .filter(item => item.status === 'PURCHASE_COMPLETE_WAITING')
+              .map(item => (
+                <AuctionItem
+                  key={item.auctionId}
+                  imageUrl={item.imageUrl}
+                  title={item.title}
+                  currentPrice={item.currentPrice}
+                  myBidPrice={item.myBidPrice}
+                  status={item.status}
+                  time={item.time}
+                  // endAuctionTime - 현재시간 현준님 코드 뽀려오기
+                />
+              ))}
           </div>
         </div>
         <div className="mb-8" />
@@ -93,12 +105,17 @@ function DefaultContent() {
             <div className="text-sm font-bold mt-2 mb-4">
               송장 번호 입력 상품
             </div>
-            <SellingItem
-              imageUrl="/harokIphone.png"
-              productName="최하록이 만든 마법의 아이폰"
-              totalPrice="200"
-              status="진행중"
-            />
+            {items
+              .filter(item => item.status === 'DELIVERY_WAITING')
+              .map(item => (
+                <SellingItem
+                  key={item.auctionId}
+                  imageUrl={item.imageUrl}
+                  title={item.title}
+                  price={item.price}
+                  status={item.status}
+                />
+              ))}
           </div>
         </div>
       </div>

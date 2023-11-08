@@ -25,7 +25,7 @@ function PurchaseRecord() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    const fetchItems = async () => {
+    const fetchPagedItems = async () => {
       try {
         // 페이지 번호를 파라미터로 보내서 해당 페이지 데이터 요청
         const response = await axios.get(`/api/deal/sales?page=${currentPage}`);
@@ -33,11 +33,11 @@ function PurchaseRecord() {
         setTotalPages(response.data.totalPage); // 전체 페이지 수 업데이트
         setItemsPerPage(response.data.cnt); // 페이지 당 아이템 수 업데이트
       } catch (error) {
-        error();
+        console.error('Fetching items failed', error);
       }
     };
 
-    fetchItems();
+    fetchPagedItems();
   }, [currentPage]); // currentPage가 바뀔 때마다 요청
 
   useEffect(() => {
@@ -46,35 +46,35 @@ function PurchaseRecord() {
       // 목 데이터
       const mockData = [
         {
-          id: '아이템 1',
+          auctionId: '아이템 1',
           imageUrl: '/harokIphone.png',
           title: '아이템 1',
           price: 10000,
           status: 'DELIVERY_WAITING',
         },
         {
-          id: '아이템 2',
+          auctionId: '아이템 2',
           imageUrl: '/harokIphone.png',
           title: '아이템 2',
           price: 20000,
           status: 'PURCHASE_COMPLETE_WAITING',
         },
         {
-          id: '아이템 3',
+          auctionId: '아이템 3',
           imageUrl: '/harokIphone.png',
           title: '아이템 3',
           price: 10000,
           status: 'DELIVERY_WAITING',
         },
         {
-          id: '아이템 4',
+          auctionId: '아이템 4',
           imageUrl: '/harokIphone.png',
           title: '아이템 4',
           price: 10000,
           status: 'DELIVERY_WAITING',
         },
         {
-          id: '아이템 5',
+          auctionId: '아이템 5',
           imageUrl: '/harokIphone.png',
           title: '아이템 5',
           price: 10000,
@@ -107,7 +107,6 @@ function PurchaseRecord() {
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
     // '전체' 옵션이 선택되었거나 statusFilter 값이 없으면 모든 아이템을 반환
-    console.log('필터 되냐?');
     if (statusFilter === '') return true;
 
     // 아이템의 상태와 드롭다운에서 선택한 상태가 매칭되는지 확인
@@ -139,7 +138,7 @@ function PurchaseRecord() {
             />
             {filteredItems.slice(startIndex, endIndex).map(item => (
               <PurchaseItem
-                key={item.title}
+                key={item.auctionId}
                 imageUrl={item.imageUrl}
                 title={item.title}
                 price={item.price}
