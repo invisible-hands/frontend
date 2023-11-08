@@ -31,50 +31,57 @@ ChartJS.register(
   Legend,
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: false,
-      text: 'Chart.js Line Chart',
-    },
-  },
-  scales: {
-    x: {
-      ticks: {
+// 가로선 - 시간의 흐름을 보여주자
+
+export default function BidHistoryModal({
+  showModal,
+  setShowModal,
+  auctionId,
+}) {
+  console.log(auctionId);
+  const labels = [
+    '2023-10-20 13:35:10',
+    '2023-10-20 13:36:10',
+    '2023-10-20 13:38:10',
+    '2023-10-20 13:39:10',
+    '2023-10-20 13:40:10',
+    '2023-10-20 13:55:10',
+    '2023-10-20 13:56:10',
+  ];
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: '경매가',
+        // data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
+        data: [10000, 12000, 13000, 14000, 19000, 21000, 23000],
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
         display: false,
+        text: 'Chart.js Line Chart',
       },
     },
-  },
-};
-// 가로선 - 시간의 흐름을 보여주자
-const labels = [
-  '2023-10-20 13:35:10',
-  '2023-10-20 13:36:10',
-  '2023-10-20 13:38:10',
-  '2023-10-20 13:39:10',
-  '2023-10-20 13:40:10',
-  '2023-10-20 13:55:10',
-  '2023-10-20 13:56:10',
-];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: '경매가',
-      // data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      data: [10000, 12000, 13000, 14000, 19000, 21000, 23000],
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+    scales: {
+      x: {
+        ticks: {
+          display: false,
+        },
+      },
     },
-  ],
-};
+  };
 
-export default function BidHistoryModal({ showModal, setShowModal }) {
   return (
     <TEModal show={showModal} setShow={setShowModal} scrollable>
       <TEModalDialog centered size="lg">
@@ -110,9 +117,10 @@ export default function BidHistoryModal({ showModal, setShowModal }) {
           {/* <!--Modal body--> */}
           <TEModalBody>
             <div className="flex flex-row">
-              <div className="sm:px-6 lg:px-8">
+              <div className="basis-1/2">
                 <Line options={options} data={data} />
               </div>
+
               <div className="flex flex-col">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div className="inline-block min-w-full max-h-screen overflow-y-auto py-2 sm:px-6 lg:px-8">
@@ -246,4 +254,5 @@ export default function BidHistoryModal({ showModal, setShowModal }) {
 BidHistoryModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   setShowModal: PropTypes.func.isRequired,
+  auctionId: PropTypes.string.isRequired,
 };

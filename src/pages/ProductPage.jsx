@@ -3,6 +3,8 @@ import { TERipple } from 'tw-elements-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { RxDotFilled } from 'react-icons/rx';
+import useModalStore from '../stores/modalStore';
+import useLoginStore from '../stores/loginStore';
 import PaymentConfirmModal from '../components/PaymentConfirmModal';
 import PaymentModal from '../components/PaymentModal';
 import {
@@ -11,6 +13,7 @@ import {
   calculateRemainTime,
 } from '../utils/timeUtils';
 import BidHistoryModal from '../components/BidHistoryModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 
 const demoData = {
   status: 'string',
@@ -24,8 +27,8 @@ const demoData = {
       itemCondition: 'NEW',
       currentPrice: 175000,
       instantPrice: 200000,
-      createdAt: '2023-11-01 17:41:10',
-      endAuctionTime: '2023-11-02 13:40:10',
+      createdAt: '2023-11-08 10:44:10',
+      endAuctionTime: '2023-11-08 11:11:10',
       duration: 24,
       bidderCnt: 8,
       viewCnt: 32,
@@ -46,19 +49,19 @@ const demoData = {
         tagName: '#애플',
       },
     ],
-    authorCheck: false,
+    authorCheck: true,
   },
 };
 // 로그인 여부에 따라서 조건부 렌더링 user/visitor/author
-const login = 'user';
 
 export default function ProductPage() {
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  console.log(showLoginModal, '로그인 모달 추가할 때 사용');
+  const { loggedIn } = useLoginStore();
+  const { openModal } = useModalStore();
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPayModal, setShowPayModal] = useState(false);
-  const { productId } = Number(useParams());
+  const { productId } = useParams();
   const navigate = useNavigate();
   const testPoint = {
     currentPoint: 2000,
@@ -103,7 +106,7 @@ export default function ProductPage() {
                   <button
                     type="button"
                     className="inline-block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                    onClick={() => setShowConfirmModal(true)}
+                    onClick={() => setShowDeleteConfirmModal(true)}
                   >
                     게시글 삭제
                   </button>
@@ -112,24 +115,17 @@ export default function ProductPage() {
             {/* 게시글 author 아니면서 판매종료가 되지 않고, 5분이 지난 게시물 */}
             {demoData.data.authorCheck === false &&
               !isWithinFiveMinute(demoData.data.auctionInfo.createdAt) &&
-              isAuctionEnd(demoData.data.auctionInfo.endAuctionTime) && (
+              !isAuctionEnd(demoData.data.auctionInfo.endAuctionTime) && (
                 <>
                   <TERipple rippleColor="white">
                     <button
                       type="button"
                       className="inline-block rounded bg-blue2 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-blue1 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                       onClick={() => {
-                        if (login === 'user') {
-                          setShowLoginModal(true);
-                          // 로그인 여부를 확인하는 코드
-                          navigate(
-                            `/bid/${demoData.data.auctionInfo.auctionId}`,
-                          );
-                        } else {
-                          navigate(
-                            `/bid/${demoData.data.auctionInfo.auctionId}`,
-                          );
+                        if (!loggedIn) {
+                          openModal();
                         }
+                        navigate(`/bid/${demoData.data.auctionInfo.auctionId}`);
                       }}
                     >
                       입찰하기
@@ -140,9 +136,9 @@ export default function ProductPage() {
                       type="button"
                       className="inline-block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                       onClick={() => {
-                        if (login === 'user') {
-                          setShowLoginModal(true);
-                          // 로그인 여부를 확인하는 코드
+                        if (!loggedIn) {
+                          openModal();
+
                           setShowConfirmModal(true);
                         } else {
                           setShowConfirmModal(true);
@@ -166,10 +162,18 @@ export default function ProductPage() {
 
         <SellerInfo auctionId={productId} />
       </div>
+      {/* 게시글 삭제 확정 모달  */}
+      <DeleteConfirmModal
+        showModal={showDeleteConfirmModal}
+        setShowModal={setShowDeleteConfirmModal}
+        productName="PS4랑 CD개"
+      />
+
       {/* 결제 확정 모달  */}
       <BidHistoryModal
         showModal={showBidHistoryModal}
         setShowModal={setShowBidHistoryModal}
+        auctionId={productId}
       />
       {/* 결제 확정 모달  */}
       <PaymentConfirmModal
@@ -408,5 +412,5 @@ SellerInfo.defaultProps = {
   auctionId: 1,
 };
 SellerInfo.propTypes = {
-  auctionId: PropTypes.number,
+  auctionId: PropTypes.string,
 };
