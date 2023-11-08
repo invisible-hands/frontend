@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import 'tw-elements-react/dist/css/tw-elements-react.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -11,7 +11,7 @@ import './index.css';
 import Main from './main';
 import ErrorPage from './pages/ErrorPage';
 import Redirection from './pages/Redirection';
-import useAuth from './Auth';
+// import useAuth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage';
@@ -71,12 +71,6 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 export default function App() {
-  const { authenticateUser } = useAuth();
-
-  useEffect(() => {
-    authenticateUser();
-  }, [authenticateUser]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
