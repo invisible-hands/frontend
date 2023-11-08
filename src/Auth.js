@@ -1,6 +1,6 @@
 // Auth.js
 import axios from 'axios';
-import loginStore from './loginStore';
+import loginStore from './stores/loginStore';
 
 // 앱이 시작될 때마다 상태 복원 or 새로운 로그인 처리
 const useAuth = () => {

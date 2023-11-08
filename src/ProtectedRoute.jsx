@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useLoginStore from './loginStore';
-import useModalStore from './modalStore';
+import useLoginStore from './stores/loginStore';
+import useModalStore from './stores/modalStore';
 import LoginModal from './components/LoginModal';
 
 function ProtectedRoute({ children }) {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import loginStore from '../loginStore';
+import loginStore from '../stores/loginStore';
 
 // 카카오 로그인 후 카카오 서버에서 앱으로
 function Redirection() {
