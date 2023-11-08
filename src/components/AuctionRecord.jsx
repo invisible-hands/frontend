@@ -104,19 +104,33 @@ function AuctionRecord() {
     fetchMockItems();
   }, []);
 
-  // useEffect(() => {
-  //   // 데이터를 불러오는 함수
-  //   const fetchItems = async () => {
-  //     try {
-  //       const response = await axios.get('/api/deal/bids'); // 가정한 API endpoint
-  //       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
-  //     } catch (error) {
-  //       console.error('Fetching items failed', error);
-  //     }
-  //   };
+  useEffect(() => {
+    // 데이터를 불러오는 함수
+    const fetchItems = async () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
 
-  //   fetchItems(); // 함수 호출
-  // }, []); // 컴포넌트가 마운트될 때 한 번만 호출
+        if (!accessToken) {
+          // 토큰이 없으면 로그인이 필요하다는 메시지를 보여줄 수 있습니다.
+          alert('로그인이 필요합니다.');
+          return;
+        }
+
+        // API 요청 보내기
+        const response = await axios.get('/api/deal/bids', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        setItems(response.data); // 받아온 데이터로 items 상태 업데이트
+      } catch (error) {
+        console.error('Fetching items failed', error);
+      }
+    };
+
+    fetchItems(); // 함수 호출
+  }, []); // 컴포넌트가 마운트될 때 한 번만 호출
 
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
