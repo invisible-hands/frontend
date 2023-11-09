@@ -24,4 +24,8 @@ dist-ssr
 *.sw?
 
 .eslintcache
+
+
+#Environment variables
+
 .env
