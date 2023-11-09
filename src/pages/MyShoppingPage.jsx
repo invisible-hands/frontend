@@ -22,68 +22,73 @@ function DefaultContent() {
   const [bids, setBids] = useState([]);
   const [sales, setSales] = useState([]);
 
-  // useEffect(() => {
-  //   // 가짜 데이터를 불러오는 함수
-  //   const fetchMockItems = async () => {
-  //     // 목 데이터
-  //     const mockData = [
-  //       {
-  //         auctionId: '1',
-  //         imageUrl: '/harokIphone.png',
-  //         title: '아이폰',
-  //         price: 10000,
-  //         status: 'DELIVERY_WAITING',
-  //         currentPrice: 50000,
-  //         myBidPrice: 50100,
-  //         time: '8:55:38',
-  //       },
-  //       {
-  //         auctionId: '2',
-  //         imageUrl: '/harokIphone.png',
-  //         title: '아이폰',
-  //         price: 20000,
-  //         status: 'PURCHASE_COMPLETE_WAITING',
-  //         currentPrice: 50000,
-  //         myBidPrice: 50100,
-  //         time: '8:55:38',
-  //       },
-  //       {
-  //         auctionId: '4',
-  //         imageUrl: '/harokIphone.png',
-  //         title: '아이폰 3',
-  //         price: 20000,
-  //         status: 'AUCTION_PROGRESS',
-  //         currentPrice: 50000,
-  //         myBidPrice: 50100,
-  //         time: '8:55:38',
-  //       },
-  //       // ... 추가 데이터
-  //     ];
-
-  //     // setState를 사용하여 items 상태 업데이트
-  //     setItems(mockData);
-  //   };
-
-  //   fetchMockItems();
-  // }, []);
-
   useEffect(() => {
+    // 각 API 호출이 성공했을 때 사용할 목 데이터
+    const mockData = {
+      purchases: [
+        {
+          auctionId: '2',
+          imageUrl: '/harokIphone.png',
+          title: '아이폰',
+          price: 20000,
+          status: 'PURCHASE_COMPLETE_WAITING',
+          currentPrice: 50000,
+          myBidPrice: 50100,
+          time: '8:55:38',
+        },
+      ],
+      bids: [
+        {
+          auctionId: '4',
+          imageUrl: '/harokIphone.png',
+          title: '아이폰 3',
+          price: 20000,
+          status: 'AUCTION_PROGRESS',
+          currentPrice: 50000,
+          myBidPrice: 50100,
+          time: '8:55:38',
+        },
+      ],
+      sales: [
+        {
+          auctionId: '1',
+          imageUrl: '/harokIphone.png',
+          title: '아이폰',
+          price: 10000,
+          status: 'DELIVERY_WAITING',
+          currentPrice: 50000,
+          myBidPrice: 50100,
+          time: '8:55:38',
+        },
+      ],
+    };
+
     // 각각의 API를 호출하여 데이터를 가져오는 함수
     const fetchData = async () => {
       try {
         // purchases API 호출
         const purchasesResponse = await axios.get('/api/deal/purchases');
-        setPurchases(purchasesResponse.data);
+        if (purchasesResponse.status === 200) {
+          // API 성공 시 목 데이터 사용
+          setPurchases(mockData.purchases);
+        }
 
         // bids API 호출
         const bidsResponse = await axios.get('/api/deal/bids');
-        setBids(bidsResponse.data);
+        if (bidsResponse.status === 200) {
+          // API 성공 시 목 데이터 사용
+          setBids(mockData.bids);
+        }
 
         // sales API 호출
         const salesResponse = await axios.get('/api/deal/sales');
-        setSales(salesResponse.data);
+        if (salesResponse.status === 200) {
+          // API 성공 시 목 데이터 사용
+          setSales(mockData.sales);
+        }
       } catch (error) {
         console.error('Fetching data failed', error);
+        // API 요청에 실패하면 오류 처리를 해야 할 수도 있어
       }
     };
 
@@ -190,3 +195,71 @@ function MyShoppingPage() {
 }
 
 export default MyShoppingPage;
+
+// useEffect(() => {
+//   // 가짜 데이터를 불러오는 함수
+//   const fetchMockItems = async () => {
+//     // 목 데이터
+//     const mockData = [
+//       {
+//         auctionId: '1',
+//         imageUrl: '/harokIphone.png',
+//         title: '아이폰',
+//         price: 10000,
+//         status: 'DELIVERY_WAITING',
+//         currentPrice: 50000,
+//         myBidPrice: 50100,
+//         time: '8:55:38',
+//       },
+//       {
+//         auctionId: '2',
+//         imageUrl: '/harokIphone.png',
+//         title: '아이폰',
+//         price: 20000,
+//         status: 'PURCHASE_COMPLETE_WAITING',
+//         currentPrice: 50000,
+//         myBidPrice: 50100,
+//         time: '8:55:38',
+//       },
+//       {
+//         auctionId: '4',
+//         imageUrl: '/harokIphone.png',
+//         title: '아이폰 3',
+//         price: 20000,
+//         status: 'AUCTION_PROGRESS',
+//         currentPrice: 50000,
+//         myBidPrice: 50100,
+//         time: '8:55:38',
+//       },
+//       // ... 추가 데이터
+//     ];
+
+//     // setState를 사용하여 items 상태 업데이트
+//     setItems(mockData);
+//   };
+
+//   fetchMockItems();
+// }, []);
+
+// useEffect(() => {
+//   // 각각의 API를 호출하여 데이터를 가져오는 함수
+//   const fetchData = async () => {
+//     try {
+//       // purchases API 호출
+//       const purchasesResponse = await axios.get('/api/deal/purchases');
+//       setPurchases(purchasesResponse.data);
+
+//       // bids API 호출
+//       const bidsResponse = await axios.get('/api/deal/bids');
+//       setBids(bidsResponse.data);
+
+//       // sales API 호출
+//       const salesResponse = await axios.get('/api/deal/sales');
+//       setSales(salesResponse.data);
+//     } catch (error) {
+//       console.error('Fetching data failed', error);
+//     }
+//   };
+
+//   fetchData();
+// }, []);

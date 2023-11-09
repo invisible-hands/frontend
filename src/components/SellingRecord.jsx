@@ -28,9 +28,7 @@ function SellingRecord() {
     const fetchPagedItems = async () => {
       try {
         // 페이지 번호를 파라미터로 보내서 해당 페이지 데이터 요청
-        const response = await axios.get(
-          `/api/deal/purchases?page=${currentPage}`,
-        );
+        const response = await axios.get(`/api/deal/sales?page=${currentPage}`);
         setItems(response.data.items); // 받아온 아이템들로 상태 업데이트
         setTotalPages(response.data.totalPage); // 전체 페이지 수 업데이트
         setItemsPerPage(response.data.cnt); // 페이지 당 아이템 수 업데이트
@@ -44,7 +42,7 @@ function SellingRecord() {
 
   useEffect(() => {
     // 가짜 데이터를 불러오는 함수
-    const fetchMockItems = async () => {
+    const fetchMockItems = () => {
       // 목 데이터
       const mockData = [
         {
@@ -89,37 +87,25 @@ function SellingRecord() {
       setItems(mockData);
     };
 
-    fetchMockItems();
-  }, []);
-
-  useEffect(() => {
     // 데이터를 불러오는 함수
     const fetchItems = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
-
-        if (!accessToken) {
-          // 토큰이 없으면 로그인이 필요하다는 메시지를 보여줄 수 있습니다.
-          alert('로그인이 필요합니다.');
-          window.location.href('/');
-          return;
-        }
-
         // API 요청 보내기
-        const response = await axios.get('/api/deal/sales', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.get('/api/deal/sales');
 
-        setItems(response.data); // 받아온 데이터로 items 상태 업데이트
+        if (response.status === 200) {
+          // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
+          fetchMockItems();
+        } else {
+          console.error('API 요청 실패:', response.status);
+        }
       } catch (error) {
-        console.error('Fetching items failed', error);
+        console.error('API 요청 실패:', error);
       }
     };
 
     fetchItems(); // 함수 호출
-  }, []); // 컴포넌트가 마운트될 때 한 번만 호출
+  }, []);
 
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
@@ -143,6 +129,24 @@ function SellingRecord() {
     }
     return pages;
   };
+
+  useEffect(() => {
+    // 데이터를 불러오는 함수
+    const fetchItems = async () => {
+      try {
+        // const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기 (주석 처리)
+
+        // API 요청 보내기
+        const response = await axios.get('/api/deal/sales');
+
+        setItems(response.data); // 받아온 데이터로 items 상태 업데이트
+      } catch (error) {
+        console.error('Fetching items failed', error);
+      }
+    };
+
+    fetchItems(); // 함수 호출
+  }, []); // 컴포넌트가 마운트될 때 한 번만 호출
 
   return (
     <div>
@@ -172,3 +176,32 @@ function SellingRecord() {
 }
 
 export default SellingRecord;
+
+// useEffect(() => {
+//   // 데이터를 불러오는 함수
+//   const fetchItems = async () => {
+//     try {
+//       const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+
+//       if (!accessToken) {
+//         // 토큰이 없으면 로그인이 필요하다는 메시지를 보여줄 수 있습니다.
+//         alert('로그인이 필요합니다.');
+//         window.location.href('/');
+//         return;
+//       }
+
+//       // API 요청 보내기
+//       const response = await axios.get('/api/deal/sales', {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//       });
+
+//       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
+//     } catch (error) {
+//       console.error('Fetching items failed', error);
+//     }
+//   };
+
+//   fetchItems(); // 함수 호출
+// }, []); // 컴포넌트가 마운트될 때 한 번만 호출
