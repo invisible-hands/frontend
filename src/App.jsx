@@ -11,11 +11,10 @@ import './index.css';
 import Main from './main';
 import ErrorPage from './pages/ErrorPage';
 import Redirection from './pages/Redirection';
-import useAuth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage';
-
+import MyShoppingPage from './pages/MyShoppingPage';
 
 const router = createBrowserRouter([
   {
@@ -63,6 +62,14 @@ const router = createBrowserRouter([
         path: '/bid/:productId',
         element: <BidPage />,
       },
+      {
+        path: '/mypage/shopping',
+        element: <MyShoppingPage />,
+      },
+      {
+        path: '/mypage/shopping/:recordType',
+        element: <MyShoppingPage />,
+      },
     ],
   },
 ]);
@@ -77,7 +84,6 @@ export default function App() {
       <RouterProvider router={router} />
     </QueryClientProvider>
   );
-
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
