@@ -143,6 +143,7 @@ function ProfilePage() {
   const handleSelectAddress = data => {
     setAddress(data.address);
     setPostcode(data.zonecode);
+    // setAddress;
     closeAddressModal();
   };
 
@@ -212,7 +213,6 @@ function ProfilePage() {
   };
 
   const canActivateAccount = () => {
-    // 추가된 폼 유효성 검사 로직
     const formIsValid =
       name &&
       validateNickname(nickname) === '' &&
@@ -224,7 +224,6 @@ function ProfilePage() {
       email &&
       !addressDetailError;
 
-    // 기존의 계정 활성화 조건 로직과 결합
     return (
       formIsValid &&
       validateNickname(nickname) === '' &&
@@ -315,6 +314,8 @@ function ProfilePage() {
             className={`mb-2 px-2 py-1 rounded border-2 ${
               nicknameError ? 'border-red-500' : 'border-gray-300'
             }`}
+            data-te-input-showcounter="true"
+            maxLength="12"
           />
           <button
             type="button"
