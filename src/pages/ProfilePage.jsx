@@ -27,8 +27,13 @@ function ProfilePage() {
   const [isUpdatingAddress, setIsUpdatingAddress] = useState(false);
   const [isUpdatingAccount, setIsUpdatingAccount] = useState(false);
 
+  const [nicknameSaved, setNicknameSaved] = useState(false);
+  const [addressSaved, setAddressSaved] = useState(false);
+  const [accountSaved, setAccountSaved] = useState(false);
+
   const bankOptions = ['국민은행', '농협은행', '신한은행'];
 
+  // 모달 열기
   const openAddressModal = () => {
     setIsModalOpen(true);
   };
@@ -105,6 +110,7 @@ function ProfilePage() {
   const handleNicknameChange = e => {
     const { value } = e.target;
     setNickname(value); // 닉네임 상태 업데이트
+    setNicknameSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
 
     // 유효성 검사를 통해 에러 메시지 업데이트
     const errorMessage = validateNickname(value);
@@ -114,6 +120,7 @@ function ProfilePage() {
   const handleAddressDetailChange = e => {
     const { value } = e.target;
     setAddressDetail(value);
+    setAddressSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
 
     // 상세 주소가 비어있는 경우 오류 메시지 설정
     if (!value.trim()) {
@@ -127,11 +134,11 @@ function ProfilePage() {
   const handleBankAccountChange = e => {
     const { value } = e.target;
     setBankAccount(value); // 계좌번호 상태 업데이트
+    setAccountSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
+
     const errorMessage = validateBankAccount(value);
     setBankAccountError(errorMessage); // 에러 메시지 상태 업데이트
   };
-
-  // 모달 열기
 
   const handleSelectAddress = data => {
     setAddress(data.address);
@@ -141,22 +148,6 @@ function ProfilePage() {
 
   const toggleTermsAgreement = () => {
     setAgreedToTerms(!agreedToTerms);
-  };
-
-  const isFormValid = () => {
-    // 모든 필드가 유효한지 검증하고
-    return (
-      name &&
-      validateNickname(nickname) === '' &&
-      profileImage &&
-      bankAccount &&
-      address &&
-      addressDetail &&
-      postcode &&
-      email &&
-      agreedToTerms &&
-      !addressDetailError // 상세 주소에 오류가 없어야 함
-    );
   };
 
   const updateNickname = async () => {
@@ -169,6 +160,7 @@ function ProfilePage() {
         { nickname },
       );
       console.log(response.data);
+      setNicknameSaved(true);
     } catch (error) {
       console.error(error);
     } finally {
@@ -193,6 +185,7 @@ function ProfilePage() {
         addressData,
       );
       console.log(response.data);
+      setAddressSaved(true);
     } catch (error) {
       console.error(error);
     } finally {
@@ -210,10 +203,53 @@ function ProfilePage() {
         { bankName, bankAccount },
       );
       console.log(response.data);
+      setAccountSaved(true);
     } catch (error) {
       console.error(error);
     } finally {
       setIsUpdatingAccount(false);
+    }
+  };
+
+  const canActivateAccount = () => {
+    // 추가된 폼 유효성 검사 로직
+    const formIsValid =
+      name &&
+      validateNickname(nickname) === '' &&
+      profileImage &&
+      bankAccount &&
+      address &&
+      addressDetail &&
+      postcode &&
+      email &&
+      !addressDetailError;
+
+    // 기존의 계정 활성화 조건 로직과 결합
+    return (
+      formIsValid &&
+      validateNickname(nickname) === '' &&
+      validateBankAccount(bankAccount) === '' &&
+      addressDetailError === '' &&
+      nicknameSaved &&
+      addressSaved &&
+      accountSaved &&
+      agreedToTerms
+    );
+  };
+
+  // 계정 활성화 함수
+  const activateAccount = async () => {
+    if (!canActivateAccount()) return;
+
+    try {
+      const response = await axios.put(
+        'https://ka1425de5708ea.user-app.krampoline.com/api/user/role',
+      );
+      console.log(response.data);
+      // 활성화 성공에 대한 처리
+    } catch (error) {
+      console.error(error);
+      // 활성화 실패에 대한 처리
     }
   };
 
@@ -446,12 +482,13 @@ function ProfilePage() {
         <div className="mb-4">
           <button
             type="submit"
-            disabled={!isFormValid()}
+            disabled={!canActivateAccount()}
+            onClick={activateAccount}
             className={`bg-deepblue2 text-white px-4 py-2 rounded ${
-              !isFormValid() ? 'opacity-50 cursor-not-allowed' : ''
+              !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            프로필 수정
+            계정 활성화
           </button>
         </div>
       </div>
