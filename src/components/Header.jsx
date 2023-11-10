@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LoginModal from './LoginModal';
 import useModalStore from '../stores/modalStore';
+import useLoginStore from '../stores/loginStore';
 
-function Header({ isLoggedIn, nickname }) {
+function Header() {
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(isLoggedIn);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const { isModalOpen, openModal, closeModal } = useModalStore();
+  const { loggedIn, nickName, logOut } = useLoginStore();
 
   const handleSearch = async () => {
     try {
@@ -61,7 +61,7 @@ function Header({ isLoggedIn, nickname }) {
   };
 
   const handleLogout = () => {
-    setLoggedIn(false);
+    logOut();
   };
 
   return (
@@ -122,10 +122,10 @@ function Header({ isLoggedIn, nickname }) {
             </button>
           </div>
           <div className="flex items-center transition-all ease-in-out duration-300 text-xs gap-x-1 select-none whitespace-nowrap md:text-base md:gap-x-2">
-            {isLoggedIn ? (
+            {loggedIn ? (
               <>
                 <span className="hidden md:inline text-deepblue1">
-                  {nickname} 님
+                  {nickName} 님
                 </span>
                 <button
                   type="button"
@@ -179,15 +179,5 @@ function Header({ isLoggedIn, nickname }) {
     </header>
   );
 }
-
-Header.propTypes = {
-  isLoggedIn: PropTypes.bool,
-  nickname: PropTypes.string,
-};
-
-Header.defaultProps = {
-  isLoggedIn: true,
-  nickname: '새벽다섯시',
-};
 
 export default Header;
