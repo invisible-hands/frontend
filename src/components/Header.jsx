@@ -2,31 +2,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useMutation } from 'react-query';
 import LoginModal from './LoginModal';
+import useModalStore from '../stores/modalStore';
 
 function Header({ isLoggedIn, nickname }) {
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(isLoggedIn);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-
-  const { mutate: openModal } = useMutation(() => {
-    setShowLoginModal(true);
-  });
-
-  const { mutate: closeModal } = useMutation(() => {
-    setShowLoginModal(false);
-  });
-
-  const handleOpenModal = () => {
-    openModal();
-  };
-
-  const handleCloseModal = () => {
-    closeModal();
-  };
+  const { isModalOpen, openModal, closeModal } = useModalStore();
 
   const handleSearch = async () => {
     try {
@@ -163,14 +147,11 @@ function Header({ isLoggedIn, nickname }) {
                 <button
                   type="button"
                   className="text-deepblue1"
-                  onClick={handleOpenModal}
+                  onClick={openModal}
                 >
                   로그인
                 </button>
-                <LoginModal
-                  isModalOpen={showLoginModal}
-                  onClose={handleCloseModal}
-                />
+                <LoginModal isModalOpen={isModalOpen} onClose={closeModal} />
               </>
             )}
             <button

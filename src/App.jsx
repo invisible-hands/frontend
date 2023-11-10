@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import 'tw-elements-react/dist/css/tw-elements-react.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import LoginModal from './components/LoginModal';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SignupPage from './pages/SignupPage';
 import ProductPage from './pages/ProductPage';
 import ProductRegistrationPage from './pages/ProductRegistrationPage';
@@ -12,9 +11,10 @@ import './index.css';
 import Main from './main';
 import ErrorPage from './pages/ErrorPage';
 import Redirection from './pages/Redirection';
-import useAuth from './Auth';
+// import useAuth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
-import MainPage from './pages/MainPage.jsx';
+import MainPage from './pages/MainPage';
+import BidPage from './pages/BidPage';
 
 const router = createBrowserRouter([
   {
@@ -27,15 +27,11 @@ const router = createBrowserRouter([
         element: <MainPage />,
       },
       {
-        path: '/login',
-        element: <LoginModal />,
-      },
-      {
         path: '/signup',
         element: <SignupPage />,
       },
       {
-        path: '/product',
+        path: '/product/:productId',
         element: <ProductPage />,
       },
       {
@@ -62,6 +58,10 @@ const router = createBrowserRouter([
         path: '/redirection',
         element: <Redirection />,
       },
+      {
+        path: '/bid/:productId',
+        element: <BidPage />,
+      },
     ],
   },
 ]);
@@ -71,12 +71,6 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 export default function App() {
-  const { authenticateUser } = useAuth();
-
-  useEffect(() => {
-    authenticateUser();
-  }, [authenticateUser]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />

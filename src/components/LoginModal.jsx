@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import useLoginStore from '../loginStore';
+import useLoginStore from '../stores/loginStore';
 
 function LoginModal({ isModalOpen, onClose }) {
   const REST_API_KEY = import.meta.env.VITE_KAKAO_JS_KEY;

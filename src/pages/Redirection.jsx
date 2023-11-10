@@ -1,24 +1,23 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import loginStore from '../loginStore';
+import useLoginStore from '../stores/loginStore';
 
 // 카카오 로그인 후 카카오 서버에서 앱으로
 function Redirection() {
   const code = new URL(document.location.toString()).searchParams.get('code');
   const navigate = useNavigate();
-  const { logIn } = loginStore(state => ({ logIn: state.logIn }));
+  const logIn = useLoginStore(state => state.logIn);
 
   useEffect(() => {
     const login = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_URL}?code=${code}`,
+          `${import.meta.env.VITE_APP_URL}/user/login/kakao?code=${code}`,
         );
-
-        logIn(response.data.nickName, response.data.accessToken);
-        localStorage.setItem('nickname', response.data.nickname);
-        localStorage.setItem('accessToken', response.data.accessToken);
+        logIn(response.data.data.nickname, response.data.data.accessToken);
+        localStorage.setItem('nickname', response.data.data.nickname);
+        localStorage.setItem('accessToken', response.data.data.accessToken);
 
         navigate('/');
       } catch (error) {
