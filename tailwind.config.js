@@ -31,6 +31,9 @@ export default {
         blue2: '#7e93ba',
         blue3: '#9fb8d2',
       },
+      backgroundImage: {
+        'dark-logo': "url('/src/assets/darkLogo.png')",
+      },
     },
   },
   darkMode: 'class',
