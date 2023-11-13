@@ -11,15 +11,15 @@ import './index.css';
 import Main from './main';
 import ErrorPage from './pages/ErrorPage';
 import Redirection from './pages/Redirection';
-import HotDetailPage from './pages/HotDetailPage';
-import DeadlineDetailPage from './pages/DeadlineDetailPage';
-import NewDetailPage from './pages/NewDetailPage';
+import HotDetailPage from './pages/detail/HotDetailPage.jsx';
+import DeadlineDetailPage from './pages/detail/DeadlineDetailPage.jsx';
+import NewDetailPage from './pages/detail/NewDetailPage.jsx';
 
 // import useAuth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage';
-import SearchDetailPage from './pages/SearchDetailPage';
+import SearchDetailPage from './pages/detail/SearchDetailPage.jsx';
 
 const router = createBrowserRouter([
   {

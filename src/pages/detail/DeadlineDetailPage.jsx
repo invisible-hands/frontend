@@ -1,5 +1,5 @@
 import React from 'react';
-import Detail from '../components/ItemDetail';
+import Detail from '../../components/ItemDetail.jsx';
 
 function DeadlineDetailPage() {
   return (

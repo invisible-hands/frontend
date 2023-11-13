@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function ItemDetail({ item }) {
+function ItemDetail({ item, onClick }) {
   const { title, currentPrice, instantPrice, imageUrl } = item;
 
   return (
-    <div className="border p-4 rounded-md relative">
+    <div
+      className="border p-4 rounded-md relative"
+      onClick={onClick}
+      role="button"
+    >
       <div className="absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-md px-2 py-1 rounded">
         {/* 타이머 로직을 추가할 수 있습니다 */}
       </div>
@@ -32,6 +36,11 @@ ItemDetail.propTypes = {
     instantPrice: PropTypes.number.isRequired,
     imageUrl: PropTypes.string,
   }).isRequired,
+  onClick: PropTypes.func,
+};
+
+ItemDetail.defaultProps = {
+  onClick: () => {},
 };
 
 export default ItemDetail;

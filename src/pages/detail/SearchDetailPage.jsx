@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ItemDetail from '../components/ItemDetail';
+import ItemDetail from '../../components/ItemDetail.jsx';
 
 function SearchDetailPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const keyword = searchParams.get('keyword');
 
@@ -39,6 +40,10 @@ function SearchDetailPage() {
     setPage(prevPage => prevPage + 1);
   };
 
+  const goToProductDetail = productId => {
+    navigate(`/product/${productId}`);
+  };
+
   return (
     <div className="whitespace-nowrap max-w-screen-lg mx-auto">
       <div className="text-4xl font-extrabold mb-4 text-deepblue2">
@@ -53,7 +58,11 @@ function SearchDetailPage() {
       >
         <div className="grid grid-cols-4 gap-4">
           {searchResults.map(item => (
-            <ItemDetail key={item.auctionId} item={item} />
+            <ItemDetail
+              key={item.auctionId}
+              item={item}
+              onClick={() => goToProductDetail(item.auctionId)}
+            />
           ))}
         </div>
       </InfiniteScroll>
