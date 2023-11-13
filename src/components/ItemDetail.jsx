@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 function ItemDetail({ item, onClick }) {
-  const { title, currentPrice, instantPrice, imageUrl } = item;
+  const { title, currentPrice, instantPrice, imageUrl, endAuctionTime } = item;
+  const [timeLeft, setTimeLeft] = useState('');
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const endTime = new Date(endAuctionTime).getTime();
+      const now = new Date().getTime();
+      const difference = endTime - now;
+
+      if (difference > 0) {
+        let hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        let minutes = Math.floor((difference / 1000 / 60) % 60);
+        let seconds = Math.floor((difference / 1000) % 60);
+
+        hours = hours < 10 ? `0${hours}` : `${hours}`;
+        minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+        return `${hours}:${minutes}:${seconds}`;
+      }
+      return '00:00:00';
+    };
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [endAuctionTime]);
 
   return (
     <div
@@ -11,10 +39,10 @@ function ItemDetail({ item, onClick }) {
       role="button"
     >
       <div className="absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-md px-2 py-1 rounded">
-        {/* 타이머 로직을 추가할 수 있습니다 */}
+        {timeLeft}
       </div>
       <img
-        src={imageUrl} // 서버에서 이미지 URL을 받거나, 기본 이미지 사용
+        src={imageUrl}
         alt={title}
         className="w-full h-48 object-cover mb-4 rounded-md"
       />
@@ -35,6 +63,7 @@ ItemDetail.propTypes = {
     currentPrice: PropTypes.number.isRequired,
     instantPrice: PropTypes.number.isRequired,
     imageUrl: PropTypes.string,
+    endAuctionTime: PropTypes.string.isRequired,
   }).isRequired,
   onClick: PropTypes.func,
 };
