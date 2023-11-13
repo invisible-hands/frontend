@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import ItemDetail from '../components/ItemDetail';
 
 function SearchDetailPage() {
@@ -9,45 +10,33 @@ function SearchDetailPage() {
   const keyword = searchParams.get('keyword');
 
   const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const fetchSearchResults = async () => {
-      setIsLoading(true);
       try {
         const response = await axios.get(
-          `https://ka1425de5708ea.user-app.krampoline.com/api/auction/search?keyword=${keyword}&page=0&size=20`,
+          `https://ka1425de5708ea.user-app.krampoline.com/api/auction/search?keyword=${keyword}&page=${page}&size=20`,
         );
 
         if (response.data.status === 'Success') {
-          setSearchResults(response.data.data.items);
+          setSearchResults(prevResults => [
+            ...prevResults,
+            ...response.data.data.items,
+          ]);
+          setHasMore(page < response.data.data.totalPage - 1);
         }
       } catch (error) {
         console.error('Error while fetching search results:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
-    if (keyword) {
-      fetchSearchResults();
-    }
-  }, [keyword]);
+    fetchSearchResults();
+  }, [keyword, page]);
 
-  const renderSearchResults = () => {
-    if (isLoading) {
-      return <p>검색 중...</p>;
-    }
-    if (searchResults.length > 0) {
-      return (
-        <div className="grid grid-cols-4 gap-4">
-          {searchResults.map(item => (
-            <ItemDetail key={item.auctionId} item={item} />
-          ))}
-        </div>
-      );
-    }
-    return <p>검색 결과가 없습니다.</p>;
+  const loadMoreData = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
   return (
@@ -55,7 +44,19 @@ function SearchDetailPage() {
       <div className="text-4xl font-extrabold mb-4 text-deepblue2">
         검색 키워드: {keyword}
       </div>
-      {renderSearchResults()} {/* 검색 결과 렌더링 */}
+      <InfiniteScroll
+        dataLength={searchResults.length}
+        next={loadMoreData}
+        hasMore={hasMore}
+        loader={<h4>불러오는 중...</h4>}
+        endMessage={<p>마지막 페이지입니다.</p>}
+      >
+        <div className="grid grid-cols-4 gap-4">
+          {searchResults.map(item => (
+            <ItemDetail key={item.auctionId} item={item} />
+          ))}
+        </div>
+      </InfiniteScroll>
     </div>
   );
 }

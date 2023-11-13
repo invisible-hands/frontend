@@ -19,7 +19,7 @@ import NewDetailPage from './pages/NewDetailPage';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage';
-import SearchDetailPage from './pages/SearchDetailPage.jsx';
+import SearchDetailPage from './pages/SearchDetailPage';
 
 const router = createBrowserRouter([
   {
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
         element: <HotDetailPage />,
       },
       {
-        path: '/Deadline',
+        path: '/deadline',
         element: <DeadlineDetailPage />,
       },
       {
