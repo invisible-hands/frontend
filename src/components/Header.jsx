@@ -12,6 +12,10 @@ function Header() {
   const { isModalOpen, openModal, closeModal } = useModalStore();
   const { loggedIn, nickName, logOut } = useLoginStore();
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   const handleSearch = async () => {
     try {
       const pageable = {
@@ -56,16 +60,12 @@ function Header() {
     }
   };
 
-  const handleLogoClick = () => {
-    navigate('/');
-  };
-
   const handleLogout = () => {
     logOut();
   };
 
   return (
-    <header className="max-w-screen-lg mx-auto">
+    <header className="max-w-screen-lg mx-auto w-full">
       <nav
         className="flex w-full items-center bg-white px-3 py-0.5 shadow-lg md:px-7 md:py-2"
         data-te-navbar-ref
