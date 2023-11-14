@@ -18,6 +18,8 @@ function ProfilePage() {
   const [bankName, setBankName] = useState('');
   const [bankAccount, setBankAccount] = useState('');
   const [virtualMoney, setVirtualMoney] = useState('');
+  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
+  const [chargeAmount, setChargeAmount] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const [nicknameError, setNicknameError] = useState('');
@@ -236,6 +238,23 @@ function ProfilePage() {
     } finally {
       setIsUpdatingAccount(false);
     }
+  };
+
+  const openChargeModal = () => {
+    setIsChargeModalOpen(true);
+  };
+
+  // 가상 머니 충전 모달 닫기
+  const closeChargeModal = () => {
+    setIsChargeModalOpen(false);
+    setChargeAmount(''); // 모달 닫을 때 입력값 초기화
+  };
+
+  // 가상 머니 충전 처리 함수 (실제 API 요청 로직은 구현 필요)
+  const handleCharge = async () => {
+    // API 요청 로직으로 가상 머니 충전 처리
+    console.log(`충전 금액: ${chargeAmount}`);
+    closeChargeModal();
   };
 
   const canActivateAccount = () => {
@@ -471,6 +490,34 @@ function ProfilePage() {
             <p className="text-red-500 text-xs mb-2 py-1">{bankAccountError}</p> // 에러 메시지 출력
           )}
         </div>
+        {/* 가상 머니 충전 모달 */}
+        {isChargeModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="modal max-w-md bg-white p-4 rounded shadow-lg flex flex-col">
+              <button
+                type="button"
+                className="text-deepblue1 self-end m-3"
+                onClick={closeChargeModal}
+              >
+                <FaTimes size={20} />
+              </button>
+              <input
+                type="number"
+                value={chargeAmount}
+                onChange={e => setChargeAmount(e.target.value)}
+                placeholder="충전 금액 입력"
+                className="mb-4 px-2 py-1 rounded border-2 border-gray-300 w-full"
+              />
+              <button
+                type="button"
+                onClick={handleCharge}
+                className="bg-deepblue2 text-white px-4 py-2 rounded w-full"
+              >
+                충전하기
+              </button>
+            </div>
+          </div>
+        )}
         <div className="mb-2">
           <input
             type="text"
@@ -479,6 +526,13 @@ function ProfilePage() {
             readOnly
             className="bg-gray-100 text-gray-500 px-2 py-1 rounded"
           />
+          <button
+            type="button"
+            onClick={openChargeModal}
+            className="bg-deepblue2 text-white px-2 py-1 rounded"
+          >
+            충전
+          </button>
         </div>
         <div className="mb-4">
           <p className="text-sm text-left">
