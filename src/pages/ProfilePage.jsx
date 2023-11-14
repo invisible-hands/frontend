@@ -4,6 +4,7 @@ import DaumPostcode from 'react-daum-postcode';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
 import profileImg from '../assets/bettingground.png';
+import useLoginStore from '../stores/loginStore';
 
 function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,7 +78,25 @@ function ProfilePage() {
   };
 
   useEffect(() => {
-    // Mock data
+    const fetchProfileData = async () => {
+      try {
+        const { token } = useLoginStore.getState();
+
+        const response = await axios.get(
+          'https://ka1425de5708ea.user-app.krampoline.com/api/user',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const userData = response.data.data;
+        console.log(userData);
+      } catch (error) {
+        console.error('Error while fetching profile data:', error);
+      }
+    };
+
     const mockData = {
       name: '김경매',
       nickname: '!',
@@ -105,6 +124,8 @@ function ProfilePage() {
     setNickname(mockData.nickname);
     const errorMessage = validateNickname(mockData.nickname);
     setNicknameError(errorMessage);
+
+    fetchProfileData();
   }, []);
 
   const handleNicknameChange = e => {
