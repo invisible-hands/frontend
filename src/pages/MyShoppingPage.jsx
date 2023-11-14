@@ -24,46 +24,52 @@ function DefaultContent() {
   // const [items, setItems] = useState([]);
 
   const [purchases, setPurchases] = useState([]);
-  const [bids, setBids] = useState([]);
+  const [items, setItems] = useState([]);
   const [sales, setSales] = useState([]);
 
   useEffect(() => {
-    const handleResponse = (response, setState) => {
-      if (response.status === 200) {
-        setState(response.data.data.auctions);
-        console.log('요청 성공', response.data.data.auctions);
-      } else {
-        console.error('API 요청 실패:', response.status);
-      }
-    };
-    const fetchItems = async () => {
-      const accessToken = import.meta.env.VITE_TOKEN;
-      const headers = { Authorization: `Bearer ${accessToken}` };
-
+    const fetchData = async () => {
       try {
-        const responsePurchases = await axiosInstance.get(
-          `/api/deal/purchases?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=1`,
-          { headers },
+        const accessToken = import.meta.env.VITE_TOKEN;
+        const purchasesResponse = await axiosInstance.get(
+          `/api/deal/purchases?status=all&startDate=2022-11-09&endDate=2023-11-09&page=0&size=1`,
+          { headers: { Authorization: `Bearer ${accessToken}` } },
         );
-        handleResponse(responsePurchases, setPurchases);
+        if (purchasesResponse.status === 200) {
+          // API 성공 시 목 데이터 사용
+          setPurchases(purchasesResponse.data.data.auctions);
+        }
 
-        const responseBids = await axiosInstance.get(
+        // bids API 호출
+        const response = await axiosInstance.get(
           `/api/deal/bids?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=8`,
-          { headers },
+          { headers: { Authorization: `Bearer ${accessToken}` } },
         );
-        handleResponse(responseBids, setBids);
 
-        const responseSales = await axiosInstance.get(
-          `/api/deal/sales?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=8`,
-          { headers },
+        if (response.status === 200) {
+          setItems(response.data.data.auctions);
+          console.log('요청 성공', response.data.data.auctions);
+        }
+
+        // sales API 호출
+        const salesResponse = await axiosInstance.get(
+          '/api/deal/sales?status=all&startDate=2022-11-09&endDate=2023-11-09&page=0&size=1',
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          },
         );
-        handleResponse(responseSales, setSales);
+        if (salesResponse.status === 200) {
+          // API 성공 시 목 데이터 사용
+          setSales(salesResponse.data.data.sales);
+        }
+        console.log('판매', salesResponse);
       } catch (error) {
-        console.error('API 요청 실패:', error);
+        console.error('Fetching data failed', error);
+        // API 요청에 실패하면 오류 처리를 해야 할 수도 있어
       }
     };
 
-    fetchItems();
+    fetchData();
   }, []);
 
   return (
@@ -83,7 +89,7 @@ function DefaultContent() {
                   key={item.auctionId}
                   imageUrl={item.imageUrl}
                   title={item.title}
-                  price={item.price}
+                  purchasePrice={item.purchasePrice}
                   status={item.status}
                 />
               ))}
@@ -96,7 +102,7 @@ function DefaultContent() {
             <div className="text-sm font-bold mt-2 mb-4">
               참여 중인 경매 목록
             </div>
-            {bids
+            {items
               .filter(item => item.status === 'AUCTION_PROGRESS')
               .map(item => (
                 <AuctionItem
