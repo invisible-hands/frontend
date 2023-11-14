@@ -3,13 +3,13 @@ import { TERipple } from 'tw-elements-react';
 import DaumPostcode from 'react-daum-postcode';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
-import profileImg from '../assets/bettingground.png';
 import useLoginStore from '../stores/loginStore';
+import profileImg from '../assets/bettingground.png';
 
 function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState('');
-  const [name, setName] = useState('');
+  const [name] = useState('');
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -92,38 +92,22 @@ function ProfilePage() {
         );
         const userData = response.data.data;
         console.log(userData);
+
+        setProfileImage(userData.profileImage);
+        setNickname(userData.nickname);
+        setEmail(userData.email);
+        setVirtualMoney(userData.money);
+
+        if (userData.role === 'USER') {
+          setAgreedToTerms(true); // 이미 USER 권한을 가진 경우 체크박스 활성화
+        }
+
+        const errorMessage = validateNickname(userData.nickname);
+        setNicknameError(errorMessage);
       } catch (error) {
         console.error('Error while fetching profile data:', error);
       }
     };
-
-    const mockData = {
-      name: '김경매',
-      nickname: '!',
-      profileImage: profileImg,
-      bankAccount: '',
-      roadName: '',
-      addressName: '',
-      zipcode: '',
-      detailAddress: '',
-      email: 'betting@gmail.com',
-      virtualMoney: 20000,
-    };
-
-    // 상태 업데이트 함수들을 사용하여 mock data로 상태 설정
-    setName(mockData.name);
-    setNickname(mockData.nickname);
-    setEmail(mockData.email);
-    // setProfileImage(mockData.profileImage);
-    setAddress(mockData.roadName);
-    setAddressDetail(mockData.detailAddress);
-    setBankAccount(mockData.bankAccount);
-    setVirtualMoney(mockData.virtualMoney);
-    setPostcode(mockData.zipcode.toString());
-
-    setNickname(mockData.nickname);
-    const errorMessage = validateNickname(mockData.nickname);
-    setNicknameError(errorMessage);
 
     fetchProfileData();
   }, []);
@@ -177,9 +161,16 @@ function ProfilePage() {
     setIsUpdatingNickname(true);
 
     try {
+      const { token } = useLoginStore.getState();
+
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/nickname',
         { nickname },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       console.log(response.data);
       setNicknameSaved(true);
@@ -202,9 +193,16 @@ function ProfilePage() {
     };
 
     try {
+      const { token } = useLoginStore.getState();
+
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/address',
         addressData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       console.log(response.data);
       setAddressSaved(true);
@@ -220,9 +218,16 @@ function ProfilePage() {
     setIsUpdatingAccount(true);
 
     try {
+      const { token } = useLoginStore.getState();
+
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/account',
         { bankName, bankAccount },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       console.log(response.data);
       setAccountSaved(true);
@@ -235,9 +240,7 @@ function ProfilePage() {
 
   const canActivateAccount = () => {
     const formIsValid =
-      name &&
       validateNickname(nickname) === '' &&
-      profileImage &&
       bankAccount &&
       address &&
       addressDetail &&
@@ -262,8 +265,16 @@ function ProfilePage() {
     if (!canActivateAccount()) return;
 
     try {
+      const { token } = useLoginStore.getState();
+
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/role',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       console.log(response.data);
       // 활성화 성공에 대한 처리
@@ -297,7 +308,7 @@ function ProfilePage() {
         <div className="mb-2">
           {profileImage ? (
             <img
-              src={URL.createObjectURL(profileImage)}
+              src={profileImage}
               alt="프로필 이미지"
               className="w-32 h-32 rounded-full my-2"
             />
@@ -308,11 +319,6 @@ function ProfilePage() {
               className="w-32 h-32 rounded-full my-2 border-solid border-2 border-blue2"
             />
           )}
-          <input
-            type="file"
-            id="profileImage"
-            onChange={e => setProfileImage(e.target.files[0])}
-          />
         </div>
         <div className="mb-2">
           <input
@@ -496,6 +502,7 @@ function ProfilePage() {
               id="termsCheckbox"
               checked={agreedToTerms}
               onChange={toggleTermsAgreement}
+              disabled={agreedToTerms} // USER 일 경우 체크박스 비활성화
               className="mr-2"
             />
             약관에 동의합니다
