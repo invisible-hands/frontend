@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 function ItemDetail({ item, onClick }) {
   const { title, currentPrice, instantPrice, imageUrl, endAuctionTime } = item;
   const [timeLeft, setTimeLeft] = useState('');
+  const [isLessThanAnHour, setIsLessThanAnHour] = useState(false);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -16,13 +17,17 @@ function ItemDetail({ item, onClick }) {
         let minutes = Math.floor((difference / 1000 / 60) % 60);
         let seconds = Math.floor((difference / 1000) % 60);
 
+        if (hours === 0) {
+          setIsLessThanAnHour(true);
+        }
+
         hours = hours < 10 ? `0${hours}` : `${hours}`;
         minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
         seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
 
         return `${hours}:${minutes}:${seconds}`;
       }
-      return '00:00:00';
+      return '경매 마감';
     };
 
     const timer = setInterval(() => {
@@ -32,15 +37,17 @@ function ItemDetail({ item, onClick }) {
     return () => clearInterval(timer);
   }, [endAuctionTime]);
 
+  const timeStyle = isLessThanAnHour
+    ? 'absolute top-1 right-1 bg-danger/20 text-danger text-md px-2 py-1 rounded'
+    : 'absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-md px-2 py-1 rounded';
+
   return (
     <div
       className="border p-4 rounded-md relative"
       onClick={onClick}
       role="button"
     >
-      <div className="absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-md px-2 py-1 rounded">
-        {timeLeft}
-      </div>
+      <div className={timeStyle}>{timeLeft}</div>
       <img
         src={imageUrl}
         alt={title}

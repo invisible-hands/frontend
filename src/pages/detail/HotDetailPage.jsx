@@ -1,5 +1,5 @@
 import React from 'react';
-import Detail from '../../components/ItemDetail.jsx';
+import ItemDetail from '../../components/ItemDetail';
 
 function HotDetailPage() {
   return (
@@ -7,7 +7,7 @@ function HotDetailPage() {
       <div className="text-4xl font-extrabold mb-4 text-deepblue2">
         인기상품
       </div>
-      <Detail />
+      <ItemDetail />
     </div>
   );
 }

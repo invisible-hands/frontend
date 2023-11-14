@@ -1,5 +1,5 @@
 import React from 'react';
-import Detail from '../../components/ItemDetail.jsx';
+import ItemDetail from '../../components/ItemDetail';
 
 function DeadlineDetailPage() {
   return (
@@ -7,7 +7,7 @@ function DeadlineDetailPage() {
       <div className="text-4xl font-extrabold mb-4 text-deepblue2">
         마감 임박 상품
       </div>
-      <Detail />
+      <ItemDetail />
     </div>
   );
 }
