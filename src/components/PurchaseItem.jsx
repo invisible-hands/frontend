@@ -20,8 +20,9 @@ const truncateProductName = title => {
 const dealStatusOptions = {
   DELIVERY_WAITING: '배송 대기중',
   PURCHASE_COMPLETE_WAITING: '구매 확정 대기',
-  PURCHASE_COMPLETED: '구매 확정',
+  PURCHASE_COMPLETE: '구매 확정',
   PURCHASE_CANCEL: '취소',
+  SALE_FAIL: '판매 실패',
 };
 
 const auctionStatusOptions = {
@@ -31,7 +32,13 @@ const auctionStatusOptions = {
   AUCTION_FAIL: '낙찰 실패',
 };
 
-export function PurchaseItem({ imageUrl, title, price, status }) {
+export function PurchaseItem({
+  imageUrl,
+  title,
+  purchasePrice,
+  status,
+  dealId,
+}) {
   const [isPurchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [isComplainModalOpen, setComplainModalOpen] = useState(false);
   const showConfirmPurchaseButton = status === 'PURCHASE_COMPLETE_WAITING';
@@ -47,7 +54,7 @@ export function PurchaseItem({ imageUrl, title, price, status }) {
       <div className="text-sm font-bold">
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-blackish">{price}원</div>
+      <div className="text-sm font-bold text-blackish">{purchasePrice}원</div>
       <div className="flex flex-col items-center">
         <div className="pt-4 text-sm text-danger">{displayStatus}</div>
         <div className="flex pt-1">
@@ -63,6 +70,7 @@ export function PurchaseItem({ imageUrl, title, price, status }) {
               <PurchaseConfirmModal
                 isModalOpen={isPurchaseModalOpen}
                 setIsModalOpen={setPurchaseModalOpen}
+                dealId={dealId}
               />
               <button
                 type="button"
@@ -113,11 +121,19 @@ export function AuctionItem({
   );
 }
 
-export function SellingItem({ imageUrl, title, price, status, time }) {
+export function SellingItem({
+  imageUrl,
+  title,
+  price,
+  status,
+  time,
+  auctionId,
+}) {
   const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const showConfirmPurchaseButton = status === 'DELIVERY_WAITING';
   const displayStatus = dealStatusOptions[status] || '알 수 없음';
 
+  console.log('옥션 아이디', auctionId);
   return (
     <div className="flex justify-between items-center mb-4 pl-5">
       <img
@@ -144,6 +160,7 @@ export function SellingItem({ imageUrl, title, price, status, time }) {
               <InvoiceInputModal
                 isModalOpen={isInvoiceModalOpen}
                 setIsModalOpen={setInvoiceModalOpen}
+                auctionId={auctionId}
               />
               <div>{time}</div>
             </>
@@ -157,8 +174,9 @@ export function SellingItem({ imageUrl, title, price, status, time }) {
 PurchaseItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
+  purchasePrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
+  dealId: PropTypes.number.isRequired,
 };
 
 AuctionItem.propTypes = {
@@ -176,4 +194,5 @@ SellingItem.propTypes = {
   price: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
+  auctionId: PropTypes.number.isRequired,
 };

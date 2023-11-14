@@ -1,24 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const axiosInstance = axios.create({
+  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+});
+
 export function PurchaseContainer() {
-  const [purchaseData, setPurchaseData] = useState([
-    { all: 0, before: 0, progress: 0, complete: 0 },
-  ]);
+  const [purchaseData, setPurchaseData] = useState({
+    all: 0,
+    before: 0,
+    progress: 0,
+    complete: 0,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/deal/purchases/count');
+        // 인증 토큰 값
+        const accessToken = import.meta.env.VITE_TOKEN;
+        const response = await axiosInstance.get('/api/deal/purchases/count', {
+          headers: {
+            // Authorization 헤더에 Bearer 토큰 추가
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (response.status === 200) {
-          const mockData = {
-            all: 12,
-            before: 0,
-            progress: 8,
-            complete: 4,
-          };
-          setPurchaseData(mockData);
+          setPurchaseData(response.data.data);
         } else {
           console.error('API 요청 실패:', response.status);
         }
@@ -67,23 +75,26 @@ export function PurchaseContainer() {
 }
 
 export function AuctionContainer() {
-  const [auctionData, setAuctionData] = useState([
-    { all: 0, progress: 0, complete: 0 },
-  ]);
+  const [auctionData, setAuctionData] = useState({
+    all: 0,
+    progress: 0,
+    complete: 0,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/deal/bids/count');
+        // 인증 토큰 값
+        const accessToken = import.meta.env.VITE_TOKEN;
+        const response = await axiosInstance.get('/api/deal/bids/count', {
+          headers: {
+            // Authorization 헤더에 Bearer 토큰 추가
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (response.status === 200) {
-          const mockData = {
-            all: 12,
-            before: 0,
-            progress: 8,
-            complete: 4,
-          };
-          setAuctionData(mockData);
+          setAuctionData(response.data.data);
         } else {
           console.error('API 요청 실패:', response.status);
         }
@@ -126,34 +137,27 @@ export function AuctionContainer() {
 }
 
 export function SellingContainer() {
-  const [sellingData, setSellingData] = useState([
-    { all: 0, before: 0, progress: 0, complete: 0 },
-  ]);
-
-  // useEffect(() => {
-  //   const mockData = {
-  //     all: 12,
-  //     before: 0,
-  //     progress: 8,
-  //     complete: 4,
-  //   };
-
-  //   setSellingData(mockData);
-  // }, []);
+  const [sellingData, setSellingData] = useState({
+    all: 0,
+    before: 0,
+    progress: 0,
+    complete: 0,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/deal/sales/count');
+        // 인증 토큰 값
+        const accessToken = import.meta.env.VITE_TOKEN;
+        const response = await axiosInstance.get('/api/deal/sales/count', {
+          headers: {
+            // Authorization 헤더에 Bearer 토큰 추가
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (response.status === 200) {
-          const mockData = {
-            all: 12,
-            before: 0,
-            progress: 8,
-            complete: 4,
-          };
-          setSellingData(mockData);
+          setSellingData(response.data.data);
         } else {
           console.error('API 요청 실패:', response.status);
         }

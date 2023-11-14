@@ -4,6 +4,10 @@ import { AuctionItem } from './PurchaseItem';
 import { AuctionContainer } from './ShoppingContainer';
 import { AuctionDropdown } from './DropDown';
 
+const axiosInstance = axios.create({
+  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+});
+
 function AuctionRecord() {
   const auctionStatusOptions = {
     '': '전체',
@@ -24,92 +28,26 @@ function AuctionRecord() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    const fetchPagedItems = async () => {
-      try {
-        // 페이지 번호를 파라미터로 보내서 해당 페이지 데이터 요청
-        const response = await axios.get(`/api/deal/bids?page=${currentPage}`);
-        setItems(response.data.items); // 받아온 아이템들로 상태 업데이트
-        setTotalPages(response.data.totalPage); // 전체 페이지 수 업데이트
-        setItemsPerPage(response.data.cnt); // 페이지 당 아이템 수 업데이트
-      } catch (error) {
-        console.error('Fetching items failed', error);
-      }
-    };
-
-    fetchPagedItems();
-  }, [currentPage]); // currentPage가 바뀔 때마다 요청
-
-  useEffect(() => {
-    // 가짜 데이터를 불러오는 함수
-    const fetchMockItems = async () => {
-      // 목 데이터
-      const mockData = [
-        {
-          auctionId: '아이템 1',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 1',
-          price: 10000,
-          status: 'AUCTION_PROGRESS',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-        {
-          auctionId: '아이템 2',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 2',
-          price: 20000,
-          status: 'AUCTION_SUCCESS',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-        {
-          auctionId: '아이템 3',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 3',
-          price: 10000,
-          status: 'AUCTION_SUCCESS',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-        {
-          auctionId: '아이템 4',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 4',
-          price: 10000,
-          status: 'AUCTION_FAIL',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-        {
-          auctionId: '아이템 5',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 5',
-          price: 10000,
-          status: 'AUCTION_PROGRESS',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-        // ... 추가 데이터
-      ];
-
-      // setState를 사용하여 items 상태 업데이트
-      setItems(mockData);
-    };
-
-    // 데이터를 불러오는 함수
     const fetchItems = async () => {
       try {
-        // API 요청 보내기
-        const response = await axios.get('/api/deal/bids');
+        const accessToken = import.meta.env.VITE_TOKEN;
+        // const page = currentPage; // 현재 페이지 번호
+        // const size = 1; // 한 페이지에 표시할 항목 수
+        // const status = 'all';
+        // const startDate = '2022-11-09'; // 시작 날짜
+        // const endDate = '2023-11-13'; // 끝 날짜
+
+        const response = await axiosInstance.get(
+          `/api/deal/bids?status=all&startDate=2022-11-09&endDate=2023-11-13&page=${currentPage}&size=8`,
+          { headers: { Authorization: `Bearer ${accessToken}` } },
+        );
 
         if (response.status === 200) {
-          // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
-          fetchMockItems();
+          setItems(response.data.data.auctions);
+          console.log('요청 성공', response.data.data.auctions);
+          setTotalPages(response.data.data.totalPage);
+          setItemsPerPage(response.data.data.cnt); // 전체 페이지 수 업데이트
+          // 다른 페이징 관련 상태도 필요하다면 여기에서 업데이트
         } else {
           console.error('API 요청 실패:', response.status);
         }
@@ -118,8 +56,8 @@ function AuctionRecord() {
       }
     };
 
-    fetchItems(); // 함수 호출
-  }, []);
+    fetchItems();
+  }, [currentPage]);
 
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
@@ -156,7 +94,7 @@ function AuctionRecord() {
             />
             {filteredItems.slice(startIndex, endIndex).map(item => (
               <AuctionItem
-                key={item.auctionId}
+                auctionId={item.auctionId}
                 imageUrl={item.imageUrl}
                 title={item.title}
                 currentPrice={item.currentPrice}

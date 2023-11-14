@@ -4,20 +4,25 @@ import { PurchaseItem } from './PurchaseItem';
 import { PurchaseContainer } from './ShoppingContainer';
 import { PurchaseDropdown } from './DropDown';
 
+const axiosInstance = axios.create({
+  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+});
+
 function PurchaseRecord() {
   const dealStatusOptions = {
     '': '전체',
     DELIVERY_WAITING: '배송 대기중',
     PURCHASE_COMPLETE_WAITING: '구매 확정 대기',
-    PURCHASE_COMPLETED: '구매 확정',
+    PURCHASE_COMPLETE: '구매 확정',
     PURCHASE_CANCEL: '취소',
+    SALE_FAIL: '판매 실패',
   };
 
   const [statusFilter, setStatusFilter] = useState('');
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [itemsPerPage, setItemsPerPage] = useState(0);
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -25,79 +30,26 @@ function PurchaseRecord() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    const fetchPagedItems = async () => {
-      try {
-        // 페이지 번호를 파라미터로 보내서 해당 페이지 데이터 요청
-        const response = await axios.get(
-          `/api/deal/purchases?page=${currentPage}`,
-        );
-        setItems(response.data.items); // 받아온 아이템들로 상태 업데이트
-        setTotalPages(response.data.totalPage); // 전체 페이지 수 업데이트
-        setItemsPerPage(response.data.cnt); // 페이지 당 아이템 수 업데이트
-      } catch (error) {
-        console.error('Fetching items failed', error);
-      }
-    };
-
-    fetchPagedItems();
-  }, [currentPage]); // currentPage가 바뀔 때마다 요청
-
-  useEffect(() => {
-    // 가짜 데이터를 불러오는 함수
-    const fetchMockItems = async () => {
-      // 목 데이터
-      const mockData = [
-        {
-          auctionId: '아이템 1',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 1',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        {
-          auctionId: '아이템 2',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 2',
-          price: 20000,
-          status: 'PURCHASE_COMPLETE_WAITING',
-        },
-        {
-          auctionId: '아이템 3',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 3',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        {
-          auctionId: '아이템 4',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 4',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        {
-          auctionId: '아이템 5',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 5',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        // ... 추가 데이터
-      ];
-
-      // setState를 사용하여 items 상태 업데이트
-      setItems(mockData);
-    };
-
-    // 데이터를 불러오는 함수
     const fetchItems = async () => {
       try {
-        // API 요청 보내기
-        const response = await axios.get('/api/deal/purchases');
+        const accessToken = import.meta.env.VITE_TOKEN;
+        // const page = currentPage; // 현재 페이지 번호
+        // const size = 1; // 한 페이지에 표시할 항목 수
+        // const status = 'all';
+        // const startDate = '2022-11-09'; // 시작 날짜
+        // const endDate = '2023-11-13'; // 끝 날짜
+
+        const response = await axiosInstance.get(
+          `/api/deal/purchases?status=all&startDate=2022-11-09&endDate=2023-11-13&page=${currentPage}&size=8`,
+          { headers: { Authorization: `Bearer ${accessToken}` } },
+        );
 
         if (response.status === 200) {
-          // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
-          fetchMockItems();
+          setItems(response.data.data.auctions);
+          console.log('요청 성공', response.data.data.auctions);
+          setTotalPages(response.data.data.totalPage);
+          setItemsPerPage(response.data.data.cnt); // 전체 페이지 수 업데이트
+          // 다른 페이징 관련 상태도 필요하다면 여기에서 업데이트
         } else {
           console.error('API 요청 실패:', response.status);
         }
@@ -106,51 +58,8 @@ function PurchaseRecord() {
       }
     };
 
-    fetchItems(); // 함수 호출
-  }, []);
-
-  // useEffect(() => {
-  //   const mockData = [
-  //     {
-  //       auctionId: '아이템 1',
-  //       imageUrl: '/harokIphone.png',
-  //       title: '아이템 1',
-  //       price: 10000,
-  //       status: 'DELIVERY_WAITING',
-  //     },
-  //     {
-  //       auctionId: '아이템 2',
-  //       imageUrl: '/harokIphone.png',
-  //       title: '아이템 2',
-  //       price: 20000,
-  //       status: 'PURCHASE_COMPLETE_WAITING',
-  //     },
-  //     {
-  //       auctionId: '아이템 3',
-  //       imageUrl: '/harokIphone.png',
-  //       title: '아이템 3',
-  //       price: 10000,
-  //       status: 'DELIVERY_WAITING',
-  //     },
-  //     {
-  //       auctionId: '아이템 4',
-  //       imageUrl: '/harokIphone.png',
-  //       title: '아이템 4',
-  //       price: 10000,
-  //       status: 'DELIVERY_WAITING',
-  //     },
-  //     {
-  //       auctionId: '아이템 5',
-  //       imageUrl: '/harokIphone.png',
-  //       title: '아이템 5',
-  //       price: 10000,
-  //       status: 'DELIVERY_WAITING',
-  //     },
-  //     // ... 추가 데이터
-  //   ];
-
-  //   setItems(mockData); // 여기서 setItems는 상태를 설정하는 함수라고 가정
-  // }, []);
+    fetchItems();
+  }, [currentPage]);
 
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
@@ -186,10 +95,11 @@ function PurchaseRecord() {
             />
             {filteredItems.slice(startIndex, endIndex).map(item => (
               <PurchaseItem
-                key={item.auctionId}
+                dealId={item.dealId}
+                auctionId={item.auctionId}
                 imageUrl={item.imageUrl}
                 title={item.title}
-                price={item.price}
+                purchasePrice={item.purchasePrice}
                 status={item.status}
               />
             ))}
@@ -230,3 +140,66 @@ export default PurchaseRecord;
 
 //   fetchItems(); // 함수 호출
 // }, []); // 컴포넌트가 마운트될 때 한 번만 호출
+
+//   // 데이터를 불러오는 함수
+//   const fetchItems = async () => {
+//     try {
+//       // API 요청 보내기
+//       const response = await axios.get('/api/deal/purchases');
+
+//       if (response.status === 200) {
+//         // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
+//         fetchMockItems();
+//       } else {
+//         console.error('API 요청 실패:', response.status);
+//       }
+//     } catch (error) {
+//       console.error('API 요청 실패:', error);
+//     }
+//   };
+
+//   fetchItems(); // 함수 호출
+// }, []);
+
+// useEffect(() => {
+//   const mockData = [
+//     {
+//       auctionId: '아이템 1',
+//       imageUrl: '/harokIphone.png',
+//       title: '아이템 1',
+//       price: 10000,
+//       status: 'DELIVERY_WAITING',
+//     },
+//     {
+//       auctionId: '아이템 2',
+//       imageUrl: '/harokIphone.png',
+//       title: '아이템 2',
+//       price: 20000,
+//       status: 'PURCHASE_COMPLETE_WAITING',
+//     },
+//     {
+//       auctionId: '아이템 3',
+//       imageUrl: '/harokIphone.png',
+//       title: '아이템 3',
+//       price: 10000,
+//       status: 'DELIVERY_WAITING',
+//     },
+//     {
+//       auctionId: '아이템 4',
+//       imageUrl: '/harokIphone.png',
+//       title: '아이템 4',
+//       price: 10000,
+//       status: 'DELIVERY_WAITING',
+//     },
+//     {
+//       auctionId: '아이템 5',
+//       imageUrl: '/harokIphone.png',
+//       title: '아이템 5',
+//       price: 10000,
+//       status: 'DELIVERY_WAITING',
+//     },
+//     // ... 추가 데이터
+//   ];
+
+//   setItems(mockData); // 여기서 setItems는 상태를 설정하는 함수라고 가정
+// }, []);

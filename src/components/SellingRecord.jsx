@@ -4,20 +4,25 @@ import { SellingItem } from './PurchaseItem';
 import { SellingContainer } from './ShoppingContainer';
 import { SellingDropdown } from './DropDown';
 
+const axiosInstance = axios.create({
+  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+});
+
 function SellingRecord() {
   const dealStatusOptions = {
     '': '전체',
     DELIVERY_WAITING: '배송 대기중',
     PURCHASE_COMPLETE_WAITING: '구매 확정 대기',
-    PURCHASE_COMPLETED: '구매 확정',
+    PURCHASE_COMPLETE: '구매 확정',
     PURCHASE_CANCEL: '취소',
+    SALE_FAIL: '판매 실패',
   };
 
   const [statusFilter, setStatusFilter] = useState('');
   const [items, setItems] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지
+  const [itemsPerPage, setItemsPerPage] = useState(0);
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -25,77 +30,26 @@ function SellingRecord() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    const fetchPagedItems = async () => {
-      try {
-        // 페이지 번호를 파라미터로 보내서 해당 페이지 데이터 요청
-        const response = await axios.get(`/api/deal/sales?page=${currentPage}`);
-        setItems(response.data.items); // 받아온 아이템들로 상태 업데이트
-        setTotalPages(response.data.totalPage); // 전체 페이지 수 업데이트
-        setItemsPerPage(response.data.cnt); // 페이지 당 아이템 수 업데이트
-      } catch (error) {
-        console.error('Fetching items failed', error);
-      }
-    };
-
-    fetchPagedItems();
-  }, [currentPage]); // currentPage가 바뀔 때마다 요청
-
-  useEffect(() => {
-    // 가짜 데이터를 불러오는 함수
-    const fetchMockItems = () => {
-      // 목 데이터
-      const mockData = [
-        {
-          autcionId: '1',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 1',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        {
-          auctionId: '2',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 2',
-          price: 20000,
-          status: 'PURCHASE_COMPLETE_WAITING',
-        },
-        {
-          auctionId: '3',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 3',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        {
-          auctionId: '4',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 4',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        {
-          auctionId: '5',
-          imageUrl: '/harokIphone.png',
-          title: '아이템 5',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-        },
-        // ... 추가 데이터
-      ];
-
-      // setState를 사용하여 items 상태 업데이트
-      setItems(mockData);
-    };
-
-    // 데이터를 불러오는 함수
     const fetchItems = async () => {
       try {
-        // API 요청 보내기
-        const response = await axios.get('/api/deal/sales');
+        const accessToken = import.meta.env.VITE_TOKEN;
+        // const page = currentPage; // 현재 페이지 번호
+        // const size = 1; // 한 페이지에 표시할 항목 수
+        // const status = 'all';
+        // const startDate = '2022-11-09'; // 시작 날짜
+        // const endDate = '2023-11-13'; // 끝 날짜
+
+        const response = await axiosInstance.get(
+          `/api/deal/sales?status=all&startDate=2022-11-09&endDate=2023-11-13&page=${currentPage}&size=8`,
+          { headers: { Authorization: `Bearer ${accessToken}` } },
+        );
 
         if (response.status === 200) {
-          // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
-          fetchMockItems();
+          setItems(response.data.data.sales);
+          console.log('요청 성공', response.data.data.sales);
+          setTotalPages(response.data.data.totalPage);
+          setItemsPerPage(response.data.data.cnt);
+          // 다른 페이징 관련 상태도 필요하다면 여기에서 업데이트
         } else {
           console.error('API 요청 실패:', response.status);
         }
@@ -104,8 +58,8 @@ function SellingRecord() {
       }
     };
 
-    fetchItems(); // 함수 호출
-  }, []);
+    fetchItems();
+  }, [currentPage]);
 
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
@@ -130,24 +84,6 @@ function SellingRecord() {
     return pages;
   };
 
-  useEffect(() => {
-    // 데이터를 불러오는 함수
-    const fetchItems = async () => {
-      try {
-        // const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기 (주석 처리)
-
-        // API 요청 보내기
-        const response = await axios.get('/api/deal/sales');
-
-        setItems(response.data); // 받아온 데이터로 items 상태 업데이트
-      } catch (error) {
-        console.error('Fetching items failed', error);
-      }
-    };
-
-    fetchItems(); // 함수 호출
-  }, []); // 컴포넌트가 마운트될 때 한 번만 호출
-
   return (
     <div>
       <div className="w-[50%] mx-auto">
@@ -160,7 +96,7 @@ function SellingRecord() {
             />
             {filteredItems.slice(startIndex, endIndex).map(item => (
               <SellingItem
-                key={item.auctionId}
+                auctionId={item.auctionId}
                 imageUrl={item.imageUrl}
                 title={item.title}
                 price={item.price}
@@ -205,3 +141,86 @@ export default SellingRecord;
 
 //   fetchItems(); // 함수 호출
 // }, []); // 컴포넌트가 마운트될 때 한 번만 호출
+
+// useEffect(() => {
+//   // 데이터를 불러오는 함수
+//   const fetchItems = async () => {
+//     try {
+//       // const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기 (주석 처리)
+
+//       // API 요청 보내기
+//       const response = await axios.get('/api/deal/sales');
+
+//       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
+//     } catch (error) {
+//       console.error('Fetching items failed', error);
+//     }
+//   };
+
+//   fetchItems(); // 함수 호출
+// }, []); // 컴포넌트가 마운트될 때 한 번만 호출
+
+// useEffect(() => {
+//   const mockData = {
+//     cnt: 5, // 총 아이템 수
+//     currentPage: 0, // 현재 페이지 인덱스 (0부터 시작)
+//     totalPage: 1, // 전체 페이지 수
+//   };
+
+//   const fetchPagedItems = async () => {
+//     try {
+//       // 페이지 번호를 파라미터로 보내서 해당 페이지 데이터 요청
+//       const response = await axiosInstance.get(
+//         `/api/deal/sales?page=0&size=1`,
+//       );
+
+//       if (response.status === 200) {
+//         // 상태 코드 200일 때 목 데이터 사용
+//         console.log('요청 성공');
+//         setItems(mockData.items); // 받아온 아이템들로 상태 업데이트
+//         setTotalPages(mockData.totalPage); // 전체 페이지 수 업데이트
+//         setItemsPerPage(mockData.cnt); // 페이지 당 아이템 수 업데이트
+//       } else {
+//         console.error('API 요청 실패:', response.status);
+//       }
+//     } catch (error) {
+//       console.error('Fetching items failed', error);
+//     }
+//   };
+
+//   fetchPagedItems();
+// }, [currentPage]); // currentPage가 바뀔 때마다 요청
+
+// useEffect(() => {
+//   // 데이터를 불러오는 함수
+//   const fetchItems = async () => {
+//     try {
+//       // 인증 토큰 값
+//       const accessToken =
+//         'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTc4LCJlbWFpbCI6Ik1lbGFueUBuYXZlci5jb20iLCJ1c2VybmFtZSI6Ik1lbGFueSIsIm5pY2tuYW1lIjoiTWVsYW55KDEyMykiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5OTg2MTYyNSwiZXhwIjoxNjk5OTQ4MDI1fQ._efjcoxvx5ozbwpivHacgoKOMoDT_APC3PyTQkhG0ww';
+//       const response = await axiosInstance.get(
+//         'api/deal/sales?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=1',
+//         {
+//           // 일단 여기를 고쳐야함 이렇게여??? ㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+//           headers: {
+//             // Authorization 헤더에 Bearer 토큰 추가
+//             Authorization: `Bearer ${accessToken}`,
+//           },
+//         },
+//       );
+
+//       if (response.status === 200) {
+//         // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
+//         console.log('요청 성공'); // 여기 콘솔
+//         console.log('response', response);
+//         setItems(response.data.data.auctions); // 그니까 리스폰스 바디가 ㄷ틀렷다..... 근데 머가 틀렷죠???
+//       } else {
+//         console.error('API 요청 실패:', response.status);
+//       }
+//     } catch (error) {
+//       console.error('API 요청 실패:', error);
+//     }
+//   };
+
+//   fetchItems(); // 함수 호출
+// }, []);

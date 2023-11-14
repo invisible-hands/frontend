@@ -16,83 +16,54 @@ import {
   SellingItem,
 } from '../components/PurchaseItem';
 
+const axiosInstance = axios.create({
+  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+});
+
 function DefaultContent() {
   // const [items, setItems] = useState([]);
+
   const [purchases, setPurchases] = useState([]);
   const [bids, setBids] = useState([]);
   const [sales, setSales] = useState([]);
 
   useEffect(() => {
-    // 각 API 호출이 성공했을 때 사용할 목 데이터
-    const mockData = {
-      purchases: [
-        {
-          auctionId: '2',
-          imageUrl: '/harokIphone.png',
-          title: '아이폰',
-          price: 20000,
-          status: 'PURCHASE_COMPLETE_WAITING',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-      ],
-      bids: [
-        {
-          auctionId: '4',
-          imageUrl: '/harokIphone.png',
-          title: '아이폰 3',
-          price: 20000,
-          status: 'AUCTION_PROGRESS',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-      ],
-      sales: [
-        {
-          auctionId: '1',
-          imageUrl: '/harokIphone.png',
-          title: '아이폰',
-          price: 10000,
-          status: 'DELIVERY_WAITING',
-          currentPrice: 50000,
-          myBidPrice: 50100,
-          time: '8:55:38',
-        },
-      ],
+    const handleResponse = (response, setState) => {
+      if (response.status === 200) {
+        setState(response.data.data.auctions);
+        console.log('요청 성공', response.data.data.auctions);
+      } else {
+        console.error('API 요청 실패:', response.status);
+      }
     };
+    const fetchItems = async () => {
+      const accessToken = import.meta.env.VITE_TOKEN;
+      const headers = { Authorization: `Bearer ${accessToken}` };
 
-    // 각각의 API를 호출하여 데이터를 가져오는 함수
-    const fetchData = async () => {
       try {
-        // purchases API 호출
-        const purchasesResponse = await axios.get('/api/deal/purchases');
-        if (purchasesResponse.status === 200) {
-          // API 성공 시 목 데이터 사용
-          setPurchases(mockData.purchases);
-        }
+        const responsePurchases = await axiosInstance.get(
+          `/api/deal/purchases?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=1`,
+          { headers },
+        );
+        handleResponse(responsePurchases, setPurchases);
 
-        // bids API 호출
-        const bidsResponse = await axios.get('/api/deal/bids');
-        if (bidsResponse.status === 200) {
-          // API 성공 시 목 데이터 사용
-          setBids(mockData.bids);
-        }
+        const responseBids = await axiosInstance.get(
+          `/api/deal/bids?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=8`,
+          { headers },
+        );
+        handleResponse(responseBids, setBids);
 
-        // sales API 호출
-        const salesResponse = await axios.get('/api/deal/sales');
-        if (salesResponse.status === 200) {
-          // API 성공 시 목 데이터 사용
-          setSales(mockData.sales);
-        }
+        const responseSales = await axiosInstance.get(
+          `/api/deal/sales?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=8`,
+          { headers },
+        );
+        handleResponse(responseSales, setSales);
       } catch (error) {
-        console.error('Fetching data failed', error);
-        // API 요청에 실패하면 오류 처리를 해야 할 수도 있어
+        console.error('API 요청 실패:', error);
       }
     };
 
-    fetchData();
+    fetchItems();
   }, []);
 
   return (

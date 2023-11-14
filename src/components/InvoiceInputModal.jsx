@@ -2,10 +2,14 @@ import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
+const axiosInstance = axios.create({
+  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+});
+
+function InvoiceInputModal({ isModalOpen, setIsModalOpen, auctionId }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [trackingNumber, setTrackingNumber] = useState('');
-  const [courier, setCourier] = useState('postOffice'); // 초기값 설정
+  const [invoice, setInvoice] = useState('');
+  const [deliveryCompany, setDeliveryCompany] = useState('postOffice'); // 초기값 설정
 
   const modalRef = useRef();
   const closeModal = () => {
@@ -26,12 +30,25 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.post('/api/delivery', {
-        trackingNumber,
-        courier,
-      });
+      // 인증 토큰 값
+      const accessToken = import.meta.env.VITE_TOKEN;
+
+      const response = await axiosInstance.post(
+        '/api/delivery',
+        {
+          invoice,
+          deliveryCompany,
+          auctionId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
 
       const responseData = response.data;
+      console.log(response.data);
 
       // API 요청 성공 시 처리
       if (responseData.status === 'success') {
@@ -45,6 +62,7 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
       console.error('API 요청 실패:', error);
     }
   };
+  // 이렇게 날리고 저 트래킹 넘버랑 택배 받아요
 
   return (
     <div>
@@ -85,8 +103,8 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
                         name="courier"
                         id="courier"
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        value={courier}
-                        onChange={e => setCourier(e.target.value)}
+                        value={deliveryCompany}
+                        onChange={e => setDeliveryCompany(e.target.value)}
                       >
                         <option value="postOffice">우체국택배</option>
                         <option value="cj">CJ대한통운</option>
@@ -109,8 +127,8 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
                         id="trackingNumber"
                         placeholder="송장번호를 입력하세요."
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        value={trackingNumber}
-                        onChange={e => setTrackingNumber(e.target.value)}
+                        value={invoice}
+                        onChange={e => setInvoice(e.target.value)}
                       />
                     </div>
                   </div>
@@ -143,6 +161,7 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen }) {
 InvoiceInputModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
+  auctionId: PropTypes.number.isRequired,
 };
 
 export default InvoiceInputModal;

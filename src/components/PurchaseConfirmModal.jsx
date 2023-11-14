@@ -2,9 +2,14 @@ import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-function PurchaseConfirmModal({ isModalOpen, setIsModalOpen }) {
+const axiosInstance = axios.create({
+  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+});
+
+function PurchaseConfirmModal({ isModalOpen, setIsModalOpen, dealId }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const modalRef = useRef();
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -23,13 +28,17 @@ function PurchaseConfirmModal({ isModalOpen, setIsModalOpen }) {
 
   const handleConfirm = async () => {
     try {
-      const dealId = '0120123';
-
+      console.log('dealId2', dealId);
+      const accessToken = import.meta.env.VITE_TOKEN;
       // 서버에 구매 확정 요청 보내기
-      const response = await axios.put(`/api/deal/${dealId}`, {
-        status: 'PURCHASE_COMPLETED', // 변경할 상태
-      });
 
+      const response = await axiosInstance.put(
+        `/api/deal/${dealId}`,
+        {},
+        { headers: { Authorization: `Bearer ${accessToken}` } },
+      );
+
+      console.log('responseData', response.data);
       const responseData = response.data;
 
       // API 요청 성공 시 처리
@@ -104,6 +113,7 @@ function PurchaseConfirmModal({ isModalOpen, setIsModalOpen }) {
 PurchaseConfirmModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
+  dealId: PropTypes.number.isRequired,
 };
 
 export default PurchaseConfirmModal;
