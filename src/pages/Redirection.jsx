@@ -16,9 +16,6 @@ function Redirection() {
           `${import.meta.env.VITE_APP_URL}/user/login/kakao?code=${code}`,
         );
         logIn(response.data.data.nickname, response.data.data.accessToken);
-        // localStorage.setItem('loggedIn', 'true');
-        // localStorage.setItem('nickname', response.data.data.nickname);
-        // localStorage.setItem('accessToken', response.data.data.accessToken);
 
         navigate('/');
       } catch (error) {
@@ -30,17 +27,21 @@ function Redirection() {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-center text-2xl font-bold mb-6">LOGIN</h2>
+    <div>
+      <div className="fixed inset-0 z-40 bg-black opacity-50" />
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h2 className="text-center text-2xl font-bold mb-6">LOGIN</h2>
 
-        <div className="mb-8" />
-        <p className="text-center text-sm font-['Apple SD Gothic Neo'] text-gray-400">
-          로그인 중입니다. 잠시만 기다려주세요!
-        </p>
+            <div className="mb-8" />
+            <p className="text-center text-sm font-['Apple SD Gothic Neo'] text-gray-400">
+              로그인 중입니다. 잠시만 기다려주세요!
+            </p>
+          </div>
+        </div>
       </div>
     </div>
-    // 모달로 css 변경 필요
   );
 }
 
