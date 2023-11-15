@@ -17,10 +17,10 @@ function Sidebar() {
       <ul className="space-y-2 p-4 pl-8">
         <li className="block text-black font-extrabold text-2xl hover:bg-gray-200 p-2 rounded">
           <a
-            href="/mypage"
+            href="/profile"
             onClick={e => {
               e.preventDefault();
-              goToPage('/mypage');
+              goToPage('/profile');
             }}
           >
             프로필 정보
@@ -28,10 +28,10 @@ function Sidebar() {
         </li>
         <li className="block text-black font-extrabold text-2xl hover:bg-gray-200 p-2 rounded">
           <a
-            href="/mypage/shopping"
+            href="/profile/shopping"
             onClick={e => {
               e.preventDefault();
-              goToPage('/mypage/shopping');
+              goToPage('/profile/shopping');
             }}
           >
             쇼핑 정보
@@ -40,10 +40,10 @@ function Sidebar() {
         <div className="ml-4">
           <li className="block text-black font-medium text-xl hover:bg-gray-200 p-2 rounded">
             <a
-              href="/mypage/shopping/purchase"
+              href="/profile/shopping/purchase"
               onClick={e => {
                 e.preventDefault();
-                goToPage('/mypage/shopping/purchase');
+                goToPage('/profile/shopping/purchase');
               }}
             >
               구매 목록
@@ -51,10 +51,10 @@ function Sidebar() {
           </li>
           <li className="block text-black font-medium text-xl hover:bg-gray-200 p-2 rounded">
             <a
-              href="/mypage/shopping/auction"
+              href="/profile/shopping/auction"
               onClick={e => {
                 e.preventDefault();
-                goToPage('/mypage/shopping/auction');
+                goToPage('/profile/shopping/auction');
               }}
             >
               경매 목록
@@ -62,10 +62,10 @@ function Sidebar() {
           </li>
           <li className="block text-black font-medium text-xl hover:bg-gray-200 p-2 rounded">
             <a
-              href="/mypage/shopping/selling"
+              href="/profile/shopping/selling"
               onClick={e => {
                 e.preventDefault();
-                goToPage('/mypage/shopping/selling');
+                goToPage('/profile/shopping/selling');
               }}
             >
               판매 목록

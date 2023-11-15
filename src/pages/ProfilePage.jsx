@@ -330,258 +330,266 @@ function ProfilePage() {
           </div>
         </div>
       )}
-
       {/* 프로필 정보 수정 섹션 */}
-      <div className="w-full">
-        <div className="mb-2">
-          {profileImage ? (
-            <img
-              src={profileImage}
-              alt="프로필 이미지"
-              className="w-32 h-32 rounded-full my-2"
+      <div className="w-full flex">
+        <div className="flex-1">
+          {' '}
+          <div className="mb-2">
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="프로필 이미지"
+                className="w-32 h-32 rounded-full my-2"
+              />
+            ) : (
+              <img
+                src={profileImg}
+                alt="프로필 이미지"
+                className="w-32 h-32 rounded-full my-2 border-solid border-2 border-blue2"
+              />
+            )}
+          </div>
+          <div className="mb-2">
+            <input
+              type="text"
+              id="name"
+              value={name}
+              readOnly
+              placeholder="이름"
+              disabled
+              className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
             />
-          ) : (
-            <img
-              src={profileImg}
-              alt="프로필 이미지"
-              className="w-32 h-32 rounded-full my-2 border-solid border-2 border-blue2"
+          </div>
+          <div className="mb-2">
+            <input
+              type="text"
+              id="nickname"
+              value={nickname}
+              onChange={handleNicknameChange}
+              placeholder="닉네임"
+              className={`mb-2 px-2 py-1 rounded border-2 ${
+                nicknameError ? 'border-red-500' : 'border-gray-300'
+              }`}
+              data-te-input-showcounter="true"
+              maxLength="12"
             />
-          )}
-        </div>
-        <div className="mb-2">
-          <input
-            type="text"
-            id="name"
-            value={name}
-            readOnly
-            placeholder="이름"
-            disabled
-            className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
-          />
-        </div>
-        <div className="mb-2">
-          <input
-            type="text"
-            id="nickname"
-            value={nickname}
-            onChange={handleNicknameChange}
-            placeholder="닉네임"
-            className={`mb-2 px-2 py-1 rounded border-2 ${
-              nicknameError ? 'border-red-500' : 'border-gray-300'
-            }`}
-            data-te-input-showcounter="true"
-            maxLength="12"
-          />
-          <button
-            type="button"
-            disabled={nicknameError || !nickname || isUpdatingNickname}
-            onClick={updateNickname}
-            className={`ml-2 ${
-              nicknameError || !nickname ? 'bg-grayish' : 'bg-deepblue2'
-            } text-white px-2 py-1 rounded`}
-          >
-            {isUpdatingNickname ? '저장 중...' : '저장'}
-          </button>
-          {nicknameError && (
-            <p className="text-red-500 text-xs">{nicknameError}</p>
-          )}
-        </div>
-        <div className="mb-2">
-          <input
-            type="email"
-            id="email"
-            value={email}
-            readOnly
-            placeholder="이메일"
-            disabled
-            className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
-          />
-        </div>
-        <input
-          type="text"
-          id="postcode"
-          value={postcode}
-          readOnly
-          placeholder="우편번호"
-          disabled
-          className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
-        />
-        <div className="mb-2">
-          <input
-            type="text"
-            id="address"
-            value={address}
-            readOnly
-            placeholder="배송지"
-            disabled
-            className="px-2 py-1 rounded border-2 border-gray-300"
-          />
-          <TERipple rippleColor="light" rippleCentered>
             <button
               type="button"
-              className="bg-deepblue2 text-white px-2 py-1 rounded ml-2"
-              onClick={openAddressModal}
+              disabled={nicknameError || !nickname || isUpdatingNickname}
+              onClick={updateNickname}
+              className={`ml-2 ${
+                nicknameError || !nickname ? 'bg-grayish' : 'bg-deepblue2'
+              } text-white px-2 py-1 rounded`}
             >
-              검색
+              {isUpdatingNickname ? '저장 중...' : '저장'}
             </button>
-          </TERipple>
-        </div>
-
-        {/* 상세 주소 입력란 */}
-        <div className="mb-2">
-          <input
-            type="text"
-            id="addressDetail"
-            value={addressDetail}
-            onChange={handleAddressDetailChange}
-            placeholder="상세 주소 입력"
-            className={`truncate flex-1 mb-2 px-2 py-1 rounded border-2 ${
-              addressDetailError ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
-          <button
-            type="button"
-            disabled={
-              !postcode || !address || !addressDetail || isUpdatingAddress
-            }
-            onClick={updateAddress}
-            className={`ml-2 ${
-              !postcode || !address || !addressDetail
-                ? 'bg-grayish'
-                : 'bg-deepblue2'
-            } text-white px-2 py-1 rounded`}
-          >
-            {isUpdatingAddress ? '저장 중...' : '저장'}
-          </button>
-          {addressDetailError && (
-            <p className="text-red-500 text-xs">{addressDetailError}</p>
-          )}
-        </div>
-        {/* 계좌번호 및 은행 선택 드롭다운 */}
-        <div className="mb-2">
-          <select
-            value={bankName}
-            onChange={e => setBankName(e.target.value)}
-            className="bg-grayish text-deepblue2 px-2 py-1 rounded mr-2"
-          >
-            <option value="">은행 선택</option>
-            {bankOptions.map(option => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            id="bankAccount"
-            value={bankAccount}
-            onChange={handleBankAccountChange}
-            placeholder="계좌번호"
-            className={`flex-1 px-2 py-1 rounded border-2 ${
-              bankAccountError ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
-          <button
-            type="button"
-            onClick={updateAccountInfo}
-            disabled={
-              !bankAccount || !bankName || isUpdatingAccount || bankAccountError
-            } // 에러가 있을 때 버튼 비활성화
-            className={`ml-2 ${
-              !bankAccount || !bankName || bankAccountError
-                ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-deepblue2'
-            } text-white px-2 py-1 rounded`}
-          >
-            {isUpdatingAccount ? '저장 중...' : '저장'}
-          </button>
-          {bankAccountError && (
-            <p className="text-red-500 text-xs mb-2 py-1">{bankAccountError}</p> // 에러 메시지 출력
-          )}
-        </div>
-        {/* 가상 머니 충전 모달 */}
-        {isChargeModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="modal max-w-md bg-white p-4 rounded shadow-lg flex flex-col">
-              <button
-                type="button"
-                className="text-deepblue1 self-end m-3"
-                onClick={closeChargeModal}
-              >
-                <FaTimes size={20} />
-              </button>
-              <input
-                type="number"
-                value={chargeAmount}
-                onChange={e => setChargeAmount(e.target.value)}
-                placeholder="충전 금액 입력"
-                className="mb-4 px-2 py-1 rounded border-2 border-gray-300 w-full"
-              />
-              <button
-                type="button"
-                onClick={handleCharge}
-                className="bg-deepblue2 text-white px-4 py-2 rounded w-full"
-              >
-                충전하기
-              </button>
-            </div>
+            {nicknameError && (
+              <p className="text-red-500 text-xs">{nicknameError}</p>
+            )}
           </div>
-        )}
-        <div className="mb-2">
-          <input
-            type="text"
-            id="virtualMoney"
-            value={virtualMoney}
-            readOnly
-            className="bg-gray-100 text-gray-500 px-2 py-1 rounded"
-          />
-          <button
-            type="button"
-            onClick={openChargeModal}
-            className="bg-deepblue2 text-white px-2 py-1 rounded"
-          >
-            충전
-          </button>
-        </div>
-        <div className="mb-4">
-          <p className="text-sm text-left">
-            <strong>약관 동의서:</strong>
-            <br />
-            본 쇼핑몰의 이용자는 아래의 약관 내용에 동의한 것으로 간주합니다.
-            <br />
-            모든 제품의 주문과 환불은 쇼핑몰의 정책에 따라 진행됩니다.
-            <br />
-            개인정보는 보안을 위해 최선을 다해 보호하며, 제3자에게 제공되지
-            않습니다.
-            <br />
-            본 약관은 사전 통보 없이 변경될 수 있으며, 변경된 약관은 쇼핑몰
-            사이트에 공지됩니다.
-            <br />
-            문제 발생 시, 본 약관 및 관련 법률에 따라 처리됩니다.
-          </p>
-          <label htmlFor="termsCheckbox" className="block text-left mt-2">
+          <div className="mb-2">
             <input
-              type="checkbox"
-              id="termsCheckbox"
-              checked={agreedToTerms}
-              onChange={toggleTermsAgreement}
-              disabled={isUserRole}
-              className="mr-2"
+              type="email"
+              id="email"
+              value={email}
+              readOnly
+              placeholder="이메일"
+              disabled
+              className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
             />
-            약관에 동의합니다
-          </label>
-        </div>
-        <div className="mb-4">
-          <button
-            type="submit"
-            disabled={!canActivateAccount()}
-            onClick={activateAccount}
-            className={`bg-deepblue2 text-white px-4 py-2 rounded ${
-              !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            계정 활성화
-          </button>
+          </div>
+          <div className="mb-2">
+            <input
+              type="text"
+              id="postcode"
+              value={postcode}
+              readOnly
+              placeholder="우편번호"
+              disabled
+              className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
+            />
+          </div>
+          <div className="mb-2">
+            <input
+              type="text"
+              id="address"
+              value={address}
+              readOnly
+              placeholder="배송지"
+              disabled
+              className="px-2 py-1 rounded border-2 border-gray-300"
+            />
+            <TERipple rippleColor="light" rippleCentered>
+              <button
+                type="button"
+                className="bg-deepblue2 text-white px-2 py-1 rounded ml-2"
+                onClick={openAddressModal}
+              >
+                검색
+              </button>
+            </TERipple>
+          </div>
+          {/* 상세 주소 입력란 */}
+          <div className="mb-2">
+            <input
+              type="text"
+              id="addressDetail"
+              value={addressDetail}
+              onChange={handleAddressDetailChange}
+              placeholder="상세 주소 입력"
+              className={`truncate flex-1 mb-2 px-2 py-1 rounded border-2 ${
+                addressDetailError ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            <button
+              type="button"
+              disabled={
+                !postcode || !address || !addressDetail || isUpdatingAddress
+              }
+              onClick={updateAddress}
+              className={`ml-2 ${
+                !postcode || !address || !addressDetail
+                  ? 'bg-grayish'
+                  : 'bg-deepblue2'
+              } text-white px-2 py-1 rounded`}
+            >
+              {isUpdatingAddress ? '저장 중...' : '저장'}
+            </button>
+            {addressDetailError && (
+              <p className="text-red-500 text-xs">{addressDetailError}</p>
+            )}
+          </div>
+          {/* 계좌번호 및 은행 선택 드롭다운 */}
+          <div className="mb-2">
+            <select
+              value={bankName}
+              onChange={e => setBankName(e.target.value)}
+              className="bg-grayish text-deepblue2 px-2 py-1 rounded mr-2"
+            >
+              <option value="">은행 선택</option>
+              {bankOptions.map(option => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <input
+              type="text"
+              id="bankAccount"
+              value={bankAccount}
+              onChange={handleBankAccountChange}
+              placeholder="계좌번호"
+              className={`flex-1 px-2 py-1 rounded border-2 ${
+                bankAccountError ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            <button
+              type="button"
+              onClick={updateAccountInfo}
+              disabled={
+                !bankAccount ||
+                !bankName ||
+                isUpdatingAccount ||
+                bankAccountError
+              } // 에러가 있을 때 버튼 비활성화
+              className={`ml-2 ${
+                !bankAccount || !bankName || bankAccountError
+                  ? 'bg-gray-300 cursor-not-allowed'
+                  : 'bg-deepblue2'
+              } text-white px-2 py-1 rounded`}
+            >
+              {isUpdatingAccount ? '저장 중...' : '저장'}
+            </button>
+            {bankAccountError && (
+              <p className="text-red-500 text-xs mb-2 py-1">
+                {bankAccountError}
+              </p> // 에러 메시지 출력
+            )}
+          </div>
+          {/* 가상 머니 충전 모달 */}
+          {isChargeModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+              <div className="modal max-w-md bg-white p-4 rounded shadow-lg flex flex-col">
+                <button
+                  type="button"
+                  className="text-deepblue1 self-end m-3"
+                  onClick={closeChargeModal}
+                >
+                  <FaTimes size={20} />
+                </button>
+                <input
+                  type="number"
+                  value={chargeAmount}
+                  onChange={e => setChargeAmount(e.target.value)}
+                  placeholder="충전 금액 입력"
+                  className="mb-4 px-2 py-1 rounded border-2 border-gray-300 w-full"
+                />
+                <button
+                  type="button"
+                  onClick={handleCharge}
+                  className="bg-deepblue2 text-white px-4 py-2 rounded w-full"
+                >
+                  충전하기
+                </button>
+              </div>
+            </div>
+          )}
+          <div className="mb-2">
+            <input
+              type="text"
+              id="virtualMoney"
+              value={virtualMoney}
+              readOnly
+              className="bg-gray-100 text-gray-500 px-2 py-1 rounded"
+            />
+            <button
+              type="button"
+              onClick={openChargeModal}
+              className="bg-deepblue2 text-white px-2 py-1 rounded"
+            >
+              충전
+            </button>
+          </div>
+          <div className="mb-4">
+            <p className="text-sm text-left">
+              <strong>약관 동의서:</strong>
+              <br />
+              본 쇼핑몰의 이용자는 아래의 약관 내용에 동의한 것으로 간주합니다.
+              <br />
+              모든 제품의 주문과 환불은 쇼핑몰의 정책에 따라 진행됩니다.
+              <br />
+              개인정보는 보안을 위해 최선을 다해 보호하며, 제3자에게 제공되지
+              않습니다.
+              <br />
+              본 약관은 사전 통보 없이 변경될 수 있으며, 변경된 약관은 쇼핑몰
+              사이트에 공지됩니다.
+              <br />
+              문제 발생 시, 본 약관 및 관련 법률에 따라 처리됩니다.
+            </p>
+            <label htmlFor="termsCheckbox" className="block text-left mt-2">
+              <input
+                type="checkbox"
+                id="termsCheckbox"
+                checked={agreedToTerms}
+                onChange={toggleTermsAgreement}
+                disabled={isUserRole}
+                className="mr-2"
+              />
+              약관에 동의합니다
+            </label>
+          </div>
+          <div className="mb-4">
+            <button
+              type="submit"
+              disabled={!canActivateAccount()}
+              onClick={activateAccount}
+              className={`bg-deepblue2 text-white px-4 py-2 rounded ${
+                !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              계정 활성화
+            </button>
+          </div>
         </div>
       </div>
     </div>
