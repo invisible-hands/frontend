@@ -51,7 +51,7 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen, auctionId }) {
       console.log(response.data);
 
       // API 요청 성공 시 처리
-      if (responseData.status === 'success') {
+      if (response.status === 200) {
         setIsSubmitted(true);
       } else {
         // 실패 시 처리
@@ -62,7 +62,13 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen, auctionId }) {
       console.error('API 요청 실패:', error);
     }
   };
-  // 이렇게 날리고 저 트래킹 넘버랑 택배 받아요
+
+  useEffect(() => {
+    if (isSubmitted) {
+      // isSubmitted가 true로 변경되었을 때 페이지 리프레시 수행
+      window.location.reload();
+    }
+  }, [isSubmitted]);
 
   return (
     <div>

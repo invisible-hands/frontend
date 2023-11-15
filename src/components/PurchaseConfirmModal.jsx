@@ -42,7 +42,7 @@ function PurchaseConfirmModal({ isModalOpen, setIsModalOpen, dealId }) {
       const responseData = response.data;
 
       // API 요청 성공 시 처리
-      if (responseData.status === 'success') {
+      if (response.status === 200) {
         setIsSubmitted(true);
       } else {
         // 실패 시 처리
@@ -53,6 +53,13 @@ function PurchaseConfirmModal({ isModalOpen, setIsModalOpen, dealId }) {
       console.error('API 요청 실패:', error);
     }
   };
+
+  useEffect(() => {
+    if (isSubmitted) {
+      // isSubmitted가 true로 변경되었을 때 페이지 리프레시 수행
+      window.location.reload();
+    }
+  }, [isSubmitted]);
 
   return (
     <div>
@@ -117,41 +124,3 @@ PurchaseConfirmModal.propTypes = {
 };
 
 export default PurchaseConfirmModal;
-
-// const handleConfirm = async () => {
-//   try {
-//     const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
-
-//     if (!accessToken) {
-//       alert('로그인이 필요합니다.');
-//       window.location.href = '/';
-//       return;
-//     }
-
-//     // 서버에 구매 확정 요청 보내기
-//     const response = await axios.patch(
-//       '/api/deal/{dealId}', // 여기에 실제 API 엔드포인트를 넣으세요.
-//       {
-//         status: 'PURCHASE_COMPLETED', // 변경할 상태
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       },
-//     );
-
-//     const responseData = response.data;
-
-//     // API 요청 성공 시 처리
-//     if (responseData.status === 'success') {
-//       setIsSubmitted(true);
-//     } else {
-//       // 실패 시 처리
-//       console.error(responseData.message);
-//     }
-//   } catch (error) {
-//     // API 요청 실패 시 처리
-//     console.error('API 요청 실패:', error);
-//   }
-// };
