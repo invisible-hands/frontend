@@ -1,32 +1,17 @@
 import React from 'react';
+import ImageSlider from '../components/ImageSlider';
+import slidesData from '../data/slidesData';
+import HotPreview from '../components/preview/HotPreview';
+import NewPreview from '../components/preview/NewPreview';
+import DeadlinePreview from '../components/preview/DeadlinePreview';
 
 function MainPage() {
   return (
-    <div>
-      메인 페이지
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
-      <div>메인 페이지</div>
+    <div className="whitespace-nowrap max-w-screen-lg mx-auto">
+      <ImageSlider slides={slidesData} />
+      <HotPreview />
+      <DeadlinePreview />
+      <NewPreview />
     </div>
   );
 }
