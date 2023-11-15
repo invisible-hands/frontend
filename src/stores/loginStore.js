@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import axios from 'axios';
 
+
 const axiosInstance = axios.create({
   baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
 });
@@ -55,5 +56,6 @@ const useLoginStore = create(
     },
   ),
 );
+
 
 export default useLoginStore;

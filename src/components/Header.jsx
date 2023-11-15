@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import LoginModal from './LoginModal';
 import useModalStore from '../stores/modalStore';
 import useLoginStore from '../stores/loginStore';
@@ -8,7 +7,6 @@ import useLoginStore from '../stores/loginStore';
 function Header() {
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
   const { isModalOpen, openModal, closeModal } = useModalStore();
   const { loggedIn, nickName, logOut } = useLoginStore();
 
@@ -17,31 +15,8 @@ function Header() {
   };
 
   const handleSearch = async () => {
-    try {
-      const pageable = {
-        page: 0,
-        size: 1,
-      };
-
-      alert(`검색어: ${searchKeyword}`);
-
-      const response = await axios.get(
-        `https://k77ac60ee78b9a.user-app.krampoline.com/api/auction/search`,
-        {
-          params: {
-            keyword: searchKeyword,
-            page: pageable.page,
-            size: pageable.size,
-          },
-        },
-      );
-
-      if (response.data.status === 'Success') {
-        setSearchResults(response.data.data.items);
-      }
-    } catch (error) {
-      console.error('Error while searching:', error);
-    }
+    if (!searchKeyword.trim()) return;
+    navigate(`/search?keyword=${encodeURIComponent(searchKeyword)}`);
   };
 
   const handleProductRegistration = () => {
@@ -163,18 +138,6 @@ function Header() {
               상품 등록
             </button>
           </div>
-
-          {/* 검색 결과 */}
-          {searchResults.length > 0 && (
-            <div>
-              <h2>Search Results:</h2>
-              <ul>
-                {searchResults.map(item => (
-                  <li key={item.auctionId}>{item.title}</li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       </nav>
     </header>

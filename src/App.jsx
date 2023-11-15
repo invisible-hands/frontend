@@ -11,10 +11,15 @@ import './index.css';
 import Main from './main';
 import ErrorPage from './pages/ErrorPage';
 import Redirection from './pages/Redirection';
+import HotDetailPage from './pages/detail/HotDetailPage';
+import DeadlineDetailPage from './pages/detail/DeadlineDetailPage';
+import NewDetailPage from './pages/detail/NewDetailPage';
+import SearchDetailPage from './pages/detail/SearchDetailPage';
 // import useAuth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage';
+import MyShoppingPage from './pages/MyShoppingPage';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +66,30 @@ const router = createBrowserRouter([
       {
         path: '/bid/:productId',
         element: <BidPage />,
+      },
+      {
+        path: '/hot',
+        element: <HotDetailPage />,
+      },
+      {
+        path: '/deadline',
+        element: <DeadlineDetailPage />,
+      },
+      {
+        path: '/new',
+        element: <NewDetailPage />,
+      },
+      {
+        path: '/search',
+        element: <SearchDetailPage />,
+      },
+      {
+        path: '/profile/shopping',
+        element: <MyShoppingPage />,
+      },
+      {
+        path: '/profile/shopping/:recordType',
+        element: <MyShoppingPage />,
       },
     ],
   },
