@@ -13,7 +13,7 @@ function HotPreview() {
     const fetchDeadlineItems = async () => {
       try {
         const response = await axios.get(
-          'https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=0&size=3&sort=deadline,asc',
+          'https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=0&size=3&sort=deadline,asc&progressFilter=true',
         );
         setDeadlineItems(response.data.data.items);
       } catch (error) {

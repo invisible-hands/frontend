@@ -18,7 +18,7 @@ function SearchDetailPage() {
     const fetchSearchResults = async () => {
       try {
         const response = await axios.get(
-          `https://ka1425de5708ea.user-app.krampoline.com/api/auction/search?keyword=${keyword}&page=${page}&size=20`,
+          `https://ka1425de5708ea.user-app.krampoline.com/api/auction/search?keyword=${keyword}&page=${page}&size=20&progressFilter=false`,
         );
 
         if (response.data.status === 'Success') {

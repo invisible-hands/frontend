@@ -14,7 +14,7 @@ function DeadlineDetailPage() {
     const fetchDeadlineItems = async () => {
       try {
         const response = await axios.get(
-          `https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=${page}&size=20&sort=deadline,asc`,
+          `https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=${page}&size=20&sort=deadline,asc&progressFilter=true`,
         );
 
         if (response.data.status === 'Success') {
