@@ -21,6 +21,7 @@ function ProfilePage() {
   const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
   const [chargeAmount, setChargeAmount] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isUserRole, setIsUserRole] = useState(false);
 
   const [nicknameError, setNicknameError] = useState('');
   const [addressDetailError, setAddressDetailError] = useState('');
@@ -98,10 +99,18 @@ function ProfilePage() {
         setProfileImage(userData.profileImage);
         setNickname(userData.nickname);
         setEmail(userData.email);
+        setPostcode(userData.zipcode);
+        setAddress(userData.roadName);
+        setAddressDetail(userData.detailAddress);
+        setBankName(userData.bankName);
+        setBankAccount(userData.bankAccount);
         setVirtualMoney(userData.money);
 
         if (userData.role === 'USER') {
-          setAgreedToTerms(true); // 이미 USER 권한을 가진 경우 체크박스 활성화
+          setAgreedToTerms(true);
+          setIsUserRole(true);
+        } else {
+          setIsUserRole(false);
         }
 
         const errorMessage = validateNickname(userData.nickname);
@@ -556,7 +565,7 @@ function ProfilePage() {
               id="termsCheckbox"
               checked={agreedToTerms}
               onChange={toggleTermsAgreement}
-              disabled={agreedToTerms} // USER 일 경우 체크박스 비활성화
+              disabled={isUserRole}
               className="mr-2"
             />
             약관에 동의합니다
