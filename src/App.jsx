@@ -84,11 +84,11 @@ const router = createBrowserRouter([
         element: <SearchDetailPage />,
       },
       {
-        path: '/mypage/shopping',
+        path: '/profile/shopping',
         element: <MyShoppingPage />,
       },
       {
-        path: '/mypage/shopping/:recordType',
+        path: '/profile/shopping/:recordType',
         element: <MyShoppingPage />,
       },
     ],
