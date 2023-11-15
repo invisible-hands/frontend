@@ -14,12 +14,12 @@ import Redirection from './pages/Redirection';
 import HotDetailPage from './pages/detail/HotDetailPage';
 import DeadlineDetailPage from './pages/detail/DeadlineDetailPage';
 import NewDetailPage from './pages/detail/NewDetailPage';
-
+import SearchDetailPage from './pages/detail/SearchDetailPage';
 // import useAuth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage';
-import SearchDetailPage from './pages/detail/SearchDetailPage';
+import MyShoppingPage from './pages/MyShoppingPage';
 
 const router = createBrowserRouter([
   {
@@ -82,6 +82,14 @@ const router = createBrowserRouter([
       {
         path: '/search',
         element: <SearchDetailPage />,
+      },
+      {
+        path: '/mypage/shopping',
+        element: <MyShoppingPage />,
+      },
+      {
+        path: '/mypage/shopping/:recordType',
+        element: <MyShoppingPage />,
       },
     ],
   },
