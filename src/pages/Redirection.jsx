@@ -16,8 +16,9 @@ function Redirection() {
           `${import.meta.env.VITE_APP_URL}/user/login/kakao?code=${code}`,
         );
         logIn(response.data.data.nickname, response.data.data.accessToken);
-        localStorage.setItem('nickname', response.data.data.nickname);
-        localStorage.setItem('accessToken', response.data.data.accessToken);
+        // localStorage.setItem('loggedIn', 'true');
+        // localStorage.setItem('nickname', response.data.data.nickname);
+        // localStorage.setItem('accessToken', response.data.data.accessToken);
 
         navigate('/');
       } catch (error) {

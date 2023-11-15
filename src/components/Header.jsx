@@ -61,6 +61,7 @@ function Header() {
   };
 
   const handleLogout = () => {
+    console.log('로그아웃 눌리긴 하니? ');
     logOut();
   };
 
