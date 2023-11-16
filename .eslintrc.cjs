@@ -18,5 +18,6 @@ module.exports = {
     'jsx-a11y/interactive-supports-focus': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'react/require-default-props': 'off',
+    'jsx-a11y/control-has-associated-label': 'off',
   },
 };

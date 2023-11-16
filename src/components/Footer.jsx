@@ -3,16 +3,16 @@ import iconLogo from '../assets/bettingground.png';
 
 function Footer() {
   return (
-    <footer className="max-w-screen-lg mx-auto bg-neutral-100 text-center text-xs text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
-      <div className="mx-6 py-5 text-center md:text-left">
-        <div className="flex flex-wrap gap-8">
-          <div className="flex-1">
+    <footer className="mt-auto max-w-screen-lg mx-auto bg-neutral-100 text-center text-xs text-neutral-600 lg:text-left transition-all ease-in-out duration-300">
+      <div className="mx-4 py-3 text-center md:text-left transition-all ease-in-out duration-300 md:mx-6 md:py-5">
+        <div className="flex flex-wrap gap-8 transition-all ease-in-out duration-300">
+          <div className="flex-1 transition-all ease-in-out duration-300">
             <h6 className="flex items-center justify-center font-semibold uppercase md:justify-start">
               <img src={iconLogo} alt="Logo" className="mr-3 w-4 h-auto" />
               Betting Ground
             </h6>
           </div>
-          <div className="flex-2 flex flex-wrap gap-4">
+          <div className="flex-2 flex flex-wrap gap-4 transition-all ease-in-out duration-300">
             <h6 className="w-full flex justify-center font-semibold uppercase md:justify-start">
               Contact
             </h6>
@@ -74,14 +74,10 @@ function Footer() {
         </div>
       </div>
 
-      <div className="bg-neutral-200 p-6 text-center dark:bg-neutral-700">
-        <span>© 2023 Copyright:</span>
-        <a
-          className="font-semibold text-neutral-600 dark:text-neutral-400"
-          href="https://tw-elements.com/"
-        >
-          Betting Ground
-        </a>
+      <div className="bg-neutral-200 py-3 text-center dark:bg-neutral-700 transition-all ease-in-out duration-300 md:py-6">
+        <p className="font-semibold text-neutral-600 dark:text-neutral-400">
+          © 2023 Copyright: Betting Ground
+        </p>
       </div>
     </footer>
   );
