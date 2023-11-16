@@ -36,6 +36,7 @@ export default function SellerInfo({ auctionId }) {
       </div>
       <div className="flex justify-end">
         <span className="cursor-pointer text-sm">{`더보기 >`}</span>
+        {/* 판매자 목록을 확인할 수 있는 경로로 이동하기 */}
       </div>
       {data.data.auctionList
         .filter(
@@ -45,7 +46,6 @@ export default function SellerInfo({ auctionId }) {
         )
         .filter((auction, index) => index < 3)
         .map(auction => {
-          console.log('auction', auction);
           return (
             <div
               className="inline-block rounded-lg bg-whitish shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-blacktish-700"

@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { TERipple } from 'tw-elements-react';
 // import { useMutation } from '@tanstack/react-query';
-import { createAuction } from '../../queries/auctionQueries';
+// import { createAuction } from '../../queries/auctionQueries';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import useLoginStore from '../../stores/loginStore';
 
 export default function AuctionRegisterPage() {
-  const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTc4LCJlbWFpbCI6Ik1lbGFueUBuYXZlci5jb20iLCJ1c2VybmFtZSI6Ik1lbGFueSIsIm5pY2tuYW1lIjoiTWVsYW55KDEyMykiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTcwMDEyNjE2NiwiZXhwIjoxNzAwMjEyNTY2fQ.hkyLYNV3nRs0qnuO2U1A8EMC_ayWvz60hAU5JSYVeN4';
+  const { accessToken: token } = useLoginStore();
+  const API_URL = import.meta.env.VITE_APP_URL;
+  const navigate = useNavigate();
+
   const [files, setFiles] = useState([]);
   const [otherData, setOtherData] = useState({
     title: '',
@@ -30,16 +35,36 @@ export default function AuctionRegisterPage() {
     }
   };
 
+  const createAuction = (imageFiles, data, accessToken) => {
+    const dataSet = { ...data, tags: data.tags.trim().split(' ') };
+
+    const formData = new FormData();
+    for (let i = 0; i < imageFiles.length; i += 1) {
+      formData.append('images', imageFiles[i]);
+    }
+
+    formData.append(
+      'request',
+      new Blob([JSON.stringify(dataSet)], { type: 'application/json' }),
+    );
+
+    axios
+      .post(`${API_URL}/auction`, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(res => {
+        console.log(res.status, res.data);
+        navigate('/');
+      })
+      .catch(err => console.log(err));
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
-    try {
-      const res = createAuction(files, otherData, token);
-      if (res.status === 200) {
-        alert(res.message);
-      }
-    } catch (err) {
-      alert(err.message);
-    }
+    createAuction(files, otherData, token);
   };
 
   return (

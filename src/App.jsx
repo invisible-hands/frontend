@@ -40,11 +40,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/auction/:auctionId',
-        element: (
-          <ProtectedRoute>
-            <AuctionPage />
-          </ProtectedRoute>
-        ),
+        element: <AuctionPage />,
       },
       {
         path: '/profile',
@@ -64,7 +60,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/bid/:auctionId',
-        element: <BidPage />,
+        element: (
+          <ProtectedRoute>
+            <BidPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '/hot',

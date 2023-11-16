@@ -38,7 +38,9 @@ export default function AuctionPage() {
   if (auctionQuery.status === 'pending') return <div>로딩중...</div>;
   if (auctionQuery.status === 'error')
     return <div>{auctionQuery.error.message}</div>;
-
+  if (auctionQuery.status === 'success') {
+    console.log(auctionQuery.data.data.auctionInfo);
+  }
   return (
     <div className="flex justify-center">
       <div className="w-full lg:w-[1024px]">
@@ -80,7 +82,7 @@ export default function AuctionPage() {
             </TERipple>
             {/* 게시글 author면서 생성한 지 5분 이내에 만든 게시물이면 버튼을 보여준다 */}
             {loggedIn &&
-              userId === auctionQuery.data.data.auctionInfo.authorId &&
+              userId === auctionQuery.data.data.auctionInfo.sellerId &&
               isWithinFiveMinute(
                 auctionQuery.data.data.auctionInfo.createdAt,
               ) && (
@@ -144,8 +146,8 @@ export default function AuctionPage() {
       <DeleteConfirmModal
         showModal={showDeleteConfirmModal}
         setShowModal={setShowDeleteConfirmModal}
-        productName={auctionQuery.data.data.auctionInfo.title}
-        productId={auctionQuery.data.data.auctionInfo.auctionId}
+        auctionName={auctionQuery.data.data.auctionInfo.title}
+        auctionId={auctionQuery.data.data.auctionInfo.auctionId}
       />
 
       {/* 경매 기록 모달  */}

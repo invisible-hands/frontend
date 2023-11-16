@@ -16,7 +16,7 @@ export async function createAuction(files, otherData, token) {
     new Blob([JSON.stringify(dataSet)], { type: 'application/json' }),
   );
 
-  return axios.post(`${API_URL}/auction`, formData, {
+  axios.post(`${API_URL}/auction`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data',
