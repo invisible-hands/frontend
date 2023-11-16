@@ -9,10 +9,11 @@ import { fetchBidPage } from '../../queries/auctionQueries';
 
 // import { updateBidPrice } from '../../queries/bidQueries';
 import { calculateRemainTime } from '../../utils/timeUtils';
+import useLoginStore from '../../stores/loginStore';
+import BidHistory from '../../components/BidHistory';
 
 export default function BidPage() {
-  const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwNiwiZW1haWwiOiJtaWNoYWVsaGpAbmF0ZS5jb20iLCJ1c2VybmFtZSI6Iuqzve2YhOykgCIsIm5pY2tuYW1lIjoi6rO97ZiE7KSAKDMxNTM1NjA5MDcpIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDAwMjcxNTcsImV4cCI6MTcwMDExMzU1N30.BDi9G9Lz97NOAW64xCDZsVMq2auxIqjJdJ_teYcYnYQ';
+  const { accessToken } = useLoginStore();
   const { auctionId } = useParams();
   const API_URL = import.meta.env.VITE_APP_URL;
   const [showPayModal, setShowPayModal] = useState(false);
@@ -20,15 +21,8 @@ export default function BidPage() {
   const [newPrice, setNewPrice] = useState(0);
   const { status, error, data } = useQuery({
     queryKey: ['BidInfo', auctionId],
-    queryFn: () => fetchBidPage(auctionId, token),
+    queryFn: () => fetchBidPage(auctionId, accessToken),
   });
-
-  // const queryClient = useQueryClient();
-  // const mutation = useMutation({
-  //   mutationFn: (id, price, userToken) => updateBidPrice(id, price, userToken),
-  //   onSettled: () =>
-  //     queryClient.invalidateQueries({ queryKey: ['BidInfo', auctionId] }),
-  // });
 
   function updateBidPrice(id, price, userToken) {
     const url = `${API_URL}/auction/${id}/bid`;
@@ -48,7 +42,7 @@ export default function BidPage() {
         setShowBidSuccessModal(true);
       })
       .catch(err => {
-        console.log(err);
+        console.log(err.response.data.message);
       });
   }
 
@@ -85,7 +79,9 @@ export default function BidPage() {
             </p>
 
             <p>남은 시간 : {calculateRemainTime(data.data.endAuctionTime)}</p>
-            <p>입찰 가격(직접 입력 가능) </p>
+            <label>보유 포인트</label>
+            <input type="number" value={data.data.money} readOnly />
+            <label>입찰 가격(직접 입력 가능) </label>
             <input
               type="number"
               id="exampleFormControlInputNumber"
@@ -93,6 +89,7 @@ export default function BidPage() {
               value={newPrice}
               onChange={e => setNewPrice(e.target.value)}
             />
+
             <div>
               <TERipple rippleColor="white">
                 <button
@@ -136,9 +133,7 @@ export default function BidPage() {
 
         {/* <!-- 상품설명 --> */}
         <div>
-          <h2>상품 정보</h2>
-          <p>상품정보 내용</p>
-          <p>#태그들</p>
+          <BidHistory auctionId={auctionId} />
         </div>
         <div>
           <h2>약관</h2>
@@ -175,7 +170,7 @@ export default function BidPage() {
               type="button"
               className="inline-block rounded bg-deepblue1 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-deepblue2 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
               onClick={() => {
-                updateBidPrice(auctionId, newPrice, token);
+                updateBidPrice(auctionId, newPrice, accessToken);
               }}
             >
               상품 입찰하기
