@@ -12,12 +12,14 @@ const useLoginStore = create(
       loggedIn: false,
       nickName: null,
       accessToken: null,
+      userId: null,
 
-      logIn: (nickName, accessToken) => {
+      logIn: (nickName, accessToken, userId) => {
         set({
           loggedIn: true,
           nickName,
           accessToken,
+          userId,
         });
         console.log('상태 변경 후:', useLoginStore.getState());
       },
@@ -40,6 +42,7 @@ const useLoginStore = create(
               loggedIn: false,
               nickName: null,
               accessToken: null,
+              userId: null,
             });
             console.log('상태 변경 후:', useLoginStore.getState());
           } catch (error) {

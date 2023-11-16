@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { RxDotFilled } from 'react-icons/rx';
 import { useQuery } from '@tanstack/react-query';
 // import useModalStore from '../../stores/modalStore';
-// import useLoginStore from '../../stores/loginStore';
+import useLoginStore from '../../stores/loginStore';
 import PaymentConfirmModal from '../../components/PaymentConfirmModal';
 import PaymentModal from '../../components/PaymentModal';
 import {
@@ -21,7 +21,7 @@ import { fetchAuctionInfo } from '../../queries/auctionQueries';
 export default function AuctionPage() {
   const { auctionId } = useParams();
   const navigate = useNavigate();
-  // const { loggedIn } = useLoginStore();
+  const { loggedIn, userId } = useLoginStore();
   // const { openModal } = useModalStore();
 
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
@@ -34,8 +34,6 @@ export default function AuctionPage() {
     queryKey: ['auctionInfo', auctionId],
     queryFn: () => fetchAuctionInfo(auctionId),
   });
-
-  console.log(auctionQuery.data);
 
   if (auctionQuery.status === 'pending') return <div>로딩중...</div>;
   if (auctionQuery.status === 'error')
@@ -81,7 +79,8 @@ export default function AuctionPage() {
               </button>
             </TERipple>
             {/* 게시글 author면서 생성한 지 5분 이내에 만든 게시물이면 버튼을 보여준다 */}
-            {auctionQuery.data.data.authorCheck === true &&
+            {loggedIn &&
+              userId === auctionQuery.data.data.auctionInfo.authorId &&
               isWithinFiveMinute(
                 auctionQuery.data.data.auctionInfo.createdAt,
               ) && (
@@ -191,6 +190,7 @@ function ImageSlider({ slides }) {
   const goToSlide = slideIndex => {
     setcurrentIndex(slideIndex);
   };
+  if (slides.length === 0) return null;
 
   return (
     <div className="w-72">
