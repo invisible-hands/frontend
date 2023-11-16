@@ -42,7 +42,7 @@ function Header({ isLoggedIn, nickname }) {
 
   const handleProductRegistration = () => {
     if (loggedIn) {
-      navigate('/product/registration');
+      navigate('/auction/registration');
     } else {
       openModal();
     }
