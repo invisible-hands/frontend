@@ -4,17 +4,16 @@ import 'tw-elements-react/dist/css/tw-elements-react.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SignupPage from './pages/SignupPage';
-import ProductPage from './pages/ProductPage';
-import ProductRegistrationPage from './pages/ProductRegistrationPage';
+import AuctionPage from './pages/AuctionPage/AuctionPage';
+import AuctionRegisterPage from './pages/AuctionRegisterPage/AuctionRegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import './index.css';
 import Main from './main';
 import ErrorPage from './pages/ErrorPage';
 import Redirection from './pages/Redirection';
-// import useAuth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
-import BidPage from './pages/BidPage';
+import BidPage from './pages/BidPage/BidPage';
 
 const router = createBrowserRouter([
   {
@@ -31,14 +30,14 @@ const router = createBrowserRouter([
         element: <SignupPage />,
       },
       {
-        path: '/product/:productId',
-        element: <ProductPage />,
+        path: '/auction/register',
+        element: <AuctionRegisterPage />,
       },
       {
-        path: '/product/registration',
+        path: '/auction/:auctionId',
         element: (
           <ProtectedRoute>
-            <ProductRegistrationPage />
+            <AuctionPage />
           </ProtectedRoute>
         ),
       },
@@ -59,7 +58,7 @@ const router = createBrowserRouter([
         element: <Redirection />,
       },
       {
-        path: '/bid/:productId',
+        path: '/bid/:auctionId',
         element: <BidPage />,
       },
     ],
