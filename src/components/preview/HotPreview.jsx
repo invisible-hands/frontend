@@ -28,8 +28,8 @@ function HotPreview() {
     navigate('/hot');
   };
 
-  const goToProductDetail = productId => {
-    navigate(`/product/${productId}`);
+  const goToProductDetail = auctionId => {
+    navigate(`/auction/${auctionId}`);
   };
 
   return (

@@ -23,8 +23,8 @@ function NewPreview() {
     fetchNewItems();
   }, []);
 
-  const goToProductDetail = productId => {
-    navigate(`/product/${productId}`);
+  const goToProductDetail = auctionId => {
+    navigate(`/auction/${auctionId}`);
   };
 
   const handleRightArrowClick = () => {

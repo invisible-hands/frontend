@@ -28,8 +28,8 @@ function HotPreview() {
     navigate('/deadline');
   };
 
-  const goToDeadlineDetail = productId => {
-    navigate(`/product/${productId}`);
+  const goToDeadlineDetail = auctionId => {
+    navigate(`/auction/${auctionId}`);
   };
 
   return (

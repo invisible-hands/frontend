@@ -12,19 +12,6 @@ export function isWithinFiveMinute(birthTime) {
   return false;
 }
 
-// 포맷을 변경해주는 함수
-export function formatTime(duration) {
-  const hours = Math.floor(duration / 3600);
-  const minutes = Math.floor((duration / 3600) % 60);
-  const seconds = Math.floor(duration % 60);
-
-  const paddedHours = hours.toString().padStart(2, '0');
-  const paddedMinutes = minutes.toString().padStart(2, '0');
-  const paddedSeconds = seconds.toString().padStart(2, '0');
-
-  return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
-}
-
 // 경매 끝났는 지 확인하는 함수
 export function isAuctionEnd(endTime) {
   const now = dayjs();
@@ -37,14 +24,21 @@ export function isAuctionEnd(endTime) {
 }
 
 // 남은 시간을 확인하는 함수
-// 없으면 00:00:00을 반환, 남으면 12:34:56 형식으로 반환
-export function calculateRemainTime(startTime, duration) {
-  const now = dayjs();
-  const end = dayjs(startTime).add(duration, 'hour');
-  const difference = end.diff(now, 'second');
-  if (difference < 0) {
+export function calculateRemainTime(endTime) {
+  const end = dayjs(endTime);
+  const remain = end.diff(dayjs(), 'second');
+  if (remain < 0) {
     return '00:00:00';
   }
+  const hours = Math.floor(remain / 3600)
+    .toString()
+    .padStart(2, '0');
+  const minutes = Math.floor((remain % 3600) / 60)
+    .toString()
+    .padStart(2, '0');
+  const seconds = Math.floor(remain % 60)
+    .toString()
+    .padStart(2, '0');
 
-  return formatTime(difference);
+  return `${hours}:${minutes}:${seconds}`;
 }

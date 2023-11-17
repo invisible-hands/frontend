@@ -21,7 +21,7 @@ function Header() {
 
   const handleProductRegistration = () => {
     if (loggedIn) {
-      navigate('/product/registration');
+      navigate('/auction/register');
     } else {
       openModal();
     }
@@ -36,6 +36,7 @@ function Header() {
   };
 
   const handleLogout = () => {
+    console.log('로그아웃 눌리긴 하니? ');
     logOut();
   };
 

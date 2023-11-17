@@ -84,13 +84,13 @@ function ProfilePage() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const { token } = useLoginStore.getState();
+        const { accessToken } = useLoginStore.getState();
 
         const response = await axios.get(
           'https://ka1425de5708ea.user-app.krampoline.com/api/user',
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           },
         );
@@ -173,14 +173,14 @@ function ProfilePage() {
     setIsUpdatingNickname(true);
 
     try {
-      const { token } = useLoginStore.getState();
+      const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/nickname',
         { nickname },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );
@@ -205,14 +205,14 @@ function ProfilePage() {
     };
 
     try {
-      const { token } = useLoginStore.getState();
+      const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/address',
         addressData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );
@@ -230,14 +230,14 @@ function ProfilePage() {
     setIsUpdatingAccount(true);
 
     try {
-      const { token } = useLoginStore.getState();
+      const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/account',
         { bankName, bankAccount },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );
@@ -294,14 +294,14 @@ function ProfilePage() {
     if (!canActivateAccount()) return;
 
     try {
-      const { token } = useLoginStore.getState();
+      const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
         'https://ka1425de5708ea.user-app.krampoline.com/api/user/role',
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );
