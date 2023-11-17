@@ -1,23 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import useLoginStore from '../stores/loginStore';
+// import useLoginStore from '../stores/loginStore';
 
 function LoginModal({ isModalOpen, onClose }) {
   const REST_API_KEY = import.meta.env.VITE_KAKAO_JS_KEY;
-  const REDIRECT_URI = 'http://localhost:5173/redirection';
+  const REDIRECT_URI = `${window.location.origin}/redirection`;
   const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   const handleLoginLink = () => {
     window.location.href = link;
   };
-  const navigate = useNavigate();
-  const { loggedIn } = useLoginStore();
+  // const navigate = useNavigate();
+  // const { loggedIn } = useLoginStore();
 
   const handleClose = () => {
     onClose();
-    if (!loggedIn) {
-      navigate('/');
-    }
+    // if (!loggedIn) {
+    //   navigate('/');
+    // }
   };
 
   return (

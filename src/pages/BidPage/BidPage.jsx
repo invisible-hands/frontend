@@ -54,7 +54,8 @@ export default function BidPage() {
     }
   }, [data]);
 
-  if (status === 'pending') return <div>로딩중...</div>;
+  if (status === 'pending') return <div />;
+  if (status === 'pending' && !!accessToken) return <div>로딩중</div>;
   if (status === 'error') return <div>{error.message}</div>;
   if (status === 'success') console.log(data.data);
   return (

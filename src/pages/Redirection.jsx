@@ -21,7 +21,7 @@ function Redirection() {
           response.data.data.userId,
         );
 
-        navigate('/');
+        navigate(-1);
       } catch (error) {
         console.error('로그인 중 오류 발생:', error);
       }
