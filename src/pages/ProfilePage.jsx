@@ -5,6 +5,7 @@ import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
 import useLoginStore from '../stores/loginStore';
 import profileImg from '../assets/bettingground.png';
+import Sidebar from '../components/Sidebar';
 
 function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -332,6 +333,7 @@ function ProfilePage() {
       )}
       {/* 프로필 정보 수정 섹션 */}
       <div className="w-full flex">
+        <Sidebar />
         <div className="flex-1">
           {' '}
           <div className="mb-2">
