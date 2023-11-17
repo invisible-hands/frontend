@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TERipple } from 'tw-elements-react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import PaymentModal from '../../components/PaymentModal';
@@ -15,13 +15,15 @@ import BidHistory from '../../components/BidHistory';
 export default function BidPage() {
   const { accessToken } = useLoginStore();
   const { auctionId } = useParams();
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_APP_URL;
   const [showPayModal, setShowPayModal] = useState(false);
-  const [showBidSuccessModal, setShowBidSuccessModal] = useState(false);
+  const [showBidSuccessModal, setShowBidSuccessModal] = useState(true);
   const [newPrice, setNewPrice] = useState(0);
   const { status, error, data } = useQuery({
     queryKey: ['BidInfo', auctionId],
     queryFn: () => fetchBidPage(auctionId, accessToken),
+    enabled: !!accessToken,
   });
 
   function updateBidPrice(id, price, userToken) {
@@ -161,6 +163,7 @@ export default function BidPage() {
             <button
               type="button"
               className="inline-block rounded bg-deepblue1 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-deepblue2 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+              onClick={() => navigate(-1)}
             >
               입찰 안하기
             </button>

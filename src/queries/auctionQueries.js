@@ -24,18 +24,6 @@ export async function createAuction(files, otherData, token) {
   });
 }
 
-/*
-"title": "내가 만든 쿠키",
-  "content": "뉴진스가 아니라 제가 구운 쿠키 전혀 건강을 생각하지 않아 버터를 때려박았어요",
-  "itemCondition": "NEW",
-  "startPrice": 10000,
-  "instantPrice": 25000,
-  "duration": "DAY",
-  "tags": [
-    "아이폰", "애플", "갤럭시"
-  ]
-*/
-
 export async function purchaseInstant(id, userToken) {
   const url = `${API_URL}/auction/${id}/instant`;
   const config = {
@@ -55,13 +43,6 @@ export async function purchaseInstant(id, userToken) {
       console.log(err);
     });
 }
-
-// 즉시 결제
-// export async function purchaseInstant(auctionId) {
-//   return axios.post(`${API_URL}/auction/${auctionId}/instant`);
-// }
-
-// '상품 입찰하기' 페이지 구성에 필요한 데이터 받아오기 - 토큰 없는 버전
 
 export async function fetchBidPage(auctionId, token) {
   const { data } = await axios.get(`${API_URL}/auction/${auctionId}/bid`, {

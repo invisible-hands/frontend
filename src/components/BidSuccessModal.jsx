@@ -8,9 +8,11 @@ import {
   TEModalBody,
   TEModalFooter,
 } from 'tw-elements-react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export default function BidSuccessModal({ showModal, setShowModal }) {
+  const navigate = useNavigate();
   return (
     <TEModal show={showModal} setShow={setShowModal}>
       <TEModalDialog centered>
@@ -18,7 +20,7 @@ export default function BidSuccessModal({ showModal, setShowModal }) {
           <TEModalHeader>
             {/* <!--Modal title--> */}
             <h5 className="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200">
-              Modal title
+              입찰 성공
             </h5>
             {/* <!--Close button--> */}
             <button
@@ -44,23 +46,15 @@ export default function BidSuccessModal({ showModal, setShowModal }) {
             </button>
           </TEModalHeader>
           {/* <!--Modal body--> */}
-          <TEModalBody>Modal body text goes here.</TEModalBody>
+          <TEModalBody>입찰을 성공했습니다</TEModalBody>
           <TEModalFooter>
             <TERipple rippleColor="light">
               <button
                 type="button"
                 className="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
-                onClick={() => setShowModal(false)}
+                onClick={() => navigate('/profile/shopping/auction')}
               >
-                Close
-              </button>
-            </TERipple>
-            <TERipple rippleColor="light">
-              <button
-                type="button"
-                className="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-              >
-                Save changes
+                내 입찰 내역 확인하기
               </button>
             </TERipple>
           </TEModalFooter>
