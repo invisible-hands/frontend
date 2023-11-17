@@ -9,7 +9,9 @@ import {
   TEModalFooter,
 } from 'tw-elements-react';
 import PropTypes from 'prop-types';
-import { purchaseInstant } from '../queries/auctionQueries';
+import { useQuery } from '@tanstack/react-query';
+import { purchaseInstant, fetchBidPage } from '../queries/auctionQueries';
+import useLoginStore from '../stores/loginStore';
 
 export default function PaymentConfirmModal({
   showModal,
@@ -19,12 +21,16 @@ export default function PaymentConfirmModal({
   auctionName,
   auctionId,
 }) {
-  const { currentPoint, instantPoint } = point;
-  const remainValue = point.currentPoint - point.instantPoint;
-  const remainPoint = remainValue;
-  const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTc4LCJlbWFpbCI6Ik1lbGFueUBuYXZlci5jb20iLCJ1c2VybmFtZSI6Ik1lbGFueSIsIm5pY2tuYW1lIjoiTWVsYW55KDEyMykiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTcwMDAzNDgzOCwiZXhwIjoxNzAwMTIxMjM4fQ.r4uWEacBEyzqitCINNePGtDIoN0oN28klCgsdxF5pd8';
+  const { instantPoint } = point;
+  const { accessToken: token } = useLoginStore();
+  const { status, error, data } = useQuery({
+    queryKey: ['BidInfo', auctionId],
+    queryFn: () => fetchBidPage(auctionId, token),
+  });
 
+  if (status === 'pending') return <div>로딩중...</div>;
+  if (status === 'error') return <div>에러: {error.message}</div>;
+  if (status === 'success') console.log(data);
   return (
     <TEModal show={showModal} setShow={setShowModal}>
       <TEModalDialog centered>
@@ -65,7 +71,7 @@ export default function PaymentConfirmModal({
             <div className="px-responsive-modal-padding space-y-2">
               <div className="flex justify-between">
                 <span>보유중인 포인트</span>
-                <span>{currentPoint} point</span>
+                <span>{data.data.money} point</span>
               </div>
               <div className="flex justify-between">
                 <span>즉시 구매 금액</span>
@@ -73,9 +79,9 @@ export default function PaymentConfirmModal({
               </div>
               <div className="flex justify-between">
                 <span>잔여 포인트</span>
-                <span>{remainPoint} point</span>
+                <span>{data.data.money - instantPoint} point</span>
               </div>
-              {remainValue < 0 && (
+              {data.data.money - instantPoint < 0 && (
                 <div className="flex justify-center text-danger">
                   포인트가 부족합니다.
                 </div>
@@ -83,7 +89,7 @@ export default function PaymentConfirmModal({
             </div>
           </TEModalBody>
           <TEModalFooter className="flex justify-center">
-            {remainValue >= 0 ? (
+            {data.data.money - instantPoint >= 0 ? (
               <TERipple rippleColor="light" rippleCentered>
                 <button
                   type="button"

@@ -49,6 +49,9 @@ export async function purchaseInstant(id, userToken) {
       console.log(res);
     })
     .catch(err => {
+      if (err.response.data.status === 'NOT_ENOUGH_MONEY') {
+        alert('충전이 필요합니다');
+      }
       console.log(err);
     });
 }

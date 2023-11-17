@@ -97,7 +97,7 @@ export default function AuctionPage() {
                 </TERipple>
               )}
             {/* 게시글 author 아니면서 판매종료가 되지 않고, 5분이 지난 게시물 */}
-            {auctionQuery.data.data.authorCheck === false &&
+            {userId !== auctionQuery.data.data.auctionInfo.sellerId &&
               !isWithinFiveMinute(
                 auctionQuery.data.data.auctionInfo.createdAt,
               ) &&
