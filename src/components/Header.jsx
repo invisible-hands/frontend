@@ -21,7 +21,7 @@ function Header() {
 
   const handleProductRegistration = () => {
     if (loggedIn) {
-      navigate('/product/registration');
+      navigate('/auction/register');
     } else {
       openModal();
     }

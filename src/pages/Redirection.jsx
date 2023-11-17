@@ -15,7 +15,11 @@ function Redirection() {
         const response = await axios.get(
           `${import.meta.env.VITE_APP_URL}/user/login/kakao?code=${code}`,
         );
-        logIn(response.data.data.nickname, response.data.data.accessToken);
+        logIn(
+          response.data.data.nickname,
+          response.data.data.accessToken,
+          response.data.data.userId,
+        );
 
         navigate('/');
       } catch (error) {

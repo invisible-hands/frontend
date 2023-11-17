@@ -33,8 +33,8 @@ function NewDetailPage() {
     setPage(prevPage => prevPage + 1);
   };
 
-  const goToProductDetail = productId => {
-    navigate(`/product/${productId}`);
+  const goToProductDetail = auctionId => {
+    navigate(`/auction/${auctionId}`);
   };
 
   return (
