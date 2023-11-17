@@ -18,7 +18,7 @@ export default function BidPage() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_APP_URL;
   const [showPayModal, setShowPayModal] = useState(false);
-  const [showBidSuccessModal, setShowBidSuccessModal] = useState(true);
+  const [showBidSuccessModal, setShowBidSuccessModal] = useState(false);
   const [newPrice, setNewPrice] = useState(0);
   const { status, error, data } = useQuery({
     queryKey: ['BidInfo', auctionId],
