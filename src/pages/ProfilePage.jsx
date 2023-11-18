@@ -10,7 +10,6 @@ import Sidebar from '../components/Sidebar';
 function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState('');
-  const [name] = useState('');
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -350,17 +349,6 @@ function ProfilePage() {
                 className="w-32 h-32 rounded-full my-2 border-solid border-2 border-blue2"
               />
             )}
-          </div>
-          <div className="mb-2">
-            <input
-              type="text"
-              id="name"
-              value={name}
-              readOnly
-              placeholder="이름"
-              disabled
-              className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
-            />
           </div>
           <div className="mb-2">
             <input
