@@ -8,8 +8,8 @@ import profileImg from '../assets/bettingground.png';
 import Sidebar from '../components/Sidebar';
 
 function ProfilePage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState('');
+  const [originalNickname, setOriginalNickname] = useState('');
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -18,8 +18,6 @@ function ProfilePage() {
   const [bankName, setBankName] = useState('');
   const [bankAccount, setBankAccount] = useState('');
   const [virtualMoney, setVirtualMoney] = useState('');
-  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
-  const [chargeAmount, setChargeAmount] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isUserRole, setIsUserRole] = useState(false);
 
@@ -37,14 +35,18 @@ function ProfilePage() {
 
   const bankOptions = ['국민은행', '농협은행', '신한은행'];
 
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
+  const [chargeAmount, setChargeAmount] = useState('');
+
   // 모달 열기
   const openAddressModal = () => {
-    setIsModalOpen(true);
+    setIsAddressModalOpen(true);
   };
 
   // 모달 닫기
   const closeAddressModal = () => {
-    setIsModalOpen(false);
+    setIsAddressModalOpen(false);
   };
 
   const validateNickname = value => {
@@ -97,6 +99,7 @@ function ProfilePage() {
         console.log(userData);
 
         setProfileImage(userData.profileImage);
+        setOriginalNickname(userData.nickname);
         setNickname(userData.nickname);
         setEmail(userData.email);
         setPostcode(userData.zipcode);
@@ -105,16 +108,15 @@ function ProfilePage() {
         setBankName(userData.bankName);
         setBankAccount(userData.bankAccount);
         setVirtualMoney(userData.money);
-
-        if (userData.role === 'USER') {
-          setAgreedToTerms(true);
-          setIsUserRole(true);
-        } else {
-          setIsUserRole(false);
-        }
+        setAgreedToTerms(userData.role === 'USER');
+        setIsUserRole(userData.role === 'USER');
 
         const errorMessage = validateNickname(userData.nickname);
         setNicknameError(errorMessage);
+
+        if (!errorMessage) {
+          setNicknameSaved(true);
+        }
       } catch (error) {
         console.error('Error while fetching profile data:', error);
       }
@@ -126,7 +128,7 @@ function ProfilePage() {
   const handleNicknameChange = e => {
     const { value } = e.target;
     setNickname(value); // 닉네임 상태 업데이트
-    setNicknameSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
+    setNicknameSaved(value === originalNickname);
 
     // 유효성 검사를 통해 에러 메시지 업데이트
     const errorMessage = validateNickname(value);
@@ -315,7 +317,7 @@ function ProfilePage() {
   return (
     <div className="whitespace-nowrap max-w-screen-lg mx-auto">
       {/* 모달 */}
-      {isModalOpen && (
+      {isAddressModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="modal max-w-md bg-white p-4 rounded shadow-lg flex flex-col">
             <button
