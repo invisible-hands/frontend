@@ -14,6 +14,8 @@ function ProfilePage() {
   const [originalPostcode, setOriginalPostcode] = useState('');
   const [originalAddress, setOriginalAddress] = useState('');
   const [originalAddressDetail, setOriginalAddressDetail] = useState('');
+  const [originalBankName, setOriginalBankName] = useState('');
+  const [originalBankAccount, setOriginalBankAccount] = useState('');
 
   const [profileImage, setProfileImage] = useState('');
   const [nickname, setNickname] = useState('');
@@ -108,6 +110,8 @@ function ProfilePage() {
         setOriginalPostcode(userData.zipcode);
         setOriginalAddress(userData.roadName);
         setOriginalAddressDetail(userData.detailAddress);
+        setOriginalBankName(userData.bankName);
+        setOriginalBankAccount(userData.bankAccount);
 
         setProfileImage(userData.profileImage);
         setNickname(userData.nickname);
@@ -135,12 +139,10 @@ function ProfilePage() {
     fetchProfileData();
   }, []);
 
-  const handleNicknameChange = e => {
-    const { value } = e.target;
-    setNickname(value); // 닉네임 상태 업데이트
+  const handleNicknameChange = value => {
+    setNickname(value);
     setNicknameSaved(value === originalNickname);
 
-    // 유효성 검사를 통해 에러 메시지 업데이트
     const errorMessage = validateNickname(value);
     setNicknameError(errorMessage);
   };
@@ -163,7 +165,7 @@ function ProfilePage() {
 
     // postcode, address 또는 addressDetail이 변경되면 저장된 상태를 false로 설정
     setAddressSaved(
-      value === originalPostcode &&
+      postcode === originalPostcode &&
         address === originalAddress &&
         addressDetail === originalAddressDetail,
     );
@@ -179,7 +181,9 @@ function ProfilePage() {
     }
 
     // 은행명이나 계좌번호가 변경되었을 때 저장된 상태를 false로 설정
-    setAccountSaved(false);
+    setAccountSaved(
+      bankName === originalBankName && bankAccount === originalBankAccount,
+    );
   };
 
   const handleSelectAddress = data => {
@@ -408,7 +412,7 @@ function ProfilePage() {
               type="text"
               id="nickname"
               value={nickname}
-              onChange={handleNicknameChange}
+              onChange={e => handleNicknameChange(e.target.value)}
               placeholder="닉네임"
               className={`mb-2 px-2 py-1 rounded border-2 ${
                 nicknameError ? 'border-red-500' : 'border-gray-300'
@@ -499,12 +503,24 @@ function ProfilePage() {
             <button
               type="button"
               disabled={
-                !postcode || !address || !addressDetail || isUpdatingAddress
+                !postcode ||
+                !address ||
+                !addressDetail ||
+                (postcode === originalPostcode &&
+                  address === originalAddress &&
+                  addressDetail === originalAddressDetail) ||
+                isUpdatingAddress
               }
               onClick={updateAddress}
               className={`ml-2 ${
-                !postcode || !address || !addressDetail
-                  ? 'bg-grayish'
+                !postcode ||
+                !address ||
+                !addressDetail ||
+                (postcode === originalPostcode &&
+                  address === originalAddress &&
+                  addressDetail === originalAddressDetail) ||
+                isUpdatingAddress
+                  ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-deepblue2'
               } text-white px-2 py-1 rounded`}
             >
@@ -548,11 +564,16 @@ function ProfilePage() {
               disabled={
                 !bankAccount ||
                 !bankName ||
-                isUpdatingAccount ||
-                bankAccountError
-              } // 에러가 있을 때 버튼 비활성화
+                (bankAccount === originalBankAccount &&
+                  bankName === originalBankName) ||
+                isUpdatingAccount
+              }
               className={`ml-2 ${
-                !bankAccount || !bankName || bankAccountError
+                !bankAccount ||
+                !bankName ||
+                (bankAccount === originalBankAccount &&
+                  bankName === originalBankName) ||
+                isUpdatingAccount
                   ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-deepblue2'
               } text-white px-2 py-1 rounded`}
