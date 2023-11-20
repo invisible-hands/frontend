@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useLoginStore from '../stores/loginStore';
 import { SellingItem } from './PurchaseItem';
 import { SellingContainer } from './ShoppingContainer';
 import { SellingDropdown } from './DropDown';
@@ -23,6 +24,7 @@ function SellingRecord() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지
   const [itemsPerPage, setItemsPerPage] = useState(0);
+  const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -32,7 +34,6 @@ function SellingRecord() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const accessToken = import.meta.env.VITE_TOKEN;
         // const page = currentPage; // 현재 페이지 번호
         // const size = 1; // 한 페이지에 표시할 항목 수
         // const status = 'all';
@@ -94,133 +95,29 @@ function SellingRecord() {
               setStatusFilter={setStatusFilter}
               dealStatusOptions={dealStatusOptions}
             />
-            {filteredItems.slice(startIndex, endIndex).map(item => (
-              <SellingItem
-                auctionId={item.auctionId}
-                imageUrl={item.imageUrl}
-                title={item.title}
-                price={item.price}
-                status={item.status}
-              />
-            ))}
+            {items.length > 0 ? (
+              filteredItems
+                .slice(startIndex, endIndex)
+                .map(item => (
+                  <SellingItem
+                    auctionId={item.auctionId}
+                    imageUrl={item.imageUrl}
+                    title={item.title}
+                    price={item.price}
+                    status={item.status}
+                  />
+                ))
+            ) : (
+              <div className="text-center py-8 text-sm text-gray-300">
+                아직 판매 내역이 없습니다.
+              </div>
+            )}
           </div>
         </div>
-        <div>{renderPageNumbers()}</div>
+        {items.length > 0 && <div>{renderPageNumbers()}</div>}
       </div>
     </div>
   );
 }
 
 export default SellingRecord;
-
-// useEffect(() => {
-//   // 데이터를 불러오는 함수
-//   const fetchItems = async () => {
-//     try {
-//       const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
-
-//       if (!accessToken) {
-//         // 토큰이 없으면 로그인이 필요하다는 메시지를 보여줄 수 있습니다.
-//         alert('로그인이 필요합니다.');
-//         window.location.href('/');
-//         return;
-//       }
-
-//       // API 요청 보내기
-//       const response = await axios.get('/api/deal/sales', {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       });
-
-//       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
-//     } catch (error) {
-//       console.error('Fetching items failed', error);
-//     }
-//   };
-
-//   fetchItems(); // 함수 호출
-// }, []); // 컴포넌트가 마운트될 때 한 번만 호출
-
-// useEffect(() => {
-//   // 데이터를 불러오는 함수
-//   const fetchItems = async () => {
-//     try {
-//       // const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기 (주석 처리)
-
-//       // API 요청 보내기
-//       const response = await axios.get('/api/deal/sales');
-
-//       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
-//     } catch (error) {
-//       console.error('Fetching items failed', error);
-//     }
-//   };
-
-//   fetchItems(); // 함수 호출
-// }, []); // 컴포넌트가 마운트될 때 한 번만 호출
-
-// useEffect(() => {
-//   const mockData = {
-//     cnt: 5, // 총 아이템 수
-//     currentPage: 0, // 현재 페이지 인덱스 (0부터 시작)
-//     totalPage: 1, // 전체 페이지 수
-//   };
-
-//   const fetchPagedItems = async () => {
-//     try {
-//       // 페이지 번호를 파라미터로 보내서 해당 페이지 데이터 요청
-//       const response = await axiosInstance.get(
-//         `/api/deal/sales?page=0&size=1`,
-//       );
-
-//       if (response.status === 200) {
-//         // 상태 코드 200일 때 목 데이터 사용
-//         console.log('요청 성공');
-//         setItems(mockData.items); // 받아온 아이템들로 상태 업데이트
-//         setTotalPages(mockData.totalPage); // 전체 페이지 수 업데이트
-//         setItemsPerPage(mockData.cnt); // 페이지 당 아이템 수 업데이트
-//       } else {
-//         console.error('API 요청 실패:', response.status);
-//       }
-//     } catch (error) {
-//       console.error('Fetching items failed', error);
-//     }
-//   };
-
-//   fetchPagedItems();
-// }, [currentPage]); // currentPage가 바뀔 때마다 요청
-
-// useEffect(() => {
-//   // 데이터를 불러오는 함수
-//   const fetchItems = async () => {
-//     try {
-//       // 인증 토큰 값
-//       const accessToken =
-//         'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTc4LCJlbWFpbCI6Ik1lbGFueUBuYXZlci5jb20iLCJ1c2VybmFtZSI6Ik1lbGFueSIsIm5pY2tuYW1lIjoiTWVsYW55KDEyMykiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5OTg2MTYyNSwiZXhwIjoxNjk5OTQ4MDI1fQ._efjcoxvx5ozbwpivHacgoKOMoDT_APC3PyTQkhG0ww';
-//       const response = await axiosInstance.get(
-//         'api/deal/sales?status=all&startDate=2022-11-09&endDate=2023-11-13&page=0&size=1',
-//         {
-//           // 일단 여기를 고쳐야함 이렇게여??? ㅋㅋㅋㅋㅋㅋㅋㅋㅋ
-//           headers: {
-//             // Authorization 헤더에 Bearer 토큰 추가
-//             Authorization: `Bearer ${accessToken}`,
-//           },
-//         },
-//       );
-
-//       if (response.status === 200) {
-//         // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
-//         console.log('요청 성공'); // 여기 콘솔
-//         console.log('response', response);
-//         setItems(response.data.data.auctions); // 그니까 리스폰스 바디가 ㄷ틀렷다..... 근데 머가 틀렷죠???
-//       } else {
-//         console.error('API 요청 실패:', response.status);
-//       }
-//     } catch (error) {
-//       console.error('API 요청 실패:', error);
-//     }
-//   };
-
-//   fetchItems(); // 함수 호출
-// }, []);

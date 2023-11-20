@@ -10,7 +10,7 @@ function Sidebar() {
 
   return (
     <div className="sticky top-0 w-[20%] min-w-[15.9rem] h-full min-h-screen border-r shadow-md pt-10 pl-10">
-      <div className="text-black font-black text-2xl p-4 pl-10">
+      <div className="text-deepblue1 font-black text-2xl p-4 pl-10">
         마이 페이지
       </div>
       <div className="mb-1" />

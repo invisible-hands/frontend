@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useLoginStore from '../stores/loginStore';
 import { AuctionItem } from './PurchaseItem';
 import { AuctionContainer } from './ShoppingContainer';
 import { AuctionDropdown } from './DropDown';
@@ -21,6 +22,7 @@ function AuctionRecord() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
+  const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -30,7 +32,6 @@ function AuctionRecord() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const accessToken = import.meta.env.VITE_TOKEN;
         // const page = currentPage; // 현재 페이지 번호
         // const size = 1; // 한 페이지에 표시할 항목 수
         // const status = 'all';
@@ -92,52 +93,30 @@ function AuctionRecord() {
               setStatusFilter={setStatusFilter}
               dealStatusOptions={auctionStatusOptions}
             />
-            {filteredItems.slice(startIndex, endIndex).map(item => (
-              <AuctionItem
-                auctionId={item.auctionId}
-                imageUrl={item.imageUrl}
-                title={item.title}
-                currentPrice={item.currentPrice}
-                myBidPrice={item.myBidPrice}
-                status={item.status}
-                time={item.time}
-                // endAuctionTime - 현재시간 현준님 코드 뽀려오기
-              />
-            ))}
+            {items.legth > 0 ? (
+              filteredItems.slice(startIndex, endIndex).map(item => (
+                <AuctionItem
+                  auctionId={item.auctionId}
+                  imageUrl={item.imageUrl}
+                  title={item.title}
+                  currentPrice={item.currentPrice}
+                  myBidPrice={item.myBidPrice}
+                  status={item.status}
+                  time={item.time}
+                  // endAuctionTime - 현재시간 현준님 코드 뽀려오기
+                />
+              ))
+            ) : (
+              <div className="text-center py-8 text-sm text-gray-300">
+                아직 경매 내역이 없습니다.
+              </div>
+            )}
           </div>
         </div>
-        <div>{renderPageNumbers()}</div>
+        {items.length > 0 && <div>{renderPageNumbers()}</div>}
       </div>
     </div>
   );
 }
 
 export default AuctionRecord;
-
-// useEffect(() => {
-//   // 데이터를 불러오는 함수
-//   const fetchItems = async () => {
-//     try {
-//       const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
-
-//       if (!accessToken) {
-//         // 토큰이 없으면 로그인이 필요하다는 메시지를 보여줄 수 있습니다.
-//         alert('로그인이 필요합니다.');
-//         return;
-//       }
-
-//       // API 요청 보내기
-//       const response = await axios.get('/api/deal/bids', {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       });
-
-//       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
-//     } catch (error) {
-//       console.error('Fetching items failed', error);
-//     }
-//   };
-
-//   fetchItems(); // 함수 호출
-// }, []); // 컴포넌트가 마운트될 때 한 번만 호출

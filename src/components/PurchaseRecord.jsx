@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useLoginStore from '../stores/loginStore';
 import { PurchaseItem } from './PurchaseItem';
 import { PurchaseContainer } from './ShoppingContainer';
 import { PurchaseDropdown } from './DropDown';
@@ -23,6 +24,7 @@ function PurchaseRecord() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(0);
+  const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -32,7 +34,6 @@ function PurchaseRecord() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const accessToken = import.meta.env.VITE_TOKEN;
         // const page = currentPage; // 현재 페이지 번호
         // const size = 1; // 한 페이지에 표시할 항목 수
         // const status = 'all';
@@ -93,113 +94,30 @@ function PurchaseRecord() {
               setStatusFilter={setStatusFilter}
               dealStatusOptions={dealStatusOptions}
             />
-            {filteredItems.slice(startIndex, endIndex).map(item => (
-              <PurchaseItem
-                dealId={item.dealId}
-                auctionId={item.auctionId}
-                imageUrl={item.imageUrl}
-                title={item.title}
-                purchasePrice={item.purchasePrice}
-                status={item.status}
-              />
-            ))}
+            {items.length > 0 ? (
+              filteredItems
+                .slice(startIndex, endIndex)
+                .map(item => (
+                  <PurchaseItem
+                    dealId={item.dealId}
+                    auctionId={item.auctionId}
+                    imageUrl={item.imageUrl}
+                    title={item.title}
+                    purchasePrice={item.purchasePrice}
+                    status={item.status}
+                  />
+                ))
+            ) : (
+              <div className="text-center py-8 text-sm text-gray-300">
+                아직 구매 내역이 없습니다.
+              </div>
+            )}
           </div>
         </div>
-        <div>{renderPageNumbers()}</div>
+        {items.length > 0 && <div>{renderPageNumbers()}</div>}
       </div>
     </div>
   );
 }
 
 export default PurchaseRecord;
-
-// useEffect(() => {
-//   // 데이터를 불러오는 함수
-//   const fetchItems = async () => {
-//     try {
-//       const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
-
-//       if (!accessToken) {
-//         // 토큰이 없으면 로그인이 필요하다는 메시지를 보여줄 수 있습니다.
-//         alert('로그인이 필요합니다.');
-//         return;
-//       }
-
-//       // API 요청 보내기
-//       const response = await axios.get('/api/deal/purchases', {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       });
-
-//       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
-//     } catch (error) {
-//       console.error('Fetching items failed', error);
-//     }
-//   };
-
-//   fetchItems(); // 함수 호출
-// }, []); // 컴포넌트가 마운트될 때 한 번만 호출
-
-//   // 데이터를 불러오는 함수
-//   const fetchItems = async () => {
-//     try {
-//       // API 요청 보내기
-//       const response = await axios.get('/api/deal/purchases');
-
-//       if (response.status === 200) {
-//         // 연결 상태가 200이면 목 데이터를 불러오는 함수 호출
-//         fetchMockItems();
-//       } else {
-//         console.error('API 요청 실패:', response.status);
-//       }
-//     } catch (error) {
-//       console.error('API 요청 실패:', error);
-//     }
-//   };
-
-//   fetchItems(); // 함수 호출
-// }, []);
-
-// useEffect(() => {
-//   const mockData = [
-//     {
-//       auctionId: '아이템 1',
-//       imageUrl: '/harokIphone.png',
-//       title: '아이템 1',
-//       price: 10000,
-//       status: 'DELIVERY_WAITING',
-//     },
-//     {
-//       auctionId: '아이템 2',
-//       imageUrl: '/harokIphone.png',
-//       title: '아이템 2',
-//       price: 20000,
-//       status: 'PURCHASE_COMPLETE_WAITING',
-//     },
-//     {
-//       auctionId: '아이템 3',
-//       imageUrl: '/harokIphone.png',
-//       title: '아이템 3',
-//       price: 10000,
-//       status: 'DELIVERY_WAITING',
-//     },
-//     {
-//       auctionId: '아이템 4',
-//       imageUrl: '/harokIphone.png',
-//       title: '아이템 4',
-//       price: 10000,
-//       status: 'DELIVERY_WAITING',
-//     },
-//     {
-//       auctionId: '아이템 5',
-//       imageUrl: '/harokIphone.png',
-//       title: '아이템 5',
-//       price: 10000,
-//       status: 'DELIVERY_WAITING',
-//     },
-//     // ... 추가 데이터
-//   ];
-
-//   setItems(mockData); // 여기서 setItems는 상태를 설정하는 함수라고 가정
-// }, []);
