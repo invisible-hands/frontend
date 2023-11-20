@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Set the path to your commit message template file
+#template_path="/.gitmessage.txt"
+
+# Check if the template file exists
+if [ -f "$template_path" ]; then
+  # If the template file exists, use it as the commit message template
+  cat "$template_path" > "$1"
+else
+  # If the template file does not exist, use a default template
+  echo "# 작성 예시 feat: add OAuth2[#1]" > "$1"
+  echo "" >> "$1"
+  echo "# --- COMMIT END ---" >> "$1"
+  echo "# <타입> 리스트" >> "$1"
+  echo "#   build     : 빌드 시스템, 패키지 매니저 설정, 라이브러리 업데이트" >> "$1"
+  echo "#   chore     : 기타 변경사항 (빌드 스크립트 수정, 불필요한 파일 삭제 등)" >> "$1"
+  echo "#   ci        : CI/CD 설정 변경사항" >> "$1"
+  echo "#   feat      : 기능 (새로운 기능 추가, 확장)" >> "$1"
+  echo "#   fix       : 버그 (버그 수정)" >> "$1"
+  echo "#   perf      : 성능 개선" >> "$1"
+  echo "#   refactor  : 리팩토링" >> "$1"
+  echo "#   revert    : 커밋을 되돌릴 때" >> "$1"
+  echo "#   style     : 스타일 (코드 형식, 세미콜론 추가: 비즈니스 로직에 변경 없음)" >> "$1"
+  echo "#   test      : 테스트 (테스트 코드 추가, 수정, 삭제: 비즈니스 로직에 변경 없음)" >> "$1"
+  echo "# ------------------" >> "$1"
+  echo "#   첫 글자를 소문자로" >> "$1"
+  echo "#   내용은 시작은 명령문으로" >> "$1"
+  echo "#   제목 끝에 마침표(.) 금지" >> "$1"
+  echo "# ------------------" >> "$1"
+fi
