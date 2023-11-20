@@ -24,6 +24,20 @@ const useLoginStore = create(
         console.log('상태 변경 후:', useLoginStore.getState());
       },
 
+      updateNickname: newNickname => {
+        set(state => ({
+          ...state,
+          nickName: newNickname,
+        }));
+      },
+
+      updateRole: newRole => {
+        set(state => ({
+          ...state,
+          role: newRole,
+        }));
+      },
+
       logOut: async () => {
         const { accessToken } = useLoginStore.getState(); // 현재 토큰 가져오기
 

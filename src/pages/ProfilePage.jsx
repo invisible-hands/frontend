@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TERipple } from 'tw-elements-react';
 import DaumPostcode from 'react-daum-postcode';
 import axios from 'axios';
@@ -8,6 +9,7 @@ import profileImg from '../assets/bettingground.png';
 import Sidebar from '../components/Sidebar';
 
 function ProfilePage() {
+  const navigate = useNavigate();
   const [originalNickname, setOriginalNickname] = useState('');
   const [originalPostcode, setOriginalPostcode] = useState('');
   const [originalAddress, setOriginalAddress] = useState('');
@@ -150,35 +152,41 @@ function ProfilePage() {
       setAddress(value);
     } else if (field === 'addressDetail') {
       setAddressDetail(value);
+      // 상세 주소가 비어있는 경우 오류 메시지 설정
+      if (!value.trim()) {
+        setAddressDetailError('상세 주소를 비워둘 수 없습니다.');
+      } else {
+        // 상세 주소에 입력이 있는 경우 오류 메시지 제거
+        setAddressDetailError('');
+      }
     }
 
+    // postcode, address 또는 addressDetail이 변경되면 저장된 상태를 false로 설정
     setAddressSaved(
-      value === originalPostcode ||
-        value === originalAddress ||
-        value === originalAddressDetail,
+      value === originalPostcode &&
+        address === originalAddress &&
+        addressDetail === originalAddressDetail,
     );
-    // 상세 주소가 비어있는 경우 오류 메시지 설정
-    if (!value.trim()) {
-      setAddressDetailError('상세 주소를 비워둘 수 없습니다.');
-    } else {
-      // 상세 주소에 입력이 있는 경우 오류 메시지 제거
-      setAddressDetailError('');
-    }
   };
 
-  const handleBankAccountChange = e => {
-    const { value } = e.target;
-    setBankAccount(value); // 계좌번호 상태 업데이트
-    setAccountSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
+  const handleBankAccountChange = (field, value) => {
+    if (field === 'bankAccount') {
+      setBankAccount(value); // 계좌번호 상태 업데이트
+      const errorMessage = validateBankAccount(value);
+      setBankAccountError(errorMessage); // 에러 메시지 상태 업데이트
+    } else if (field === 'bankName') {
+      setBankName(value); // 은행명 상태 업데이트
+    }
 
-    const errorMessage = validateBankAccount(value);
-    setBankAccountError(errorMessage); // 에러 메시지 상태 업데이트
+    // 은행명이나 계좌번호가 변경되었을 때 저장된 상태를 false로 설정
+    setAccountSaved(false);
   };
 
   const handleSelectAddress = data => {
     setAddress(data.address);
     setPostcode(data.zonecode);
-    // setAddress;
+
+    setAddressSaved(false);
     closeAddressModal();
   };
 
@@ -204,6 +212,7 @@ function ProfilePage() {
       );
       console.log(response.data);
       setNicknameSaved(true);
+      useLoginStore.getState().updateNickname(nickname);
     } catch (error) {
       if (error.response && error.response.status === 400) {
         if (error.response.data.message === '이미 존재하는 닉네임입니다.') {
@@ -320,6 +329,9 @@ function ProfilePage() {
   const activateAccount = async () => {
     if (!canActivateAccount()) return;
 
+    const { accessToken: currentAccessToken } = useLoginStore.getState();
+    console.log(`이전 토큰: ${currentAccessToken}`);
+
     try {
       const { accessToken } = useLoginStore.getState();
 
@@ -333,7 +345,21 @@ function ProfilePage() {
         },
       );
       console.log(response.data);
-      // 활성화 성공에 대한 처리
+
+      useLoginStore.getState().updateRole(response.data.data.role);
+      useLoginStore
+        .getState()
+        .logIn(
+          response.data.data.nickname,
+          response.data.data.accessToken,
+          response.data.data.userId,
+        );
+
+      const newAccessToken = useLoginStore.getState().accessToken;
+      console.log(`바뀐 토큰: ${newAccessToken}`);
+
+      alert('축하합니다! 이제 경매를 등록하고, 입찰할 수 있어요.');
+      navigate('/');
     } catch (error) {
       console.error(error);
       // 활성화 실패에 대한 처리
@@ -492,7 +518,9 @@ function ProfilePage() {
           <div className="mb-2">
             <select
               value={bankName}
-              onChange={e => setBankName(e.target.value)}
+              onChange={e =>
+                handleBankAccountChange('bankName', e.target.value)
+              }
               className="bg-grayish text-deepblue2 px-2 py-1 rounded mr-2"
             >
               <option value="">은행 선택</option>
@@ -506,7 +534,9 @@ function ProfilePage() {
               type="text"
               id="bankAccount"
               value={bankAccount}
-              onChange={handleBankAccountChange}
+              onChange={e =>
+                handleBankAccountChange('bankAccount', e.target.value)
+              }
               placeholder="계좌번호"
               className={`flex-1 px-2 py-1 rounded border-2 ${
                 bankAccountError ? 'border-red-500' : 'border-gray-300'
@@ -610,13 +640,13 @@ function ProfilePage() {
           <div className="mb-4">
             <button
               type="submit"
-              disabled={!canActivateAccount()}
+              disabled={!canActivateAccount() || isUserRole}
               onClick={activateAccount}
               className={`bg-deepblue2 text-white px-4 py-2 rounded ${
                 !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              계정 활성화
+              {isUserRole ? '약관 동의 완료' : '계정 활성화'}
             </button>
           </div>
         </div>
