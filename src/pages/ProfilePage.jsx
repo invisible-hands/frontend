@@ -385,7 +385,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="whitespace-nowrap max-w-screen-lg mx-autoa">
+    <div className="whitespace-nowrap max-w-screen-lg mx-auto">
       {/* 모달 */}
       {isAddressModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
