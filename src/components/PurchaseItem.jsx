@@ -11,8 +11,8 @@ const truncateProductName = title => {
     // 적절한 기본값으로 대체하거나 오류를 처리
     return '제품 이름 없음';
   }
-  if (title.length > 15) {
-    return `${title.substring(0, 15)}...`;
+  if (title.length > 10) {
+    return `${title.substring(0, 10)}...`;
   }
   return title;
 };
@@ -50,7 +50,7 @@ export function PurchaseItem({
   };
 
   return (
-    <div className="flex justify-between items-center mb-4 pl-9">
+    <div className="flex space-x-12 items-center mb-4 pl-9">
       <button
         type="button"
         onClick={goToPage}
@@ -65,10 +65,19 @@ export function PurchaseItem({
       >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-blackish">{purchasePrice}원</div>
+      <div className="text-sm font-bold text-blackish pt-1">
+        {purchasePrice}원
+      </div>
       <div className="flex flex-col items-center">
-        <div className="pt-4 text-sm text-danger">{displayStatus}</div>
-        <div className="flex pt-1">
+        <div
+          className={`pt-2.5 text-sm text-danger pl-3 text-center ${
+            status === 'PURCHASE_CANCEL' ? 'ml-4' : ''
+          } ${status === 'PURCHASE_COMPLETE_WAITING' ? 'pt-5' : ''}
+          `}
+        >
+          {displayStatus}
+        </div>
+        <div className="flex pt-1 pl-2.5">
           {showConfirmPurchaseButton && (
             <>
               <button
@@ -137,8 +146,10 @@ export function AuctionItem({
       <div className="text-sm font-bold text-danger pr-2">{currentPrice}원</div>
       <div className="text-sm font-bold text-blackish">{myBidPrice}원</div>
       <div className="flex flex-col items-center">
-        <div className="pt-5 text-sm text-danger">{displayStatus}</div>
-        {showConfirmPurchaseButton && <div>{time}</div>}
+        <div className="pt-1 text-sm text-danger">{displayStatus}</div>
+        {showConfirmPurchaseButton && (
+          <div className="text-xs text-deepblue1">{time}</div>
+        )}
       </div>
     </div>
   );
@@ -179,7 +190,7 @@ export function SellingItem({
       </div>
       <div className="text-sm font-bold text-blackish pl-1">{price}원</div>
       <div className="flex flex-col items-center">
-        <div className="pt-4 text-sm text-danger">{displayStatus}</div>
+        <div className="pt-2.5 text-sm text-danger">{displayStatus}</div>
         <div className="flex flex-col items-center pt-1">
           {showConfirmPurchaseButton && (
             <>

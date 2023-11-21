@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import useLoginStore from '../stores/loginStore';
+import useLoginStore from '../stores/loginStore';
 import CustomDatePicker from './CustomDatePicker';
 import { AuctionItem } from './PurchaseItem';
 import { AuctionContainer } from './ShoppingContainer';
@@ -26,7 +26,7 @@ function AuctionRecord() {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  // const { accessToken } = useLoginStore();
+  const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -36,7 +36,7 @@ function AuctionRecord() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const accessToken = import.meta.env.VITE_TOKEN;
+        // const accessToken = import.meta.env.VITE_TOKEN;
         const formattedStartDate = startDate.toISOString().split('T')[0];
         const formattedEndDate = endDate.toISOString().split('T')[0];
         const response = await axiosInstance.get(
@@ -76,7 +76,12 @@ function AuctionRecord() {
     const pages = [];
     for (let i = 0; i < totalPages; i += 1) {
       pages.push(
-        <button type="button" key={i} onClick={() => setCurrentPage(i)}>
+        <button
+          type="button"
+          key={i}
+          className="mx-1  text-gray-300 hover:bg-grayish rounded"
+          onClick={() => setCurrentPage(i)}
+        >
           {i + 1}
         </button>,
       );
@@ -86,47 +91,53 @@ function AuctionRecord() {
 
   return (
     <div>
-      <div className="w-[50%] mx-auto">
-        <AuctionContainer />
-        <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
-          <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
-            <div className="flex">
-              <AuctionDropdown
-                setStatusFilter={setStatusFilter}
-                dealStatusOptions={auctionStatusOptions}
-              />
-              <div className="flex space-x-4 pl-4">
-                <CustomDatePicker
-                  startDate={startDate}
-                  setStartDate={setStartDate}
+      <div className="flex justify-center items-center ">
+        <div className="w-full sm:w-3/4 md:w-[50%] mx-auto">
+          <AuctionContainer />
+          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
+              <div className="flex">
+                <AuctionDropdown
+                  setStatusFilter={setStatusFilter}
+                  dealStatusOptions={auctionStatusOptions}
                 />
-                <CustomDatePicker
-                  startDate={endDate}
-                  setStartDate={setEndDate}
-                />
+                <div className="flex space-x-4 pl-4">
+                  <CustomDatePicker
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                  />
+                  <CustomDatePicker
+                    startDate={endDate}
+                    setStartDate={setEndDate}
+                  />
+                </div>
               </div>
+              {items.length > 0 ? (
+                filteredItems.slice(startIndex, endIndex).map(item => (
+                  <AuctionItem
+                    auctionId={item.auctionId}
+                    imageUrl={item.imageUrl}
+                    title={item.title}
+                    currentPrice={item.currentPrice}
+                    myBidPrice={item.myBidPrice}
+                    status={item.status}
+                    time={calculateRemainTime(item.endAuctionTime)}
+                    // endAuctionTime - 현재시간 현준님 코드 뽀려오기
+                  />
+                ))
+              ) : (
+                <div className="text-center py-8 text-sm text-gray-300">
+                  아직 경매 내역이 없습니다.
+                </div>
+              )}
             </div>
-            {items.length > 0 ? (
-              filteredItems.slice(startIndex, endIndex).map(item => (
-                <AuctionItem
-                  auctionId={item.auctionId}
-                  imageUrl={item.imageUrl}
-                  title={item.title}
-                  currentPrice={item.currentPrice}
-                  myBidPrice={item.myBidPrice}
-                  status={item.status}
-                  time={calculateRemainTime(item.endAuctionTime)}
-                  // endAuctionTime - 현재시간 현준님 코드 뽀려오기
-                />
-              ))
-            ) : (
-              <div className="text-center py-8 text-sm text-gray-300">
-                아직 경매 내역이 없습니다.
-              </div>
-            )}
           </div>
+          {items.length > 0 && (
+            <div className="flex justify-center mt-12 mb-4 pt-8">
+              {renderPageNumbers()}
+            </div>
+          )}
         </div>
-        {items.length > 0 && <div>{renderPageNumbers()}</div>}
       </div>
     </div>
   );

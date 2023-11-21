@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import useLoginStore from '../stores/loginStore';
+import useLoginStore from '../stores/loginStore';
 import CustomDatePicker from './CustomDatePicker';
 import { PurchaseItem } from './PurchaseItem';
 import { PurchaseContainer } from './ShoppingContainer';
@@ -27,7 +27,7 @@ function PurchaseRecord() {
   const [itemsPerPage, setItemsPerPage] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  // const { accessToken } = useLoginStore();
+  const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -39,7 +39,7 @@ function PurchaseRecord() {
       try {
         const formattedStartDate = startDate.toISOString().split('T')[0];
         const formattedEndDate = endDate.toISOString().split('T')[0];
-        const accessToken = import.meta.env.VITE_TOKEN;
+        // const accessToken = import.meta.env.VITE_TOKEN;
         const response = await axiosInstance.get(
           `/api/deal/purchases?status=all&startDate=${formattedStartDate}&endDate=${formattedEndDate}&page=${currentPage}&size=8`,
           { headers: { Authorization: `Bearer ${accessToken}` } },
@@ -76,7 +76,12 @@ function PurchaseRecord() {
     const pages = [];
     for (let i = 0; i < totalPages; i += 1) {
       pages.push(
-        <button type="button" key={i} onClick={() => setCurrentPage(i)}>
+        <button
+          type="button"
+          key={i}
+          className="mx-1  text-gray-300 hover:bg-grayish rounded"
+          onClick={() => setCurrentPage(i)}
+        >
           {i + 1}
         </button>,
       );
@@ -86,47 +91,53 @@ function PurchaseRecord() {
 
   return (
     <div>
-      <div className="w-[50%] mx-auto">
-        <PurchaseContainer />
-        <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
-          <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
-            <div className="flex">
-              <PurchaseDropdown
-                setStatusFilter={setStatusFilter}
-                dealStatusOptions={dealStatusOptions}
-              />
-              <div className="flex space-x-4 pl-4">
-                <CustomDatePicker
-                  startDate={startDate}
-                  setStartDate={setStartDate}
+      <div className="flex justify-center items-center ">
+        <div className="w-full sm:w-3/4 md:w-[50%] mx-auto">
+          <PurchaseContainer />
+          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
+              <div className="flex">
+                <PurchaseDropdown
+                  setStatusFilter={setStatusFilter}
+                  dealStatusOptions={dealStatusOptions}
                 />
-                <CustomDatePicker
-                  startDate={endDate}
-                  setStartDate={setEndDate}
-                />
-              </div>
-            </div>
-            {items.length > 0 ? (
-              filteredItems
-                .slice(startIndex, endIndex)
-                .map(item => (
-                  <PurchaseItem
-                    dealId={item.dealId}
-                    auctionId={item.auctionId}
-                    imageUrl={item.imageUrl}
-                    title={item.title}
-                    purchasePrice={item.purchasePrice}
-                    status={item.status}
+                <div className="flex space-x-4 pl-4">
+                  <CustomDatePicker
+                    startDate={startDate}
+                    setStartDate={setStartDate}
                   />
-                ))
-            ) : (
-              <div className="text-center py-8 text-sm text-gray-300">
-                아직 구매 내역이 없습니다.
+                  <CustomDatePicker
+                    startDate={endDate}
+                    setStartDate={setEndDate}
+                  />
+                </div>
               </div>
-            )}
+              {items.length > 0 ? (
+                filteredItems
+                  .slice(startIndex, endIndex)
+                  .map(item => (
+                    <PurchaseItem
+                      dealId={item.dealId}
+                      auctionId={item.auctionId}
+                      imageUrl={item.imageUrl}
+                      title={item.title}
+                      purchasePrice={item.purchasePrice}
+                      status={item.status}
+                    />
+                  ))
+              ) : (
+                <div className="text-center py-8 text-sm text-gray-300">
+                  아직 구매 내역이 없습니다.
+                </div>
+              )}
+            </div>
           </div>
+          {items.length > 0 && (
+            <div className="flex justify-center mt-12 mb-4 pt-8">
+              {renderPageNumbers()}
+            </div>
+          )}
         </div>
-        {items.length > 0 && <div>{renderPageNumbers()}</div>}
       </div>
     </div>
   );

@@ -77,7 +77,12 @@ function SellingRecord() {
     const pages = [];
     for (let i = 0; i < totalPages; i += 1) {
       pages.push(
-        <button type="button" key={i} onClick={() => setCurrentPage(i)}>
+        <button
+          type="button"
+          key={i}
+          className="mx-1  text-gray-300 hover:bg-grayish rounded"
+          onClick={() => setCurrentPage(i)}
+        >
           {i + 1}
         </button>,
       );
@@ -87,46 +92,52 @@ function SellingRecord() {
 
   return (
     <div>
-      <div className="w-[50%] mx-auto">
-        <SellingContainer />
-        <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
-          <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
-            <div className="flex">
-              <SellingDropdown
-                setStatusFilter={setStatusFilter}
-                dealStatusOptions={dealStatusOptions}
-              />
-              <div className="flex space-x-4 pl-4">
-                <CustomDatePicker
-                  startDate={startDate}
-                  setStartDate={setStartDate}
+      <div className="flex justify-center items-center ">
+        <div className="w-full sm:w-3/4 md:w-[50%] mx-auto">
+          <SellingContainer />
+          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
+              <div className="flex">
+                <SellingDropdown
+                  setStatusFilter={setStatusFilter}
+                  dealStatusOptions={dealStatusOptions}
                 />
-                <CustomDatePicker
-                  startDate={endDate}
-                  setStartDate={setEndDate}
-                />
-              </div>
-            </div>
-            {items.length > 0 ? (
-              filteredItems
-                .slice(startIndex, endIndex)
-                .map(item => (
-                  <SellingItem
-                    auctionId={item.auctionId}
-                    imageUrl={item.imageUrl}
-                    title={item.title}
-                    price={item.price}
-                    status={item.status}
+                <div className="flex space-x-4 pl-4">
+                  <CustomDatePicker
+                    startDate={startDate}
+                    setStartDate={setStartDate}
                   />
-                ))
-            ) : (
-              <div className="text-center py-8 text-sm text-gray-300">
-                아직 판매 내역이 없습니다.
+                  <CustomDatePicker
+                    startDate={endDate}
+                    setStartDate={setEndDate}
+                  />
+                </div>
               </div>
-            )}
+              {items.length > 0 ? (
+                filteredItems
+                  .slice(startIndex, endIndex)
+                  .map(item => (
+                    <SellingItem
+                      auctionId={item.auctionId}
+                      imageUrl={item.imageUrl}
+                      title={item.title}
+                      price={item.price}
+                      status={item.status}
+                    />
+                  ))
+              ) : (
+                <div className="text-center py-8 text-sm text-gray-300">
+                  아직 판매 내역이 없습니다.
+                </div>
+              )}
+            </div>
           </div>
+          {items.length > 0 && (
+            <div className="flex justify-center mt-12 mb-4 pt-8">
+              {renderPageNumbers()}
+            </div>
+          )}
         </div>
-        {items.length > 0 && <div>{renderPageNumbers()}</div>}
       </div>
     </div>
   );

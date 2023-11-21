@@ -74,88 +74,90 @@ function DefaultContent() {
   }, []);
 
   return (
-    <div className="w-[50%] mx-auto">
-      <div className="p-8 ">
-        <h1 className="text-2xl font-extrabold pt-6">쇼핑 정보</h1>
-        <PurchaseContainer />
-        <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
-          <div className="p-1 bg-white rounded-xl ">
-            <div className="text-sm font-bold mt-2 mb-4">
-              구매 확정 대기 상품
-            </div>
-            {purchases.length > 0 ? (
-              purchases
-                .filter(item => item.status === 'PURCHASE_COMPLETE_WAITING')
-                .map(item => (
-                  <PurchaseItem
-                    key={item.auctionId}
-                    imageUrl={item.imageUrl}
-                    title={item.title}
-                    purchasePrice={item.purchasePrice}
-                    status={item.status}
-                  />
-                ))
-            ) : (
-              <div className="text-center py-8 text-sm text-gray-300">
-                아직 구매 내역이 없습니다.
+    <div className="flex justify-center items-center ">
+      <div className="w-full sm:w-3/4 md:w-[50%] mx-auto">
+        <div className="pt-8">
+          <h1 className="text-2xl font-extrabold pt-6">쇼핑 정보</h1>
+          <PurchaseContainer />
+          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
+              <div className="text-sm font-bold mt-2 mb-4">
+                구매 확정 대기 상품
               </div>
-            )}
+              {purchases.length > 0 ? (
+                purchases
+                  .filter(item => item.status === 'PURCHASE_COMPLETE_WAITING')
+                  .map(item => (
+                    <PurchaseItem
+                      key={item.auctionId}
+                      imageUrl={item.imageUrl}
+                      title={item.title}
+                      purchasePrice={item.purchasePrice}
+                      status={item.status}
+                    />
+                  ))
+              ) : (
+                <div className="text-center py-8 text-sm text-gray-300">
+                  아직 구매 내역이 없습니다.
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="mb-8" />
-        <AuctionContainer />
-        <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
-          <div className="p-1 bg-white rounded-xl ">
-            <div className="text-sm font-bold mt-2 mb-4">
-              참여 중인 경매 목록
-            </div>
-            {items.length > 0 ? (
-              items
-                .filter(item => item.status === 'AUCTION_PROGRESS')
-                .map(item => (
-                  <AuctionItem
-                    key={item.auctionId}
-                    imageUrl={item.imageUrl}
-                    title={item.title}
-                    currentPrice={item.currentPrice}
-                    myBidPrice={item.myBidPrice}
-                    status={item.status}
-                    time={item.time}
-                    // endAuctionTime - 현재시간 현준님 코드 뽀려오기
-                  />
-                ))
-            ) : (
-              <div className="text-center py-8 text-sm text-gray-300">
-                아직 경매 내역이 없습니다.
+          <div className="mb-8" />
+          <AuctionContainer />
+          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
+              <div className="text-sm font-bold mt-2 mb-4">
+                참여 중인 경매 목록
               </div>
-            )}
+              {items.length > 0 ? (
+                items
+                  .filter(item => item.status === 'AUCTION_PROGRESS')
+                  .map(item => (
+                    <AuctionItem
+                      key={item.auctionId}
+                      imageUrl={item.imageUrl}
+                      title={item.title}
+                      currentPrice={item.currentPrice}
+                      myBidPrice={item.myBidPrice}
+                      status={item.status}
+                      time={item.time}
+                      // endAuctionTime - 현재시간 현준님 코드 뽀려오기
+                    />
+                  ))
+              ) : (
+                <div className="text-center py-8 text-sm text-gray-300">
+                  아직 경매 내역이 없습니다.
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="mb-8" />
-        <SellingContainer />
-        <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
-          <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
-            <div className="text-sm font-bold mt-2 mb-4">
-              송장 번호 입력 상품
-            </div>
-            {sales.length > 0 ? (
-              sales
-                .filter(item => item.status === 'DELIVERY_WAITING')
-                .map(item => (
-                  <SellingItem
-                    key={item.auctionId}
-                    imageUrl={item.imageUrl}
-                    title={item.title}
-                    price={item.price}
-                    status={item.status}
-                    time={item.time}
-                  />
-                ))
-            ) : (
-              <div className="text-center py-8 text-sm text-gray-300">
-                아직 판매 내역이 없습니다.
+          <div className="mb-8" />
+          <SellingContainer />
+          <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
+              <div className="text-sm font-bold mt-2 mb-4">
+                송장 번호 입력 상품
               </div>
-            )}
+              {sales.length > 0 ? (
+                sales
+                  .filter(item => item.status === 'DELIVERY_WAITING')
+                  .map(item => (
+                    <SellingItem
+                      key={item.auctionId}
+                      imageUrl={item.imageUrl}
+                      title={item.title}
+                      price={item.price}
+                      status={item.status}
+                      time={item.time}
+                    />
+                  ))
+              ) : (
+                <div className="text-center py-8 text-sm text-gray-300">
+                  아직 판매 내역이 없습니다.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -178,8 +180,10 @@ function MyShoppingPage() {
     // 로그인 상태가 아니면 빈 화면 반환
 
     return (
-      <div className="flex">
-        <Sidebar />
+      <div className="whitespace-nowrap max-w-screen-lg mx-auto">
+        <div className="flex">
+          <Sidebar />
+        </div>
       </div>
     );
   }
@@ -201,9 +205,11 @@ function MyShoppingPage() {
   }
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <ContentComponent className="flex-1" />
+    <div className="whitespace-nowrap max-w-screen-lg mx-auto">
+      <div className="w-full flex">
+        <Sidebar />
+        <ContentComponent className="flex-1" />
+      </div>
     </div>
   );
 }
