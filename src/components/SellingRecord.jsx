@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import useLoginStore from '../stores/loginStore';
+import CustomDatePicker from './CustomDatePicker';
 import { SellingItem } from './PurchaseItem';
 import { SellingContainer } from './ShoppingContainer';
 import { SellingDropdown } from './DropDown';
@@ -24,6 +25,8 @@ function SellingRecord() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지
   const [itemsPerPage, setItemsPerPage] = useState(0);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
@@ -34,14 +37,11 @@ function SellingRecord() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        // const page = currentPage; // 현재 페이지 번호
-        // const size = 1; // 한 페이지에 표시할 항목 수
-        // const status = 'all';
-        // const startDate = '2022-11-09'; // 시작 날짜
-        // const endDate = '2023-11-13'; // 끝 날짜
-
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+        const formattedEndDate = endDate.toISOString().split('T')[0];
+        // const accessToken = import.meta.env.VITE_TOKEN;
         const response = await axiosInstance.get(
-          `/api/deal/sales?status=all&startDate=2022-11-09&endDate=2023-11-13&page=${currentPage}&size=8`,
+          `/api/deal/sales?status=all&startDate=${formattedStartDate}&endDate=${formattedEndDate}&page=${currentPage}&size=8`,
           { headers: { Authorization: `Bearer ${accessToken}` } },
         );
 
@@ -60,7 +60,7 @@ function SellingRecord() {
     };
 
     fetchItems();
-  }, [currentPage]);
+  }, [startDate, endDate, currentPage]);
 
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
@@ -91,10 +91,22 @@ function SellingRecord() {
         <SellingContainer />
         <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
           <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
-            <SellingDropdown
-              setStatusFilter={setStatusFilter}
-              dealStatusOptions={dealStatusOptions}
-            />
+            <div className="flex">
+              <SellingDropdown
+                setStatusFilter={setStatusFilter}
+                dealStatusOptions={dealStatusOptions}
+              />
+              <div className="flex space-x-4 pl-4">
+                <CustomDatePicker
+                  startDate={startDate}
+                  setStartDate={setStartDate}
+                />
+                <CustomDatePicker
+                  startDate={endDate}
+                  setStartDate={setEndDate}
+                />
+              </div>
+            </div>
             {items.length > 0 ? (
               filteredItems
                 .slice(startIndex, endIndex)
