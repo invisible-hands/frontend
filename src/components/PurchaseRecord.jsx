@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import useLoginStore from '../stores/loginStore';
+// import useLoginStore from '../stores/loginStore';
 import CustomDatePicker from './CustomDatePicker';
 import { PurchaseItem } from './PurchaseItem';
 import { PurchaseContainer } from './ShoppingContainer';
@@ -27,7 +27,7 @@ function PurchaseRecord() {
   const [itemsPerPage, setItemsPerPage] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const { accessToken } = useLoginStore();
+  // const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -39,7 +39,7 @@ function PurchaseRecord() {
       try {
         const formattedStartDate = startDate.toISOString().split('T')[0];
         const formattedEndDate = endDate.toISOString().split('T')[0];
-        // const accessToken = import.meta.env.VITE_TOKEN;
+        const accessToken = import.meta.env.VITE_TOKEN;
         const response = await axiosInstance.get(
           `/api/deal/purchases?status=all&startDate=${formattedStartDate}&endDate=${formattedEndDate}&page=${currentPage}&size=8`,
           { headers: { Authorization: `Bearer ${accessToken}` } },

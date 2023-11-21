@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import useLoginStore from '../stores/loginStore';
+// import useLoginStore from '../stores/loginStore';
 import CustomDatePicker from './CustomDatePicker';
 import { AuctionItem } from './PurchaseItem';
 import { AuctionContainer } from './ShoppingContainer';
@@ -26,7 +26,7 @@ function AuctionRecord() {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const { accessToken } = useLoginStore();
+  // const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -36,7 +36,7 @@ function AuctionRecord() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        // const accessToken = import.meta.env.VITE_TOKEN;
+        const accessToken = import.meta.env.VITE_TOKEN;
         const formattedStartDate = startDate.toISOString().split('T')[0];
         const formattedEndDate = endDate.toISOString().split('T')[0];
         const response = await axiosInstance.get(

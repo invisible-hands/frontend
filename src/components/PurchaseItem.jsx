@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InvoiceInputModal from './InvoiceInputModal';
 import PurchaseConfirmModal from './PurchaseConfirmModal';
@@ -37,20 +38,31 @@ export function PurchaseItem({
   purchasePrice,
   status,
   dealId,
+  auctionId,
 }) {
   const [isPurchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [isComplainModalOpen, setComplainModalOpen] = useState(false);
   const showConfirmPurchaseButton = status === 'PURCHASE_COMPLETE_WAITING';
   const displayStatus = dealStatusOptions[status] || '알 수 없음';
+  const navigate = useNavigate();
+  const goToPage = () => {
+    navigate(`/auction/${auctionId}`);
+  };
 
   return (
-    <div className="flex justify-between items-center mb-4 pl-5">
-      <img
-        src={imageUrl}
-        alt="상품 이미지"
-        className="w-14 h-14 object-cover p-2 pl-3"
-      />
-      <div className="text-sm font-bold">
+    <div className="flex justify-between items-center mb-4 pl-9">
+      <button
+        type="button"
+        onClick={goToPage}
+        className="w-14 h-14 p-2 pl-3 cursor-pointer hover:opacity-80"
+      >
+        <img src={imageUrl} alt="상품 이미지" className="object-cover" />
+      </button>
+      <div
+        className="text-sm font-bold cursor-pointer hover:underline rounded"
+        onClick={goToPage}
+        role="button"
+      >
         제품명: {truncateProductName(title)}
       </div>
       <div className="text-sm font-bold text-blackish">{purchasePrice}원</div>
@@ -97,17 +109,29 @@ export function AuctionItem({
   myBidPrice,
   status,
   time,
+  auctionId,
 }) {
   const showConfirmPurchaseButton = status === 'AUCTION_PROGRESS';
   const displayStatus = auctionStatusOptions[status] || '알 수 없음';
+  const navigate = useNavigate();
+  const goToPage = () => {
+    navigate(`/auction/${auctionId}`);
+  };
+
   return (
-    <div className="flex justify-between items-center mb-4 pl-6">
-      <img
-        src={imageUrl}
-        alt="상품 이미지"
-        className="w-14 h-14 object-cover p-2 pl-3"
-      />
-      <div className="text-sm font-bold pr-2">
+    <div className="flex justify-between items-center mb-4 pl-9">
+      <button
+        type="button"
+        onClick={goToPage}
+        className="w-14 h-14 p-2 pl-3 cursor-pointer hover:opacity-80"
+      >
+        <img src={imageUrl} alt="상품 이미지" className="object-cover" />
+      </button>
+      <div
+        className="text-sm font-bold cursor-pointer hover:underline rounded"
+        onClick={goToPage}
+        role="button"
+      >
         제품명: {truncateProductName(title)}
       </div>
       <div className="text-sm font-bold text-danger pr-2">{currentPrice}원</div>
@@ -131,16 +155,26 @@ export function SellingItem({
   const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const showConfirmPurchaseButton = status === 'DELIVERY_WAITING';
   const displayStatus = dealStatusOptions[status] || '알 수 없음';
+  const navigate = useNavigate();
+  const goToPage = () => {
+    navigate(`/auction/${auctionId}`);
+  };
 
   console.log('옥션 아이디', auctionId);
   return (
-    <div className="flex justify-between items-center mb-4 pl-5">
-      <img
-        src={imageUrl}
-        alt="상품 이미지"
-        className="w-14 h-14 object-cover p-2 pl-3"
-      />
-      <div className="text-sm font-bold">
+    <div className="flex justify-between items-center mb-4 pl-9">
+      <button
+        type="button"
+        onClick={goToPage}
+        className="w-14 h-14 p-2 pl-3 cursor-pointer hover:opacity-80"
+      >
+        <img src={imageUrl} alt="상품 이미지" className="object-cover" />
+      </button>
+      <div
+        className="text-sm font-bold cursor-pointer hover:underline rounded"
+        onClick={goToPage}
+        role="button"
+      >
         제품명: {truncateProductName(title)}
       </div>
       <div className="text-sm font-bold text-blackish pl-1">{price}원</div>
@@ -176,6 +210,7 @@ PurchaseItem.propTypes = {
   purchasePrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   dealId: PropTypes.number.isRequired,
+  auctionId: PropTypes.number.isRequired,
 };
 
 AuctionItem.propTypes = {
@@ -185,6 +220,7 @@ AuctionItem.propTypes = {
   myBidPrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
+  auctionId: PropTypes.number.isRequired,
 };
 
 SellingItem.propTypes = {
