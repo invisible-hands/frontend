@@ -27,6 +27,16 @@ const useLoginStore = create(
       logOut: async () => {
         const { accessToken } = useLoginStore.getState(); // 현재 토큰 가져오기
 
+        const resetLoginState = () => {
+          set({
+            loggedIn: false,
+            nickName: null,
+            accessToken: null,
+            userId: null,
+          });
+          console.log('로그아웃 후 상태:', useLoginStore.getState());
+        };
+
         if (accessToken) {
           try {
             await axiosInstance.post(
@@ -36,21 +46,23 @@ const useLoginStore = create(
                 headers: { Authorization: `Bearer ${accessToken}` },
               },
             );
-
-            // API 호출 성공 후 상태 초기화
-            set({
-              loggedIn: false,
-              nickName: null,
-              accessToken: null,
-              userId: null,
-            });
-            console.log('상태 변경 후:', useLoginStore.getState());
           } catch (error) {
             console.error('로그아웃 실패:', error);
+            // 실패 메시지를 표시하거나 처리할 수 있습니다.
+          } finally {
+            // 성공 여부에 관계없이 로그아웃 상태로 변경
+            resetLoginState();
           }
+        } else {
+          // 토큰이 없는 경우에도 로그아웃 상태로 변경
+          resetLoginState();
         }
       },
     }),
+    {
+      name: 'login-storage',
+      storage: createJSONStorage(() => localStorage),
+    },
     {
       name: 'login-storage',
       storage: createJSONStorage(() => localStorage),
