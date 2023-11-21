@@ -49,13 +49,13 @@ function HotPreview() {
         <div className="text-center border p-1 rounded-md relative">
           <div className=" blur-sm">
             {/* 타이머 */}
-            <div className="absolute top-1 right-1 danger/20 text-danger text-xs px-2 py-1 rounded">
+            <div className="absolute top-1 right-1 danger/20 text-danger text-xs px-2 py-1 rounded md:text-lg md:top-2 md:right-2">
               00:01:07
             </div>
             <img
               src={detailBackground}
               alt="더보기 상품 샘플"
-              className="w-full h-20 object-cover mb-4 rounded-md"
+              className="w-full h-20 object-cover mb-4 rounded-md md:h-30 lg:h-40"
             />
             <div className="text-xs font-bold mb-2 truncate">
               미네랄사이다 지라치 봉제인형

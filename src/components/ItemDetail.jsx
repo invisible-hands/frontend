@@ -38,12 +38,12 @@ function ItemDetail({ item, onClick }) {
   }, [endAuctionTime]);
 
   const timeStyle = isLessThanAnHour
-    ? 'absolute top-1 right-1 bg-danger/20 text-danger text-xs px-2 py-1 rounded'
-    : 'absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-xs px-2 py-1 rounded';
+    ? 'absolute top-1 right-1 bg-danger/20 text-danger text-xs px-2 py-1 rounded md:text-lg md:top-2 md:right-2'
+    : 'absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-xs px-2 py-1 rounded md:text-lg md:top-2 md:right-2';
 
   return (
     <div
-      className="text-center border p-1 rounded-md relative"
+      className="text-center border p-1 rounded-md relative md:p-2 lg:p-3"
       onClick={onClick}
       role="button"
     >
@@ -51,17 +51,19 @@ function ItemDetail({ item, onClick }) {
       <img
         src={imageUrl}
         alt={title}
-        className="w-full h-20 object-cover mb-4 rounded-md"
+        className="w-full h-20 object-cover mb-4 rounded-md md:h-30 lg:h-40"
       />
-      <div className="text-xs font-bold mb-2 truncate">{title}</div>
-
-      <div className="text-xs mb-1 truncate">
-        <span className="hidden md:inline">현재 입찰 </span>
-        <span className="text-xs font-bold">{currentPrice}</span> 원
+      <div className="text-xs text-blue2 font-bold mb-2 truncate md:text-lg lg:text-xl">
+        {title}
       </div>
-      <div className="text-xs font-bold text-deepblue1 truncate">
+
+      <div className="text-xs mb-1 truncate md:text-lg">
+        <span className="hidden md:inline">현재 입찰 </span>
+        <span className="font-bold">{currentPrice}</span> 원
+      </div>
+      <div className="text-xs font-bold text-deepblue1 truncate md:text-lg">
         <span className="hidden md:inline">즉시구매 </span>
-        <span className="text-xs font-bold">{instantPrice}</span> 원
+        <span className="font-bold">{instantPrice}</span> 원
       </div>
     </div>
   );

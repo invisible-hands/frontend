@@ -46,7 +46,10 @@ function SearchDetailPage() {
 
   return (
     <div className="whitespace-nowrap max-w-screen-lg mx-auto p-4">
-      <div className="text-lg mb-4 text-deepblue2">검색 키워드: {keyword}</div>
+      <div className="text-lg mb-4 text-deepblue2">
+        {' '}
+        {keyword} 와 관련된 상품은요...
+      </div>
       <InfiniteScroll
         dataLength={searchResults.length}
         next={loadMoreData}

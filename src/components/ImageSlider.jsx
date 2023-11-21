@@ -28,7 +28,7 @@ function ImageSlider({ slides }) {
   }, [currentId]);
 
   return (
-    <div className="w-full h-52 mx-auto mb-4 p-4 relative group">
+    <div className="w-full h-52 mx-auto mb-4 p-4 relative group md:h-72 lg:h-80">
       <div
         style={{ backgroundImage: `url(${slides[currentId].url})` }}
         className="w-full h-full rounded-2xl bg-center bg-cover duration-500"
