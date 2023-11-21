@@ -45,9 +45,10 @@ function SearchDetailPage() {
   };
 
   return (
-    <div className="whitespace-nowrap max-w-screen-lg mx-auto">
-      <div className="text-4xl font-extrabold mb-4 text-deepblue2">
-        검색 키워드: {keyword}
+    <div className="whitespace-nowrap max-w-screen-lg mx-auto p-4">
+      <div className="text-lg mb-4 text-deepblue2">
+        {' '}
+        {keyword} 와 관련된 상품은요...
       </div>
       <InfiniteScroll
         dataLength={searchResults.length}
