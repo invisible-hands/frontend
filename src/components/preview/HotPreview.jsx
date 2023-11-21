@@ -33,10 +33,8 @@ function HotPreview() {
   };
 
   return (
-    <div className="w-full p-6">
-      <div className="text-4xl font-extrabold mb-4 text-deepblue2">
-        인기상품
-      </div>
+    <div className="w-full px-6 mb-4">
+      <div className="text-lg font-extrabold mb-2 text-deepblue2">인기상품</div>
       <div className="grid grid-cols-4 gap-4">
         {hotItems.map(item => (
           <ItemDetail
@@ -46,26 +44,28 @@ function HotPreview() {
           />
         ))}
         {/* 더보기 상품 */}
-        <div className="border p-4 rounded-md relative">
+        <div className="text-center border p-1 rounded-md relative">
           <div className=" blur-sm">
             {/* relative for positioning the timer */}
-            <div className="absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-md px-2 py-1 rounded">
+            <div className="absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-xs px-2 py-1 rounded">
               99:01:07
             </div>
             {/* 타이머 */}
             <img
               src={detailBackground}
               alt="더보기 상품 샘플"
-              className="w-full h-48 object-cover mb-4 rounded-md"
+              className="w-full h-20 object-cover mb-4 rounded-md"
             />
-            <div className="text-xl font-bold mb-2 truncate">
+            <div className="text-xs font-bold mb-2 truncate">
               미네랄사이다 지라치 봉제인형
             </div>
-            <div className="text-md mb-1">
-              현재 입찰 <span className="text-lg font-bold">10000</span> 원
+            <div className="text-xs mb-1 truncate">
+              <span className="hidden md:inline">현재 입찰 </span>
+              <span className="text-xs font-bold">10000</span> 원
             </div>
-            <div className="text-md font-bold text-deepblue1">
-              즉시구매 <span className="text-lg font-bold">77000</span> 원
+            <div className="text-xs font-bold text-deepblue1 truncate">
+              <span className="hidden md:inline">즉시구매 </span>
+              <span className="text-xs font-bold">77000</span> 원
             </div>
           </div>
           <div className="absolute inset-0 flex justify-center items-center">

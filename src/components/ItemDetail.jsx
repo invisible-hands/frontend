@@ -38,12 +38,12 @@ function ItemDetail({ item, onClick }) {
   }, [endAuctionTime]);
 
   const timeStyle = isLessThanAnHour
-    ? 'absolute top-1 right-1 bg-danger/20 text-danger text-md px-2 py-1 rounded'
-    : 'absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-md px-2 py-1 rounded';
+    ? 'absolute top-1 right-1 bg-danger/20 text-danger text-xs px-2 py-1 rounded'
+    : 'absolute top-1 right-1 bg-deepblue2/20 text-deepblue1 text-xs px-2 py-1 rounded';
 
   return (
     <div
-      className="border p-4 rounded-md relative"
+      className="text-center border p-1 rounded-md relative"
       onClick={onClick}
       role="button"
     >
@@ -51,14 +51,17 @@ function ItemDetail({ item, onClick }) {
       <img
         src={imageUrl}
         alt={title}
-        className="w-full h-48 object-cover mb-4 rounded-md"
+        className="w-full h-20 object-cover mb-4 rounded-md"
       />
-      <div className="text-xl font-bold mb-2 truncate">{title}</div>
-      <div className="text-md mb-1">
-        현재 입찰 <span className="text-lg font-bold">{currentPrice}</span> 원
+      <div className="text-xs font-bold mb-2 truncate">{title}</div>
+
+      <div className="text-xs mb-1 truncate">
+        <span className="hidden md:inline">현재 입찰 </span>
+        <span className="text-xs font-bold">{currentPrice}</span> 원
       </div>
-      <div className="text-md font-bold text-deepblue1">
-        즉시구매 <span className="text-lg font-bold">{instantPrice}</span> 원
+      <div className="text-xs font-bold text-deepblue1 truncate">
+        <span className="hidden md:inline">즉시구매 </span>
+        <span className="text-xs font-bold">{instantPrice}</span> 원
       </div>
     </div>
   );
