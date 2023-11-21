@@ -9,11 +9,13 @@ function Sidebar() {
   };
 
   return (
-    <div className="sticky h-full min-h-screen border-r pt-3 px-3 shadow-md">
-      <div className="text-deepblue1 text-lg mb-4">마이페이지</div>
+    <div className="sticky h-full min-h-screen border-r pt-3 px-3 shadow-md md:pt-6 md:px-6 lg:pt-9 lg:px-9">
+      <div className="text-deepblue1 text-lg mb-4 select-none md:text-2xl">
+        마이페이지
+      </div>
       <ul className="space-y-2">
-        <div className="block text-black hover:bg-gray-200 rounded">
-          <li className="mb-2">
+        <div className="block text-black rounded select-none md:text-xl">
+          <li className="mb-2 hover:bg-gray-200">
             <a
               href="/profile"
               onClick={e => {
@@ -24,7 +26,7 @@ function Sidebar() {
               프로필 정보
             </a>
           </li>
-          <li>
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-xl">
             <a
               href="/profile/shopping"
               onClick={e => {
@@ -36,8 +38,8 @@ function Sidebar() {
             </a>
           </li>
         </div>
-        <div className="block text-black text-sm hover:bg-gray-200 rounded mt-4">
-          <li className="mb-2">
+        <div className="block text-black text-sm mt-4">
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-lg">
             <a
               href="/profile/shopping/purchase"
               onClick={e => {
@@ -48,7 +50,7 @@ function Sidebar() {
               구매 목록
             </a>
           </li>
-          <li className="mb-2">
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-lg">
             <a
               href="/profile/shopping/auction"
               onClick={e => {
@@ -59,7 +61,7 @@ function Sidebar() {
               경매 목록
             </a>
           </li>
-          <li>
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-lg">
             <a
               href="/profile/shopping/selling"
               onClick={e => {
