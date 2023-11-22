@@ -80,7 +80,7 @@ function SellingRecord() {
         <button
           type="button"
           key={i}
-          className="mx-1  text-gray-300 hover:bg-grayish rounded"
+          className="mx-1 text-white "
           onClick={() => setCurrentPage(i)}
         >
           {i + 1}
