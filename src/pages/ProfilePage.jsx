@@ -230,6 +230,7 @@ function ProfilePage() {
       );
       console.log(response.data);
       setNicknameSaved(true);
+      setOriginalNickname(nickname);
       useLoginStore.getState().updateNickname(nickname);
     } catch (error) {
       if (error.response && error.response.status === 400) {
