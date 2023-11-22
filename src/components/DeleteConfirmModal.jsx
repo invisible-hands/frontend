@@ -26,7 +26,7 @@ export default function DeleteConfirmModal({
 
   const deleteAuction = async (id, accessToken) => {
     await axios
-      .delete(`${API_URL}/auction/${id}`, {
+      .delete(`${API_URL}/api/auction/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
