@@ -54,9 +54,9 @@ export async function fetchBidPage(auctionId, token) {
 }
 
 // 입찰하기
-export async function bid(auctionId, price) {
-  return axios.post(`${API_URL}/auction/${auctionId}/bid`, { price });
-}
+// export async function bid(auctionId, price) {
+//   return axios.post(`${API_URL}/auction/${auctionId}/bid`, { price });
+// }
 
 // 특저 쿠키 값을 읽는 함수
 export function getCookieValue(name) {
@@ -103,7 +103,21 @@ export async function fetchSellerInfo(auctionId) {
 // 입찰 내역 조회
 export async function fetchBidHistory(auctionId) {
   const { data } = await axios.get(
-    `${API_URL}/auction/${auctionId}/bidHistory?page=0&size=1`,
+    `${API_URL}/auction/${auctionId}/bidHistory?page=0&size=10`,
   );
   return data;
+}
+
+export async function fetchBidsTime(auctionId) {
+  const response = await axios.get(
+    `${API_URL}/auction/${auctionId}/bidHistory?page=0&size=10`,
+  );
+  return response.data.data.bids.map(bid => bid.bidTime);
+}
+
+export async function fetchBidsPrice(auctionId) {
+  const response = await axios.get(
+    `${API_URL}/auction/${auctionId}/bidHistory?page=0&size=10`,
+  );
+  return response.data.data.bids.map(bid => bid.bidPrice);
 }
