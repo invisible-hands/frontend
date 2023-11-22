@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useLoginStore from '../stores/loginStore';
 import Sidebar from '../components/Sidebar';
@@ -75,12 +75,12 @@ function DefaultContent() {
 
   return (
     <div className="flex justify-center items-center ">
-      <div className="w-full sm:w-3/4 md:w-[50%] mx-auto">
+      <div className="w-full max-w-[31rem] md:w-[40%] lg:mx-auto">
         <div className="pt-8">
           <h1 className="text-2xl font-extrabold pt-6">쇼핑 정보</h1>
           <PurchaseContainer />
-          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
-            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
+          <div className="p-1 justufy-center max-w-[31rem] md:min-w-[35.9365rem] lg:max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl max-w-[31rem] md:min-w-[35.9365rem]">
               <div className="text-sm font-bold mt-2 mb-4">
                 구매 확정 대기 상품
               </div>
@@ -105,8 +105,8 @@ function DefaultContent() {
           </div>
           <div className="mb-8" />
           <AuctionContainer />
-          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
-            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
+          <div className="p-1 justufy-center max-w-[31rem] md:min-w-[35.9365rem] lg:max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl max-w-[31rem] md:min-w-[35.9365rem]">
               <div className="text-sm font-bold mt-2 mb-4">
                 참여 중인 경매 목록
               </div>
@@ -168,13 +168,14 @@ function DefaultContent() {
 function MyShoppingPage() {
   const { recordType } = useParams();
   const { accessToken } = useLoginStore();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  const isLoggedIn = !!accessToken;
 
   useEffect(() => {
-    if (accessToken) {
-      setIsLoggedIn(true);
+    if (!isLoggedIn) {
+      navigate('/'); // 로그인 상태가 아니면 메인 페이지로 리디렉션
     }
-  }, [accessToken]);
+  }, [isLoggedIn, navigate]);
 
   if (!isLoggedIn) {
     // 로그인 상태가 아니면 빈 화면 반환

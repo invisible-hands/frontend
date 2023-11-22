@@ -58,9 +58,9 @@ export function AuctionDropdown({ setStatusFilter }) {
   ));
 
   return (
-    <div className="relative mb-2 ">
+    <div className="relative mb-2">
       <select
-        className=" z-20 text-sm px-8 bg-gray-200 border border-gray-300 rounded-lg text-center py-0.5"
+        className=" z-20 text-sm px-10 bg-gray-200 border border-gray-300 rounded-lg text-center py-0.5"
         value={selectedStatus}
         onChange={handleChange}
       >

@@ -79,7 +79,7 @@ function AuctionRecord() {
         <button
           type="button"
           key={i}
-          className="mx-1  text-gray-300 hover:bg-grayish rounded"
+          className="mx-1  text-white rounded"
           onClick={() => setCurrentPage(i)}
         >
           {i + 1}
@@ -92,16 +92,16 @@ function AuctionRecord() {
   return (
     <div>
       <div className="flex justify-center items-center ">
-        <div className="w-full sm:w-3/4 md:w-[50%] mx-auto">
+        <div className="w-full max-w-[31rem] md:w-[40%] lg:mx-auto">
           <AuctionContainer />
-          <div className="p-1 justufy-center sm:min-w-[30rem] md:min-w-[33.9365rem] max-w-xl mx-auto">
-            <div className="p-1 bg-white rounded-xl sm:min-w-[30rem] md:min-w-[33.9365rem]">
-              <div className="flex">
+          <div className="justufy-center max-w-[31rem] md:min-w-[35.9365rem] lg:max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl max-w-[31rem] md:min-w-[35.9365rem]">
+              <div className="flex flex-wrap md:flex-nowrap ">
                 <AuctionDropdown
                   setStatusFilter={setStatusFilter}
                   dealStatusOptions={auctionStatusOptions}
                 />
-                <div className="flex space-x-4 pl-4">
+                <div className="flex space-x-2 pl-2">
                   <CustomDatePicker
                     startDate={startDate}
                     setStartDate={setStartDate}

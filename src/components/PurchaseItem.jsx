@@ -50,7 +50,7 @@ export function PurchaseItem({
   };
 
   return (
-    <div className="flex space-x-12 items-center mb-4 pl-9">
+    <div className="flex justify-between items-center mb-4 pl-8 mt-2 mr-10">
       <button
         type="button"
         onClick={goToPage}
@@ -59,25 +59,25 @@ export function PurchaseItem({
         <img src={imageUrl} alt="상품 이미지" className="object-cover" />
       </button>
       <div
-        className="text-sm font-bold cursor-pointer hover:underline rounded"
+        className="pt-3 text-sm font-bold cursor-pointer hover:underline rounded"
         onClick={goToPage}
         role="button"
       >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-blackish pt-1">
+      <div className="pt-3 text-sm font-bold text-blackish ">
         {purchasePrice}원
       </div>
       <div className="flex flex-col items-center">
         <div
-          className={`pt-2.5 text-sm text-danger pl-3 text-center ${
-            status === 'PURCHASE_CANCEL' ? 'ml-4' : ''
+          className={`pt-4 text-sm text-danger pl-3 text-center pr-6 ${
+            status === 'PURCHASE_CANCEL' ? 'ml-4 mr-3' : ''
           } ${status === 'PURCHASE_COMPLETE_WAITING' ? 'pt-5' : ''}
           `}
         >
           {displayStatus}
         </div>
-        <div className="flex pt-1 pl-2.5">
+        <div className="flex pt-1 pl-2.5 pr-6">
           {showConfirmPurchaseButton && (
             <>
               <button
@@ -128,7 +128,7 @@ export function AuctionItem({
   };
 
   return (
-    <div className="flex justify-between items-center mb-4 pl-9">
+    <div className="flex justify-between items-center mb-4 pl-8 mt-2 mr-8">
       <button
         type="button"
         onClick={goToPage}
@@ -137,18 +137,20 @@ export function AuctionItem({
         <img src={imageUrl} alt="상품 이미지" className="object-cover" />
       </button>
       <div
-        className="text-sm font-bold cursor-pointer hover:underline rounded"
+        className="pt-3 text-sm font-bold cursor-pointer hover:underline rounded"
         onClick={goToPage}
         role="button"
       >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-danger pr-2">{currentPrice}원</div>
-      <div className="text-sm font-bold text-blackish">{myBidPrice}원</div>
+      <div className="pt-3 text-sm font-bold text-danger pr-2">
+        {currentPrice}원
+      </div>
+      <div className="pt-3 text-sm font-bold text-blackish">{myBidPrice}원</div>
       <div className="flex flex-col items-center">
-        <div className="pt-1 text-sm text-danger">{displayStatus}</div>
+        <div className="pt-4 text-sm text-danger pr-6">{displayStatus}</div>
         {showConfirmPurchaseButton && (
-          <div className="text-xs text-deepblue1">{time}</div>
+          <div className="text-xs text-deepblue1 pr-6">{time}</div>
         )}
       </div>
     </div>
@@ -173,7 +175,7 @@ export function SellingItem({
 
   console.log('옥션 아이디', auctionId);
   return (
-    <div className="flex justify-between items-center mb-4 pl-9">
+    <div className="flex justify-between items-center mb-4 pl-12 pt-2 mr-8">
       <button
         type="button"
         onClick={goToPage}
@@ -182,15 +184,17 @@ export function SellingItem({
         <img src={imageUrl} alt="상품 이미지" className="object-cover" />
       </button>
       <div
-        className="text-sm font-bold cursor-pointer hover:underline rounded"
+        className="pt-3 text-sm font-bold cursor-pointer hover:underline rounded"
         onClick={goToPage}
         role="button"
       >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-blackish pl-1">{price}원</div>
+      <div className="pt-3 text-sm font-bold text-blackish pl-1 ">
+        {price}원
+      </div>
       <div className="flex flex-col items-center">
-        <div className="pt-2.5 text-sm text-danger">{displayStatus}</div>
+        <div className="pt-4 text-sm pr-12 text-danger">{displayStatus}</div>
         <div className="flex flex-col items-center pt-1">
           {showConfirmPurchaseButton && (
             <>

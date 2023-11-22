@@ -49,7 +49,7 @@ export function PurchaseContainer() {
       <div className="pl-4 pb-2 pt-6 block text-md font-semibold">
         구매 목록
       </div>
-      <section className="bg-blue3 p-6 rounded-xl whitespace-no-wrap shadow-md min-w-[37.25rem] text-center">
+      <section className="bg-blue3 p-6 rounded-xl whitespace-no-wrap shadow-md sm:min-w-[10rem] md:min-w-[35.25rem] text-center">
         <div className="flex flex-col justify-center items-center">
           <div className="flex justify-center space-x-12">
             <div className="block pl-10 pr-8">
@@ -146,7 +146,7 @@ export function AuctionContainer() {
       <div className="pl-4 pb-2 pt-6 block text-md font-semibold">
         경매 목록
       </div>
-      <section className="bg-blue3 p-6 rounded-xl whitespace-no-wrap shadow-md min-w-[37.25rem] text-center">
+      <section className="bg-blue3 p-6 rounded-xl whitespace-no-wrap shadow-md sm:min-w-[10rem] md:min-w-[35.25rem] text-center">
         <div className="flex flex-col justify-center items-center">
           <div className="flex justify-center space-x-12">
             <div className="block pl-10 pr-8">
@@ -232,7 +232,7 @@ export function SellingContainer() {
       <div className="pl-4 pb-2 pt-6 block text-md font-semibold">
         판매 목록
       </div>
-      <section className="bg-blue3 p-6 rounded-xl whitespace-no-wrap shadow-md min-w-[37.25rem] text-center ">
+      <section className="bg-blue3 p-6 rounded-xl whitespace-no-wrap shadow-md sm:min-w-[10rem] md:min-w-[35.25rem] text-center ">
         <div className="flex flex-col justify-center items-center">
           <div className="flex justify-center space-x-12">
             <div className="block pl-10 pr-8">
