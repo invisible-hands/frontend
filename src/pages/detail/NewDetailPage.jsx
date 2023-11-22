@@ -14,7 +14,7 @@ function NewDetailPage() {
     const fetchNewItems = async () => {
       try {
         const response = await axios.get(
-          `https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=${page}&size=20&sort=latest,asc&progressFilter=false`,
+          `https://k77ac60ee78b9a.user-app.krampoline.com/api/auction?page=${page}&size=20&sort=latest,asc&progressFilter=false`,
         );
 
         if (response.data.status === 'Success') {

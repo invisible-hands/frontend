@@ -110,7 +110,7 @@ function ProfilePage() {
         const { accessToken } = useLoginStore.getState();
 
         const response = await axios.get(
-          'https://ka1425de5708ea.user-app.krampoline.com/api/user',
+          'https://k77ac60ee78b9a.user-app.krampoline.com/api/user',
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -220,7 +220,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://ka1425de5708ea.user-app.krampoline.com/api/user/nickname',
+        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/nickname',
         { nickname },
         {
           headers: {
@@ -262,7 +262,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://ka1425de5708ea.user-app.krampoline.com/api/user/address',
+        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/address',
         addressData,
         {
           headers: {
@@ -287,7 +287,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://ka1425de5708ea.user-app.krampoline.com/api/user/account',
+        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/account',
         { bankName, bankAccount },
         {
           headers: {
@@ -354,7 +354,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://ka1425de5708ea.user-app.krampoline.com/api/user/role',
+        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/role',
         {},
         {
           headers: {

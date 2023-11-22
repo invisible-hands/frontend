@@ -13,7 +13,7 @@ function NewPreview() {
     const fetchNewItems = async () => {
       try {
         const response = await axios.get(
-          'https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=0&size=3&sort=latest,asc&progressFilter=true',
+          'https://k77ac60ee78b9a.user-app.krampoline.com/api/auction?page=0&size=3&sort=latest,asc&progressFilter=true',
         );
         setNewItems(response.data.data.items);
       } catch (error) {
