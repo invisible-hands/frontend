@@ -14,7 +14,7 @@ function NewPreview() {
     const fetchNewItems = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/api/auction?page=0&size=3&sort=latest,asc&progressFilter=true`,
+          `${API_URL}/api/auction?page=0&size=3&sort=latest,desc&progressFilter=true`,
         );
         setNewItems(response.data.data.items);
       } catch (error) {

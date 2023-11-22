@@ -15,7 +15,7 @@ function NewDetailPage() {
     const fetchNewItems = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/api/auction?page=${page}&size=20&sort=latest,asc&progressFilter=false`,
+          `${API_URL}/api/auction?page=${page}&size=20&sort=latest,desc&progressFilter=false`,
         );
 
         if (response.data.status === 'Success') {
