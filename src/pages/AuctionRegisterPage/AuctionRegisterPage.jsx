@@ -164,6 +164,7 @@ export default function AuctionRegisterPage() {
                   <label>경매시작가</label>
                   <br />
                   <input
+                    type="number"
                     name="startPrice"
                     className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded"
                     value={otherData.startPrice}
@@ -174,6 +175,7 @@ export default function AuctionRegisterPage() {
                   <label>즉시거래가</label>
                   <br />
                   <input
+                    type="number"
                     name="instantPrice"
                     className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded"
                     value={otherData.instantPrice}
@@ -188,7 +190,7 @@ export default function AuctionRegisterPage() {
                     <div className="relative mb-3">
                       <select
                         name="duration"
-                        className="w-full"
+                        className="w-full border-blackish border-2"
                         value={otherData.duration}
                         onChange={handleChange}
                       >
