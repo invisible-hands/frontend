@@ -40,7 +40,7 @@ export default function AuctionPage() {
   if (auctionQuery.status === 'error')
     return <div>{auctionQuery.error.message}</div>;
   if (auctionQuery.status === 'success') {
-    console.log(auctionQuery.data.data.auctionInfo);
+    console.log(auctionQuery.data.data);
   }
   return (
     <div className="flex justify-center">
@@ -111,7 +111,9 @@ export default function AuctionPage() {
                 ) &&
                 !isAuctionEnd(
                   auctionQuery.data.data.auctionInfo.endAuctionTime,
-                ) && (
+                ) &&
+                auctionQuery.data.data.auctionInfo.auctionStatus ===
+                  'AUCTION_PROGRESS' && (
                   <>
                     <TERipple rippleColor="white">
                       <button
@@ -190,6 +192,7 @@ export default function AuctionPage() {
         showModal={showBidHistoryModal}
         setShowModal={setShowBidHistoryModal}
         auctionId={auctionId}
+        sellerId={auctionQuery.data.data.auctionInfo.sellerId}
       />
       {/* 결제 확정 모달  */}
       <PaymentConfirmModal
@@ -197,8 +200,8 @@ export default function AuctionPage() {
         setShowModal={setShowConfirmModal}
         setShowPayModal={setShowPayModal}
         point={{
-          currentPoint: auctionQuery.data.data.auctionInfo.instantPrice,
-          instantPoint: auctionQuery.data.data.auctionInfo.currentPrice,
+          currentPoint: auctionQuery.data.data.auctionInfo.currentPrice,
+          instantPoint: auctionQuery.data.data.auctionInfo.instantPrice,
         }}
         auctionName={auctionQuery.data.data.auctionInfo.title}
         auctionId={auctionId}

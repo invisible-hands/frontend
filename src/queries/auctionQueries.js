@@ -34,6 +34,9 @@ export async function purchaseInstant(id, userToken) {
   await axios
     .post(url, {}, config)
     .then(res => {
+      if (res.status === 200) {
+        alert('즉시 구매가 완료되었습니다');
+      }
       console.log(res);
     })
     .catch(err => {

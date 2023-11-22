@@ -24,6 +24,7 @@ export default function AuctionRegisterPage() {
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [isAgreed, setIsAgreed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = e => {
     setOtherData({
@@ -56,6 +57,8 @@ export default function AuctionRegisterPage() {
       new Blob([JSON.stringify(dataSet)], { type: 'application/json' }),
     );
 
+    setLoading(true);
+
     axios
       .post(`${API_URL}/api/auction`, formData, {
         headers: {
@@ -68,7 +71,8 @@ export default function AuctionRegisterPage() {
         alert('상품이 등록되었습니다.');
         navigate('/');
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
 
   const handleSubmit = e => {
@@ -83,8 +87,9 @@ export default function AuctionRegisterPage() {
       !title || !content || !itemCondition || !startPrice || !instantPrice;
 
     // 버튼을 활성화 또는 비활성화합니다.
+    console.log(isAnyFieldEmpty || !isAgreed);
     setIsButtonDisabled(isAnyFieldEmpty || !isAgreed);
-  }, [otherData]);
+  }, [otherData, isAgreed]);
 
   return (
     <div className="flex justify-center">
@@ -318,7 +323,7 @@ export default function AuctionRegisterPage() {
                     ? `bg-danger hover-bg-danger-300`
                     : `bg-deepblue1 hover:bg-deepblue2`
                 } px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
-                disabled={isButtonDisabled}
+                disabled={isButtonDisabled || loading}
               >
                 상품 등록하기
               </button>
