@@ -9,6 +9,8 @@ function HotPreview() {
   const navigate = useNavigate();
   const [hotItems, setHotItems] = useState([]);
   const API_URL = import.meta.env.VITE_APP_URL;
+  const JS_KEY = import.meta.env.VITE_KAKAO_JS_KEY;
+  console.log(`API_URL : ${API_URL} \n JS_KEY : ${JS_KEY}`);
 
   useEffect(() => {
     const fetchHotItems = async () => {
