@@ -36,7 +36,7 @@ export default function AuctionPage() {
     queryFn: () => fetchAuctionInfo(auctionId),
   });
 
-  // if (auctionQuery.status === 'pending') return <div>로딩중...</div>;
+  if (auctionQuery.status === 'pending') return <div>로딩중...</div>;
   if (auctionQuery.status === 'error')
     return <div>{auctionQuery.error.message}</div>;
   if (auctionQuery.status === 'success') {
