@@ -77,10 +77,6 @@ const useLoginStore = create(
       name: 'login-storage',
       storage: createJSONStorage(() => localStorage),
     },
-    {
-      name: 'login-storage',
-      storage: createJSONStorage(() => localStorage),
-    },
   ),
 );
 

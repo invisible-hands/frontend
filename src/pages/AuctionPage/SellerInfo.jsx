@@ -16,7 +16,9 @@ export default function SellerInfo({ auctionId }) {
   return (
     <>
       {/* <!-- 판매자 프로필 --> */}
-      <h3>판매자 정보</h3>
+      <h3 className="text-2xl font-extrabold mb-4 text-deepblue2">
+        판매자 정보
+      </h3>
       <div className="flex">
         <div>
           <img
@@ -38,6 +40,7 @@ export default function SellerInfo({ auctionId }) {
         <span className="cursor-pointer text-sm">{`더보기 >`}</span>
         {/* 판매자 목록을 확인할 수 있는 경로로 이동하기 */}
       </div>
+
       {data.data.auctionList
         .filter(
           auction =>
