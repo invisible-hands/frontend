@@ -9,11 +9,9 @@ function Sidebar() {
   };
 
   return (
-
     <div className="sticky h-full min-h-screen border-r pt-3 px-3 shadow-md md:pt-6 md:px-6 lg:pt-9 lg:px-9">
       <div className="text-deepblue1 text-lg mb-4 select-none md:text-2xl">
         마이페이지
-
       </div>
       <ul className="space-y-2">
         <div className="block text-black rounded select-none md:text-xl">
