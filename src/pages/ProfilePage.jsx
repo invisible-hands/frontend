@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TERipple } from 'tw-elements-react';
 import DaumPostcode from 'react-daum-postcode';
 import axios from 'axios';
@@ -8,9 +9,15 @@ import profileImg from '../assets/bettingground.png';
 import Sidebar from '../components/Sidebar';
 
 function ProfilePage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const [originalNickname, setOriginalNickname] = useState('');
+  const [originalPostcode, setOriginalPostcode] = useState('');
+  const [originalAddress, setOriginalAddress] = useState('');
+  const [originalAddressDetail, setOriginalAddressDetail] = useState('');
+  const [originalBankName, setOriginalBankName] = useState('');
+  const [originalBankAccount, setOriginalBankAccount] = useState('');
+
   const [profileImage, setProfileImage] = useState('');
-  const [name] = useState('');
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -19,8 +26,6 @@ function ProfilePage() {
   const [bankName, setBankName] = useState('');
   const [bankAccount, setBankAccount] = useState('');
   const [virtualMoney, setVirtualMoney] = useState('');
-  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
-  const [chargeAmount, setChargeAmount] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isUserRole, setIsUserRole] = useState(false);
 
@@ -36,16 +41,34 @@ function ProfilePage() {
   const [addressSaved, setAddressSaved] = useState(false);
   const [accountSaved, setAccountSaved] = useState(false);
 
-  const bankOptions = ['국민은행', '농협은행', '신한은행'];
+  const bankOptions = [
+    'KB국민은행',
+    'NH농협은행',
+    '신한은행',
+    '우리은행',
+    '하나은행',
+    'IBK기업은행',
+    'SC제일은행',
+    '씨티은행',
+    '대구은행',
+    '부산은행',
+    '광주은행',
+    '제주은행',
+    '전북은행',
+    '경남은행',
+  ];
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
+  const [chargeAmount, setChargeAmount] = useState('');
 
   // 모달 열기
   const openAddressModal = () => {
-    setIsModalOpen(true);
+    setIsAddressModalOpen(true);
   };
 
   // 모달 닫기
   const closeAddressModal = () => {
-    setIsModalOpen(false);
+    setIsAddressModalOpen(false);
   };
 
   const validateNickname = value => {
@@ -97,6 +120,13 @@ function ProfilePage() {
         const userData = response.data.data;
         console.log(userData);
 
+        setOriginalNickname(userData.nickname);
+        setOriginalPostcode(userData.zipcode);
+        setOriginalAddress(userData.roadName);
+        setOriginalAddressDetail(userData.detailAddress);
+        setOriginalBankName(userData.bankName);
+        setOriginalBankAccount(userData.bankAccount);
+
         setProfileImage(userData.profileImage);
         setNickname(userData.nickname);
         setEmail(userData.email);
@@ -106,16 +136,15 @@ function ProfilePage() {
         setBankName(userData.bankName);
         setBankAccount(userData.bankAccount);
         setVirtualMoney(userData.money);
-
-        if (userData.role === 'USER') {
-          setAgreedToTerms(true);
-          setIsUserRole(true);
-        } else {
-          setIsUserRole(false);
-        }
+        setAgreedToTerms(userData.role === 'USER');
+        setIsUserRole(userData.role === 'USER');
 
         const errorMessage = validateNickname(userData.nickname);
         setNicknameError(errorMessage);
+
+        if (!errorMessage) {
+          setNicknameSaved(true);
+        }
       } catch (error) {
         console.error('Error while fetching profile data:', error);
       }
@@ -124,43 +153,58 @@ function ProfilePage() {
     fetchProfileData();
   }, []);
 
-  const handleNicknameChange = e => {
-    const { value } = e.target;
-    setNickname(value); // 닉네임 상태 업데이트
-    setNicknameSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
+  const handleNicknameChange = value => {
+    setNickname(value);
+    setNicknameSaved(value === originalNickname);
 
-    // 유효성 검사를 통해 에러 메시지 업데이트
     const errorMessage = validateNickname(value);
     setNicknameError(errorMessage);
   };
 
-  const handleAddressDetailChange = e => {
-    const { value } = e.target;
-    setAddressDetail(value);
-    setAddressSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
-
-    // 상세 주소가 비어있는 경우 오류 메시지 설정
-    if (!value.trim()) {
-      setAddressDetailError('상세 주소를 비워둘 수 없습니다.');
-    } else {
-      // 상세 주소에 입력이 있는 경우 오류 메시지 제거
-      setAddressDetailError('');
+  const handleAddressChange = (field, value) => {
+    if (field === 'postcode') {
+      setPostcode(value);
+    } else if (field === 'address') {
+      setAddress(value);
+    } else if (field === 'addressDetail') {
+      setAddressDetail(value);
+      // 상세 주소가 비어있는 경우 오류 메시지 설정
+      if (!value.trim()) {
+        setAddressDetailError('상세 주소를 비워둘 수 없습니다.');
+      } else {
+        // 상세 주소에 입력이 있는 경우 오류 메시지 제거
+        setAddressDetailError('');
+      }
     }
+
+    // postcode, address 또는 addressDetail이 변경되면 저장된 상태를 false로 설정
+    setAddressSaved(
+      postcode === originalPostcode &&
+        address === originalAddress &&
+        addressDetail === originalAddressDetail,
+    );
   };
 
-  const handleBankAccountChange = e => {
-    const { value } = e.target;
-    setBankAccount(value); // 계좌번호 상태 업데이트
-    setAccountSaved(false); // 변경되었으므로 저장된 상태를 false로 설정
+  const handleBankAccountChange = (field, value) => {
+    if (field === 'bankAccount') {
+      setBankAccount(value); // 계좌번호 상태 업데이트
+      const errorMessage = validateBankAccount(value);
+      setBankAccountError(errorMessage); // 에러 메시지 상태 업데이트
+    } else if (field === 'bankName') {
+      setBankName(value); // 은행명 상태 업데이트
+    }
 
-    const errorMessage = validateBankAccount(value);
-    setBankAccountError(errorMessage); // 에러 메시지 상태 업데이트
+    // 은행명이나 계좌번호가 변경되었을 때 저장된 상태를 false로 설정
+    setAccountSaved(
+      bankName === originalBankName && bankAccount === originalBankAccount,
+    );
   };
 
   const handleSelectAddress = data => {
     setAddress(data.address);
     setPostcode(data.zonecode);
-    // setAddress;
+
+    setAddressSaved(false);
     closeAddressModal();
   };
 
@@ -186,8 +230,18 @@ function ProfilePage() {
       );
       console.log(response.data);
       setNicknameSaved(true);
+      useLoginStore.getState().updateNickname(nickname);
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 400) {
+        if (error.response.data.message === '이미 존재하는 닉네임입니다.') {
+          setNicknameError(error.response.data.message);
+        } else {
+          setNicknameError(error.response.data.message);
+        }
+      } else {
+        console.error(error);
+        setNicknameError('닉네임 변경 중 오류가 발생했습니다.');
+      }
     } finally {
       setIsUpdatingNickname(false);
     }
@@ -200,7 +254,7 @@ function ProfilePage() {
     const addressData = {
       roadName: address,
       addressName: address,
-      zipcode: parseInt(postcode, 10),
+      zipcode: postcode,
       detailAddress: addressDetail,
     };
 
@@ -293,6 +347,9 @@ function ProfilePage() {
   const activateAccount = async () => {
     if (!canActivateAccount()) return;
 
+    const { accessToken: currentAccessToken } = useLoginStore.getState();
+    console.log(`이전 토큰: ${currentAccessToken}`);
+
     try {
       const { accessToken } = useLoginStore.getState();
 
@@ -306,7 +363,21 @@ function ProfilePage() {
         },
       );
       console.log(response.data);
-      // 활성화 성공에 대한 처리
+
+      useLoginStore.getState().updateRole(response.data.data.role);
+      useLoginStore
+        .getState()
+        .logIn(
+          response.data.data.nickname,
+          response.data.data.accessToken,
+          response.data.data.userId,
+        );
+
+      const newAccessToken = useLoginStore.getState().accessToken;
+      console.log(`바뀐 토큰: ${newAccessToken}`);
+
+      alert('축하합니다! 이제 경매를 등록하고, 입찰할 수 있어요.');
+      navigate('/');
     } catch (error) {
       console.error(error);
       // 활성화 실패에 대한 처리
@@ -316,7 +387,7 @@ function ProfilePage() {
   return (
     <div className="whitespace-nowrap max-w-screen-lg mx-auto">
       {/* 모달 */}
-      {isModalOpen && (
+      {isAddressModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="modal max-w-md bg-white p-4 rounded shadow-lg flex flex-col">
             <button
@@ -334,53 +405,49 @@ function ProfilePage() {
       {/* 프로필 정보 수정 섹션 */}
       <div className="w-full flex">
         <Sidebar />
-        <div className="flex-1">
-          {' '}
-          <div className="mb-2">
+        <div className="flex-1 text-xs justify-center mx-auto md:text-lg md:mx-12">
+          <div>
             {profileImage ? (
               <img
                 src={profileImage}
                 alt="프로필 이미지"
-                className="w-32 h-32 rounded-full my-2"
+                className="w-32 h-32 rounded-full mx-auto my-4"
               />
             ) : (
               <img
                 src={profileImg}
                 alt="프로필 이미지"
-                className="w-32 h-32 rounded-full my-2 border-solid border-2 border-blue2"
+                className="w-32 h-32 rounded-full mx-auto my-4 border-solid border-2 border-blue2"
               />
             )}
           </div>
-          <div className="mb-2">
-            <input
-              type="text"
-              id="name"
-              value={name}
-              readOnly
-              placeholder="이름"
-              disabled
-              className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
-            />
-          </div>
-          <div className="mb-2">
+          <div>
             <input
               type="text"
               id="nickname"
               value={nickname}
-              onChange={handleNicknameChange}
+              onChange={e => handleNicknameChange(e.target.value)}
               placeholder="닉네임"
-              className={`mb-2 px-2 py-1 rounded border-2 ${
-                nicknameError ? 'border-red-500' : 'border-gray-300'
+              className={`ml-3 mb-2 px-2 py-1 rounded border ${
+                nicknameError ? 'border-red-500' : 'border-deepblue1'
               }`}
               data-te-input-showcounter="true"
               maxLength="12"
             />
             <button
               type="button"
-              disabled={nicknameError || !nickname || isUpdatingNickname}
+              disabled={
+                nickname === originalNickname ||
+                nicknameError ||
+                isUpdatingNickname
+              }
               onClick={updateNickname}
               className={`ml-2 ${
-                nicknameError || !nickname ? 'bg-grayish' : 'bg-deepblue2'
+                nickname === originalNickname ||
+                nicknameError ||
+                isUpdatingNickname
+                  ? 'bg-gray-300'
+                  : 'bg-deepblue2'
               } text-white px-2 py-1 rounded`}
             >
               {isUpdatingNickname ? '저장 중...' : '저장'}
@@ -389,7 +456,7 @@ function ProfilePage() {
               <p className="text-red-500 text-xs">{nicknameError}</p>
             )}
           </div>
-          <div className="mb-2">
+          <div>
             <input
               type="email"
               id="email"
@@ -397,61 +464,75 @@ function ProfilePage() {
               readOnly
               placeholder="이메일"
               disabled
-              className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
+              className="ml-3 mb-2 px-2 py-1 rounded border border-deepblue1 bg-grayish"
             />
           </div>
-          <div className="mb-2">
+          <div>
             <input
               type="text"
               id="postcode"
               value={postcode}
               readOnly
+              onChange={e => handleAddressChange('postcode', e.target.value)}
               placeholder="우편번호"
               disabled
-              className="mb-2 px-2 py-1 rounded border-2 border-gray-300"
+              className="ml-3 mb-2 px-2 py-1 rounded border border-deepblue1"
             />
           </div>
-          <div className="mb-2">
+          <div>
             <input
               type="text"
               id="address"
               value={address}
+              onChange={e => handleAddressChange('address', e.target.value)}
               readOnly
               placeholder="배송지"
               disabled
-              className="px-2 py-1 rounded border-2 border-gray-300"
+              className="ml-3 mb-2 px-2 py-1 rounded border border-deepblue1"
             />
-            <TERipple rippleColor="light" rippleCentered>
-              <button
-                type="button"
-                className="bg-deepblue2 text-white px-2 py-1 rounded ml-2"
-                onClick={openAddressModal}
-              >
-                검색
-              </button>
-            </TERipple>
+            <button
+              type="button"
+              className="bg-deepblue2 text-white px-2 py-1 rounded ml-2"
+              onClick={openAddressModal}
+            >
+              검색
+            </button>
           </div>
           {/* 상세 주소 입력란 */}
-          <div className="mb-2">
+          <div>
             <input
               type="text"
               id="addressDetail"
               value={addressDetail}
-              onChange={handleAddressDetailChange}
+              onChange={e =>
+                handleAddressChange('addressDetail', e.target.value)
+              }
               placeholder="상세 주소 입력"
-              className={`truncate flex-1 mb-2 px-2 py-1 rounded border-2 ${
-                addressDetailError ? 'border-red-500' : 'border-gray-300'
+              className={`truncate flex-1 ml-3 mb-2 px-2 py-1 rounded border ${
+                addressDetailError ? 'border-red-500' : 'border-deepblue1'
               }`}
             />
             <button
               type="button"
               disabled={
-                !postcode || !address || !addressDetail || isUpdatingAddress
+                !postcode ||
+                !address ||
+                !addressDetail ||
+                (postcode === originalPostcode &&
+                  address === originalAddress &&
+                  addressDetail === originalAddressDetail) ||
+                isUpdatingAddress
               }
               onClick={updateAddress}
               className={`ml-2 ${
-                !postcode || !address || !addressDetail
-                  ? 'bg-grayish'
+                !postcode ||
+                !address ||
+                !addressDetail ||
+                (postcode === originalPostcode &&
+                  address === originalAddress &&
+                  addressDetail === originalAddressDetail) ||
+                isUpdatingAddress
+                  ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-deepblue2'
               } text-white px-2 py-1 rounded`}
             >
@@ -462,11 +543,13 @@ function ProfilePage() {
             )}
           </div>
           {/* 계좌번호 및 은행 선택 드롭다운 */}
-          <div className="mb-2">
+          <div>
             <select
               value={bankName}
-              onChange={e => setBankName(e.target.value)}
-              className="bg-grayish text-deepblue2 px-2 py-1 rounded mr-2"
+              onChange={e =>
+                handleBankAccountChange('bankName', e.target.value)
+              }
+              className="bg-grayish text-deepblue2 ml-3 px-2 py-1 rounded mr-2 mb-2 max-h-36 overflow-y-auto"
             >
               <option value="">은행 선택</option>
               {bankOptions.map(option => (
@@ -475,14 +558,18 @@ function ProfilePage() {
                 </option>
               ))}
             </select>
+          </div>
+          <div>
             <input
               type="text"
               id="bankAccount"
               value={bankAccount}
-              onChange={handleBankAccountChange}
+              onChange={e =>
+                handleBankAccountChange('bankAccount', e.target.value)
+              }
               placeholder="계좌번호"
-              className={`flex-1 px-2 py-1 rounded border-2 ${
-                bankAccountError ? 'border-red-500' : 'border-gray-300'
+              className={`flex-1 ml-3 px-2 py-1 rounded border mb-2 ${
+                bankAccountError ? 'border-red-500' : 'border-deepblue1'
               }`}
             />
             <button
@@ -491,11 +578,16 @@ function ProfilePage() {
               disabled={
                 !bankAccount ||
                 !bankName ||
-                isUpdatingAccount ||
-                bankAccountError
-              } // 에러가 있을 때 버튼 비활성화
+                (bankAccount === originalBankAccount &&
+                  bankName === originalBankName) ||
+                isUpdatingAccount
+              }
               className={`ml-2 ${
-                !bankAccount || !bankName || bankAccountError
+                !bankAccount ||
+                !bankName ||
+                (bankAccount === originalBankAccount &&
+                  bankName === originalBankName) ||
+                isUpdatingAccount
                   ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-deepblue2'
               } text-white px-2 py-1 rounded`}
@@ -524,7 +616,7 @@ function ProfilePage() {
                   value={chargeAmount}
                   onChange={e => setChargeAmount(e.target.value)}
                   placeholder="충전 금액 입력"
-                  className="mb-4 px-2 py-1 rounded border-2 border-gray-300 w-full"
+                  className="mb-4 px-2 py-1 bg-grayish rounded border border-deepblue1 w-full"
                 />
                 <button
                   type="button"
@@ -536,39 +628,49 @@ function ProfilePage() {
               </div>
             </div>
           )}
-          <div className="mb-2">
+          <div>
             <input
               type="text"
               id="virtualMoney"
               value={virtualMoney}
               readOnly
-              className="bg-gray-100 text-gray-500 px-2 py-1 rounded"
+              className="border border-deepblue1 text-gray-500 px-2 py-1 ml-3 mb-2 rounded"
             />
             <button
               type="button"
               onClick={openChargeModal}
-              className="bg-deepblue2 text-white px-2 py-1 rounded"
+              className="bg-deepblue2 text-white px-2 py-1 ml-2 rounded"
             >
               충전
             </button>
           </div>
           <div className="mb-4">
-            <p className="text-sm text-left">
-              <strong>약관 동의서:</strong>
-              <br />
-              본 쇼핑몰의 이용자는 아래의 약관 내용에 동의한 것으로 간주합니다.
-              <br />
-              모든 제품의 주문과 환불은 쇼핑몰의 정책에 따라 진행됩니다.
-              <br />
-              개인정보는 보안을 위해 최선을 다해 보호하며, 제3자에게 제공되지
-              않습니다.
-              <br />
-              본 약관은 사전 통보 없이 변경될 수 있으며, 변경된 약관은 쇼핑몰
-              사이트에 공지됩니다.
-              <br />
-              문제 발생 시, 본 약관 및 관련 법률에 따라 처리됩니다.
-            </p>
-            <label htmlFor="termsCheckbox" className="block text-left mt-2">
+            <div className="terms-agreement overflow-y-auto h-40 mx-3 p-2 border border-grayish rounded">
+              <p className="text-xs text-left whitespace-normal">
+                <strong>약관 동의서</strong>
+                <br />
+                <br />
+                본 쇼핑몰의 이용자는 아래의 약관 내용에 동의한 것으로
+                간주합니다.
+                <br />
+                모든 제품의 주문과 환불은 쇼핑몰의 정책에 따라 진행됩니다.
+                <br />
+                개인정보는 보안을 위해 최선을 다해 보호됩니다. 단, 경매 낙찰 시
+                판매자는 상품 배송을 위해 구매자의 주소 정보를 제공받게 됩니다.
+                <br />
+                본 약관에 동의하고 계정을 활성화하면, 경매 입찰 및 상품 등록
+                기능을 이용할 수 있습니다.
+                <br />
+                본 약관은 사전 통보 없이 변경될 수 있으며, 변경된 약관은 쇼핑몰
+                사이트에 공지됩니다.
+                <br />
+                문제 발생 시, 본 약관 및 관련 법률에 따라 처리됩니다.
+              </p>
+            </div>
+            <label
+              htmlFor="termsCheckbox"
+              className="block text-left mt-2 mx-4"
+            >
               <input
                 type="checkbox"
                 id="termsCheckbox"
@@ -581,16 +683,18 @@ function ProfilePage() {
             </label>
           </div>
           <div className="mb-4">
-            <button
-              type="submit"
-              disabled={!canActivateAccount()}
-              onClick={activateAccount}
-              className={`bg-deepblue2 text-white px-4 py-2 rounded ${
-                !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              계정 활성화
-            </button>
+            <TERipple rippleColor="light" rippleCentered>
+              <button
+                type="submit"
+                disabled={!canActivateAccount() || isUserRole}
+                onClick={activateAccount}
+                className={`bg-deepblue2 text-white px-4 py-2 ml-3 rounded ${
+                  !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                {isUserRole ? '약관 동의 완료' : '계정 활성화'}
+              </button>
+            </TERipple>
           </div>
         </div>
       </div>

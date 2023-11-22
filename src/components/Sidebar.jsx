@@ -9,36 +9,37 @@ function Sidebar() {
   };
 
   return (
-    <div className="sticky top-0 w-[20%] min-w-[15.9rem] h-full min-h-screen border-r shadow-md pt-10 pl-10">
-      <div className="text-black font-black text-2xl p-4 pl-10">
-        마이 페이지
+    <div className="sticky h-full min-h-screen border-r pt-3 px-3 shadow-md md:pt-6 md:px-6 lg:pt-9 lg:px-9">
+      <div className="text-deepblue1 text-lg mb-4 select-none md:text-2xl">
+        마이페이지
       </div>
-      <div className="mb-1" />
-      <ul className="space-y-2 p-4 pl-8">
-        <li className="block text-black font-extrabold text-2xl hover:bg-gray-200 p-2 rounded">
-          <a
-            href="/profile"
-            onClick={e => {
-              e.preventDefault();
-              goToPage('/profile');
-            }}
-          >
-            프로필 정보
-          </a>
-        </li>
-        <li className="block text-black font-extrabold text-2xl hover:bg-gray-200 p-2 rounded">
-          <a
-            href="/profile/shopping"
-            onClick={e => {
-              e.preventDefault();
-              goToPage('/profile/shopping');
-            }}
-          >
-            쇼핑 정보
-          </a>
-        </li>
-        <div className="ml-4">
-          <li className="block text-black font-medium text-xl hover:bg-gray-200 p-2 rounded">
+      <ul className="space-y-2">
+        <div className="block text-black rounded select-none md:text-xl">
+          <li className="mb-2 hover:bg-gray-200">
+            <a
+              href="/profile"
+              onClick={e => {
+                e.preventDefault();
+                goToPage('/profile');
+              }}
+            >
+              프로필 정보
+            </a>
+          </li>
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-xl">
+            <a
+              href="/profile/shopping"
+              onClick={e => {
+                e.preventDefault();
+                goToPage('/profile/shopping');
+              }}
+            >
+              쇼핑 정보
+            </a>
+          </li>
+        </div>
+        <div className="block text-black text-sm mt-4">
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-lg">
             <a
               href="/profile/shopping/purchase"
               onClick={e => {
@@ -49,7 +50,7 @@ function Sidebar() {
               구매 목록
             </a>
           </li>
-          <li className="block text-black font-medium text-xl hover:bg-gray-200 p-2 rounded">
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-lg">
             <a
               href="/profile/shopping/auction"
               onClick={e => {
@@ -60,7 +61,7 @@ function Sidebar() {
               경매 목록
             </a>
           </li>
-          <li className="block text-black font-medium text-xl hover:bg-gray-200 p-2 rounded">
+          <li className="mb-2 hover:bg-gray-200 rounded select-none md:text-lg">
             <a
               href="/profile/shopping/selling"
               onClick={e => {
