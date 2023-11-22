@@ -36,7 +36,7 @@ export default function AuctionPage() {
     queryFn: () => fetchAuctionInfo(auctionId),
   });
 
-  if (auctionQuery.status === 'pending') return <div>로딩중...</div>;
+  // if (auctionQuery.status === 'pending') return <div>로딩중...</div>;
   if (auctionQuery.status === 'error')
     return <div>{auctionQuery.error.message}</div>;
   if (auctionQuery.status === 'success') {
@@ -154,7 +154,9 @@ export default function AuctionPage() {
           </h2>
           <p>{auctionQuery.data.data.auctionInfo.content}</p>
           <div>
-            <h2>태그</h2>
+            <h2 className="text-2xl font-extrabold mb-4 text-deepblue2">
+              태그
+            </h2>
             <p className="space-x-2">
               {auctionQuery.data.data.tags.length !== 0 &&
                 auctionQuery.data.data.tags.map(tag => (
