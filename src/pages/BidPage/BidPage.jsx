@@ -43,10 +43,13 @@ export default function BidPage() {
       .post(url, priceData, config)
       .then(res => {
         console.log(res);
-        setShowBidSuccessModal(true);
+        if (res.status === 200) {
+          alert('입찰에 성공했습니다.');
+          setShowBidSuccessModal(true);
+        }
       })
       .catch(err => {
-        console.log(err.response.data.message);
+        alert(err.response.data.message);
       });
   }
 

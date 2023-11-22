@@ -65,6 +65,7 @@ export default function AuctionRegisterPage() {
       })
       .then(res => {
         console.log(res.status, res.data);
+        alert('상품이 등록되었습니다.');
         navigate('/');
       })
       .catch(err => console.log(err));
