@@ -88,11 +88,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/profile/shopping',
-        element: <MyShoppingPage />,
+        element: (
+          <ProtectedRoute>
+            <MyShoppingPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '/profile/shopping/:recordType',
-        element: <MyShoppingPage />,
+        element: (
+          <ProtectedRoute>
+            <MyShoppingPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
