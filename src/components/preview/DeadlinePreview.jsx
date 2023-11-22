@@ -8,12 +8,13 @@ import ItemDetail from '../ItemDetail';
 function HotPreview() {
   const navigate = useNavigate();
   const [deadlineItems, setDeadlineItems] = useState([]);
+  const API_URL = import.meta.env.VITE_APP_URL;
 
   useEffect(() => {
     const fetchDeadlineItems = async () => {
       try {
         const response = await axios.get(
-          'https://k77ac60ee78b9a.user-app.krampoline.com/api/auction?page=0&size=3&sort=deadline,asc&progressFilter=true',
+          `${API_URL}/api/auction?page=0&size=3&sort=deadline,asc&progressFilter=true`,
         );
         setDeadlineItems(response.data.data.items);
       } catch (error) {

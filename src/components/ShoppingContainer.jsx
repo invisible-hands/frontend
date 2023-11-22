@@ -3,8 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../stores/loginStore';
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const axiosInstance = axios.create({
-  baseURL: 'https://k77ac60ee78b9a.user-app.krampoline.com',
+  baseURL: API_URL,
 });
 
 export function PurchaseContainer() {

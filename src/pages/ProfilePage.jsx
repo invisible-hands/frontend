@@ -10,6 +10,7 @@ import Sidebar from '../components/Sidebar';
 
 function ProfilePage() {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_APP_URL;
   const [originalNickname, setOriginalNickname] = useState('');
   const [originalPostcode, setOriginalPostcode] = useState('');
   const [originalAddress, setOriginalAddress] = useState('');
@@ -109,14 +110,11 @@ function ProfilePage() {
       try {
         const { accessToken } = useLoginStore.getState();
 
-        const response = await axios.get(
-          'https://k77ac60ee78b9a.user-app.krampoline.com/api/user',
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+        const response = await axios.get(`${API_URL}/api/user`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
-        );
+        });
         const userData = response.data.data;
         console.log(userData);
 
@@ -220,7 +218,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/nickname',
+        `${API_URL}/api/user/nickname`,
         { nickname },
         {
           headers: {
@@ -262,7 +260,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/address',
+        `${API_URL}/api/user/address`,
         addressData,
         {
           headers: {
@@ -287,7 +285,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/account',
+        `${API_URL}/api/user/account`,
         { bankName, bankAccount },
         {
           headers: {
@@ -354,7 +352,7 @@ function ProfilePage() {
       const { accessToken } = useLoginStore.getState();
 
       const response = await axios.put(
-        'https://k77ac60ee78b9a.user-app.krampoline.com/api/user/role',
+        `${API_URL}/api/user/role`,
         {},
         {
           headers: {

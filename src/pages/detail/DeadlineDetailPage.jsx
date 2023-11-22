@@ -6,6 +6,7 @@ import ItemDetail from '../../components/ItemDetail';
 
 function DeadlineDetailPage() {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_APP_URL;
   const [deadlineItems, setDeadlineItems] = useState([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -14,7 +15,7 @@ function DeadlineDetailPage() {
     const fetchDeadlineItems = async () => {
       try {
         const response = await axios.get(
-          `https://k77ac60ee78b9a.user-app.krampoline.com/api/auction?page=${page}&size=20&sort=deadline,asc&progressFilter=true`,
+          `${API_URL}/api/auction?page=${page}&size=20&sort=deadline,asc&progressFilter=true`,
         );
 
         if (response.data.status === 'Success') {

@@ -57,7 +57,7 @@ export default function AuctionRegisterPage() {
     );
 
     axios
-      .post(`${API_URL}/auction`, formData, {
+      .post(`${API_URL}/api/auction`, formData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'multipart/form-data',

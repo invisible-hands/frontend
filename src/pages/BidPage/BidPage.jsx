@@ -29,7 +29,7 @@ export default function BidPage() {
   });
 
   function updateBidPrice(id, price, userToken) {
-    const url = `${API_URL}/auction/${id}/bid`;
+    const url = `${API_URL}/api/auction/${id}/bid`;
     const config = {
       headers: {
         Authorization: `Bearer ${userToken}`,
