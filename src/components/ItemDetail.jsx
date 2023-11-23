@@ -13,13 +13,11 @@ function ItemDetail({ item, onClick }) {
       const difference = endTime - now;
 
       if (difference > 0) {
-        let hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        let hours = Math.floor(difference / (1000 * 60 * 60));
         let minutes = Math.floor((difference / 1000 / 60) % 60);
         let seconds = Math.floor((difference / 1000) % 60);
 
-        if (hours === 0) {
-          setIsLessThanAnHour(true);
-        }
+        setIsLessThanAnHour(hours === 0);
 
         hours = hours < 10 ? `0${hours}` : `${hours}`;
         minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
