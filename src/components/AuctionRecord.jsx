@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useLoginStore from '../stores/loginStore';
+import CustomDatePicker from './CustomDatePicker';
 import { AuctionItem } from './PurchaseItem';
 import { AuctionContainer } from './ShoppingContainer';
 import { AuctionDropdown } from './DropDown';
+import { calculateRemainTime } from '../utils/timeUtils';
+
+const API_URL = import.meta.env.VITE_APP_URL;
 
 const axiosInstance = axios.create({
-  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+  baseURL: API_URL,
 });
 
 function AuctionRecord() {
@@ -21,6 +26,9 @@ function AuctionRecord() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
   const startIndex = currentPage * itemsPerPage;
@@ -30,15 +38,11 @@ function AuctionRecord() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const accessToken = import.meta.env.VITE_TOKEN;
-        // const page = currentPage; // 현재 페이지 번호
-        // const size = 1; // 한 페이지에 표시할 항목 수
-        // const status = 'all';
-        // const startDate = '2022-11-09'; // 시작 날짜
-        // const endDate = '2023-11-13'; // 끝 날짜
-
+        // const accessToken = import.meta.env.VITE_TOKEN;
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+        const formattedEndDate = endDate.toISOString().split('T')[0];
         const response = await axiosInstance.get(
-          `/api/deal/bids?status=all&startDate=2022-11-09&endDate=2023-11-13&page=${currentPage}&size=8`,
+          `/api/deal/bids?status=all&startDate=${formattedStartDate}&endDate=${formattedEndDate}&page=${currentPage}&size=8`,
           { headers: { Authorization: `Bearer ${accessToken}` } },
         );
 
@@ -57,7 +61,7 @@ function AuctionRecord() {
     };
 
     fetchItems();
-  }, [currentPage]);
+  }, [startDate, endDate, currentPage]);
 
   // 드롭다운에서 선택한 상태에 따라 아이템을 필터링하는 함수
   const filteredItems = items.filter(item => {
@@ -74,7 +78,12 @@ function AuctionRecord() {
     const pages = [];
     for (let i = 0; i < totalPages; i += 1) {
       pages.push(
-        <button type="button" key={i} onClick={() => setCurrentPage(i)}>
+        <button
+          type="button"
+          key={i}
+          className="mx-1  text-white rounded"
+          onClick={() => setCurrentPage(i)}
+        >
           {i + 1}
         </button>,
       );
@@ -84,60 +93,56 @@ function AuctionRecord() {
 
   return (
     <div>
-      <div className="w-[50%] mx-auto">
-        <AuctionContainer />
-        <div className="p-1 justufy-center min-w-[33.9365rem] max-w-xl mx-auto">
-          <div className="p-1 bg-white rounded-xl min-w-[33.9365rem]">
-            <AuctionDropdown
-              setStatusFilter={setStatusFilter}
-              dealStatusOptions={auctionStatusOptions}
-            />
-            {filteredItems.slice(startIndex, endIndex).map(item => (
-              <AuctionItem
-                auctionId={item.auctionId}
-                imageUrl={item.imageUrl}
-                title={item.title}
-                currentPrice={item.currentPrice}
-                myBidPrice={item.myBidPrice}
-                status={item.status}
-                time={item.time}
-                // endAuctionTime - 현재시간 현준님 코드 뽀려오기
-              />
-            ))}
+      <div className="flex justify-center items-center ">
+        <div className="w-full max-w-[31rem] md:w-[40%] lg:mx-auto">
+          <AuctionContainer />
+          <div className="justufy-center max-w-[31rem] md:min-w-[35.9365rem] lg:max-w-xl mx-auto">
+            <div className="p-1 bg-white rounded-xl max-w-[31rem] md:min-w-[35.9365rem]">
+              <div className="flex flex-wrap md:flex-nowrap ">
+                <AuctionDropdown
+                  setStatusFilter={setStatusFilter}
+                  dealStatusOptions={auctionStatusOptions}
+                />
+                <div className="flex space-x-2 pl-2">
+                  <CustomDatePicker
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                  />
+                  <CustomDatePicker
+                    startDate={endDate}
+                    setStartDate={setEndDate}
+                  />
+                </div>
+              </div>
+              {items.length > 0 ? (
+                filteredItems.slice(startIndex, endIndex).map(item => (
+                  <AuctionItem
+                    auctionId={item.auctionId}
+                    imageUrl={item.imageUrl}
+                    title={item.title}
+                    currentPrice={item.currentPrice}
+                    myBidPrice={item.myBidPrice}
+                    status={item.status}
+                    time={calculateRemainTime(item.endAuctionTime)}
+                    // endAuctionTime - 현재시간 현준님 코드 뽀려오기
+                  />
+                ))
+              ) : (
+                <div className="text-center py-8 text-sm text-gray-300">
+                  아직 경매 내역이 없습니다.
+                </div>
+              )}
+            </div>
           </div>
+          {items.length > 0 && (
+            <div className="flex justify-center mt-12 mb-4 pt-8">
+              {renderPageNumbers()}
+            </div>
+          )}
         </div>
-        <div>{renderPageNumbers()}</div>
       </div>
     </div>
   );
 }
 
 export default AuctionRecord;
-
-// useEffect(() => {
-//   // 데이터를 불러오는 함수
-//   const fetchItems = async () => {
-//     try {
-//       const accessToken = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
-
-//       if (!accessToken) {
-//         // 토큰이 없으면 로그인이 필요하다는 메시지를 보여줄 수 있습니다.
-//         alert('로그인이 필요합니다.');
-//         return;
-//       }
-
-//       // API 요청 보내기
-//       const response = await axios.get('/api/deal/bids', {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       });
-
-//       setItems(response.data); // 받아온 데이터로 items 상태 업데이트
-//     } catch (error) {
-//       console.error('Fetching items failed', error);
-//     }
-//   };
-
-//   fetchItems(); // 함수 호출
-// }, []); // 컴포넌트가 마운트될 때 한 번만 호출

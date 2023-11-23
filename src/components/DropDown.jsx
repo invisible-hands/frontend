@@ -26,7 +26,7 @@ export function PurchaseDropdown({ setStatusFilter }) {
   return (
     <div className="relative mb-2 ">
       <select
-        className="mt-1 z-20 text-sm px-8 bg-grayish rounded-lg text-center"
+        className=" z-20 text-sm px-8 bg-gray-200 border border-gray-300 rounded-lg text-center py-0.5"
         value={selectedStatus}
         onChange={handleChange}
       >
@@ -58,9 +58,9 @@ export function AuctionDropdown({ setStatusFilter }) {
   ));
 
   return (
-    <div className="relative mb-2 ">
+    <div className="relative mb-2">
       <select
-        className="mt-1 z-20 text-sm px-8 bg-grayish rounded-lg text-center"
+        className=" z-20 text-sm px-10 bg-gray-200 border border-gray-300 rounded-lg text-center py-0.5"
         value={selectedStatus}
         onChange={handleChange}
       >
@@ -95,7 +95,7 @@ export function SellingDropdown({ setStatusFilter }) {
   return (
     <div className="relative mb-2 ">
       <select
-        className="mt-1 z-20 text-sm px-8 bg-grayish rounded-lg text-center"
+        className=" z-20 text-sm px-8 bg-gray-200 border border-gray-300 rounded-lg text-center py-0.5"
         value={selectedStatus}
         onChange={handleChange}
       >

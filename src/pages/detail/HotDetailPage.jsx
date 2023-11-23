@@ -6,6 +6,7 @@ import ItemDetail from '../../components/ItemDetail';
 
 function HotDetailPage() {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_APP_URL;
   const [hotItems, setHotItems] = useState([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -14,7 +15,7 @@ function HotDetailPage() {
     const fetchHotItems = async () => {
       try {
         const response = await axios.get(
-          `https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=${page}&size=20&sort=view,desc&progressFilter=false`,
+          `${API_URL}/api/auction?page=${page}&size=20&sort=view,desc&progressFilter=false`,
         );
 
         if (response.data.status === 'Success') {

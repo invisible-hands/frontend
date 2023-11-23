@@ -13,7 +13,7 @@ function Redirection() {
     const login = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_URL}/user/login/kakao?code=${code}`,
+          `${import.meta.env.VITE_APP_URL}/api/user/login/kakao?code=${code}`,
         );
         logIn(
           response.data.data.nickname,

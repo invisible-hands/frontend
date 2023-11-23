@@ -1,14 +1,18 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import useLoginStore from '../stores/loginStore';
+
+const API_URL = import.meta.env.VITE_APP_URL;
 
 const axiosInstance = axios.create({
-  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+  baseURL: API_URL,
 });
 
 function PurchaseConfirmModal({ isModalOpen, setIsModalOpen, dealId }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const modalRef = useRef();
+  const { accessToken } = useLoginStore();
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -29,8 +33,6 @@ function PurchaseConfirmModal({ isModalOpen, setIsModalOpen, dealId }) {
   const handleConfirm = async () => {
     try {
       console.log('dealId2', dealId);
-      const accessToken = import.meta.env.VITE_TOKEN;
-      // 서버에 구매 확정 요청 보내기
 
       const response = await axiosInstance.put(
         `/api/deal/${dealId}`,

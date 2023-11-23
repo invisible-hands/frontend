@@ -1,15 +1,19 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import useLoginStore from '../stores/loginStore';
+
+const API_URL = import.meta.env.VITE_APP_URL;
 
 const axiosInstance = axios.create({
-  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+  baseURL: API_URL,
 });
 
 function InvoiceInputModal({ isModalOpen, setIsModalOpen, auctionId }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [invoice, setInvoice] = useState('');
   const [deliveryCompany, setDeliveryCompany] = useState('postOffice'); // 초기값 설정
+  const { accessToken } = useLoginStore();
 
   const modalRef = useRef();
   const closeModal = () => {
@@ -30,9 +34,6 @@ function InvoiceInputModal({ isModalOpen, setIsModalOpen, auctionId }) {
 
   const handleConfirm = async () => {
     try {
-      // 인증 토큰 값
-      const accessToken = import.meta.env.VITE_TOKEN;
-
       const response = await axiosInstance.post(
         '/api/delivery',
         {

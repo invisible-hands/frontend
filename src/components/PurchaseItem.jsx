@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 import InvoiceInputModal from './InvoiceInputModal';
 import PurchaseConfirmModal from './PurchaseConfirmModal';
 import ComplainModal from './ComplainModal';
@@ -11,8 +11,8 @@ const truncateProductName = title => {
     // 적절한 기본값으로 대체하거나 오류를 처리
     return '제품 이름 없음';
   }
-  if (title.length > 15) {
-    return `${title.substring(0, 15)}...`;
+  if (title.length > 10) {
+    return `${title.substring(0, 10)}...`;
   }
   return title;
 };
@@ -38,26 +38,46 @@ export function PurchaseItem({
   purchasePrice,
   status,
   dealId,
+  auctionId,
 }) {
   const [isPurchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [isComplainModalOpen, setComplainModalOpen] = useState(false);
   const showConfirmPurchaseButton = status === 'PURCHASE_COMPLETE_WAITING';
   const displayStatus = dealStatusOptions[status] || '알 수 없음';
+  const navigate = useNavigate();
+  const goToPage = () => {
+    navigate(`/auction/${auctionId}`);
+  };
 
   return (
-    <div className="flex justify-between items-center mb-4 pl-5">
-      <img
-        src={imageUrl}
-        alt="상품 이미지"
-        className="w-14 h-14 object-cover p-2 pl-3"
-      />
-      <div className="text-sm font-bold">
+    <div className="flex justify-between items-center mb-4 pl-8 mt-2 mr-10">
+      <button
+        type="button"
+        onClick={goToPage}
+        className="w-14 h-14 p-2 pl-3 cursor-pointer hover:opacity-80"
+      >
+        <img src={imageUrl} alt="상품 이미지" className="object-cover" />
+      </button>
+      <div
+        className="pt-3 text-sm font-bold cursor-pointer hover:underline rounded"
+        onClick={goToPage}
+        role="button"
+      >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-blackish">{purchasePrice}원</div>
+      <div className="pt-3 text-sm font-bold text-blackish ">
+        {purchasePrice}원
+      </div>
       <div className="flex flex-col items-center">
-        <div className="pt-4 text-sm text-danger">{displayStatus}</div>
-        <div className="flex pt-1">
+        <div
+          className={`pt-4 text-sm text-danger pl-3 text-center pr-6 ${
+            status === 'PURCHASE_CANCEL' ? 'ml-4 mr-3' : ''
+          } ${status === 'PURCHASE_COMPLETE_WAITING' ? 'pt-5' : ''}
+          `}
+        >
+          {displayStatus}
+        </div>
+        <div className="flex pt-1 pl-2.5 pr-6">
           {showConfirmPurchaseButton && (
             <>
               <button
@@ -98,24 +118,40 @@ export function AuctionItem({
   myBidPrice,
   status,
   time,
+  auctionId,
 }) {
   const showConfirmPurchaseButton = status === 'AUCTION_PROGRESS';
   const displayStatus = auctionStatusOptions[status] || '알 수 없음';
+  const navigate = useNavigate();
+  const goToPage = () => {
+    navigate(`/auction/${auctionId}`);
+  };
+
   return (
-    <div className="flex justify-between items-center mb-4 pl-6">
-      <img
-        src={imageUrl}
-        alt="상품 이미지"
-        className="w-14 h-14 object-cover p-2 pl-3"
-      />
-      <div className="text-sm font-bold pr-2">
+    <div className="flex justify-between items-center mb-4 pl-8 mt-2 mr-8">
+      <button
+        type="button"
+        onClick={goToPage}
+        className="w-14 h-14 p-2 pl-3 cursor-pointer hover:opacity-80"
+      >
+        <img src={imageUrl} alt="상품 이미지" className="object-cover" />
+      </button>
+      <div
+        className="pt-3 text-sm font-bold cursor-pointer hover:underline rounded"
+        onClick={goToPage}
+        role="button"
+      >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-danger pr-2">{currentPrice}원</div>
-      <div className="text-sm font-bold text-blackish">{myBidPrice}원</div>
+      <div className="pt-3 text-sm font-bold text-danger pr-2">
+        {currentPrice}원
+      </div>
+      <div className="pt-3 text-sm font-bold text-blackish">{myBidPrice}원</div>
       <div className="flex flex-col items-center">
-        <div className="pt-5 text-sm text-danger">{displayStatus}</div>
-        {showConfirmPurchaseButton && <div>{time}</div>}
+        <div className="pt-4 text-sm text-danger pr-6">{displayStatus}</div>
+        {showConfirmPurchaseButton && (
+          <div className="text-xs text-deepblue1 pr-6">{time}</div>
+        )}
       </div>
     </div>
   );
@@ -132,21 +168,33 @@ export function SellingItem({
   const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const showConfirmPurchaseButton = status === 'DELIVERY_WAITING';
   const displayStatus = dealStatusOptions[status] || '알 수 없음';
+  const navigate = useNavigate();
+  const goToPage = () => {
+    navigate(`/auction/${auctionId}`);
+  };
 
   console.log('옥션 아이디', auctionId);
   return (
-    <div className="flex justify-between items-center mb-4 pl-5">
-      <img
-        src={imageUrl}
-        alt="상품 이미지"
-        className="w-14 h-14 object-cover p-2 pl-3"
-      />
-      <div className="text-sm font-bold">
+    <div className="flex justify-between items-center mb-4 pl-12 pt-2 mr-8">
+      <button
+        type="button"
+        onClick={goToPage}
+        className="w-14 h-14 p-2 pl-3 cursor-pointer hover:opacity-80"
+      >
+        <img src={imageUrl} alt="상품 이미지" className="object-cover" />
+      </button>
+      <div
+        className="pt-3 text-sm font-bold cursor-pointer hover:underline rounded"
+        onClick={goToPage}
+        role="button"
+      >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="text-sm font-bold text-blackish pl-1">{price}원</div>
+      <div className="pt-3 text-sm font-bold text-blackish pl-1 ">
+        {price}원
+      </div>
       <div className="flex flex-col items-center">
-        <div className="pt-4 text-sm text-danger">{displayStatus}</div>
+        <div className="pt-4 text-sm pr-12 text-danger">{displayStatus}</div>
         <div className="flex flex-col items-center pt-1">
           {showConfirmPurchaseButton && (
             <>
@@ -177,6 +225,7 @@ PurchaseItem.propTypes = {
   purchasePrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   dealId: PropTypes.number.isRequired,
+  auctionId: PropTypes.number.isRequired,
 };
 
 AuctionItem.propTypes = {
@@ -186,6 +235,7 @@ AuctionItem.propTypes = {
   myBidPrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
+  auctionId: PropTypes.number.isRequired,
 };
 
 SellingItem.propTypes = {
