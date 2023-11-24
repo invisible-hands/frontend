@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { TERipple } from 'tw-elements-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { RxDotFilled } from 'react-icons/rx';
 import useLoginStore from '../../stores/loginStore';
 
 export default function AuctionRegisterPage() {
   const { accessToken: token } = useLoginStore();
   const API_URL = import.meta.env.VITE_APP_URL;
   const navigate = useNavigate();
-  console.log(token);
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -70,10 +71,8 @@ export default function AuctionRegisterPage() {
       alert('파일 첨부는 최대 5개까지 가능합니다.');
       fileList = null;
       fileInputRef.current.value = '';
-
       return;
     }
-    console.log('fileSize', fileSize);
     if (fileList !== null) {
       setFiles(fileList);
     }
@@ -151,7 +150,7 @@ export default function AuctionRegisterPage() {
       startPrice,
       instantPrice,
       duration,
-      tagList,
+      tags: tagList,
     };
     createAuction(files, data, token);
   };
@@ -231,7 +230,7 @@ export default function AuctionRegisterPage() {
                   className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                   type="file"
                   name="images"
-                  accept="image/*"
+                  accept="image/* "
                   id="formFileMultiple"
                   multiple
                   ref={fileInputRef}
@@ -464,3 +463,99 @@ export default function AuctionRegisterPage() {
     </div>
   );
 }
+
+export function ImageSlider({ slides }) {
+  const [currentIndex, setcurrentIndex] = useState(0);
+  const prevSlide = () => {
+    const isFirstSlide = currentIndex === 0;
+    const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
+    setcurrentIndex(newIndex);
+  };
+
+  const nextSlide = () => {
+    const isLastSlide = currentIndex === slides.length - 1;
+    const newIndex = isLastSlide ? 0 : currentIndex + 1;
+    setcurrentIndex(newIndex);
+  };
+
+  const goToSlide = slideIndex => {
+    setcurrentIndex(slideIndex);
+  };
+  if (slides.length === 0) return null;
+
+  return (
+    <div className="w-96">
+      <div className="relative w-96 h-96 overflow-hidden">
+        <div
+          style={{ backgroundImage: `url(${slides[currentIndex].imageUrl})` }}
+          className="w-full h-full bg-center bg-cover duration-500"
+        />
+        <div className="flex justify-between absolute w-full left-0 top-1/2 transform -translate-y-1/2">
+          {/* Left Arrow */}
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="black"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="white"
+              className="w-12 h-12 cursor-pointer"
+              onClick={prevSlide}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          {/* Right Arrow */}
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="black"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="white"
+              className="w-12 h-12 cursor-pointer"
+              onClick={nextSlide}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div className="flex top-4 justify-center py-2">
+        {slides.map(({ imageId }, index) => (
+          <div
+            role="button"
+            key={imageId}
+            onClick={() => goToSlide(index)}
+            className="text-2xl cursor-pointer"
+          >
+            <RxDotFilled
+              className={
+                index === currentIndex ? 'text-deepblue1' : 'text-blue2'
+              }
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// 판매자 정보
+
+ImageSlider.propTypes = {
+  slides: PropTypes.arrayOf(
+    PropTypes.shape({
+      imageId: PropTypes.number.isRequired,
+      imageUrl: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
