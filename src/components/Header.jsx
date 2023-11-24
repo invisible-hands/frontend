@@ -8,7 +8,7 @@ function Header() {
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState('');
   const { isModalOpen, openModal, closeModal } = useModalStore();
-  const { loggedIn, nickName, virtualMoney, logOut } = useLoginStore();
+  const { loggedIn, nickName, logOut } = useLoginStore();
 
   const handleLogoClick = () => {
     navigate('/');
@@ -98,7 +98,7 @@ function Header() {
             {loggedIn ? (
               <>
                 <span className="hidden md:inline text-deepblue1">
-                  {nickName} 님 {virtualMoney} point
+                  {nickName} 님
                 </span>
                 <button
                   type="button"

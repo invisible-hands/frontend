@@ -15,15 +15,13 @@ const useLoginStore = create(
       nickName: null,
       accessToken: null,
       userId: null,
-      virtualMoney: 0,
 
-      logIn: (nickName, accessToken, userId, virtualMoney) => {
+      logIn: (nickName, accessToken, userId) => {
         set({
           loggedIn: true,
           nickName,
           accessToken,
           userId,
-          virtualMoney,
         });
         console.log('상태 변경 후:', useLoginStore.getState());
       },
