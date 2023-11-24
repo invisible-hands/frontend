@@ -19,7 +19,7 @@ function SearchDetailPage() {
     const fetchSearchResults = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/api/auction/search?keyword=${keyword}&page=${page}&size=20&progressFilter=false`,
+          `${API_URL}/api/auction/search?keyword=${keyword}&page=${page}&size=20`,
         );
 
         if (response.data.status === 'Success') {
@@ -47,7 +47,7 @@ function SearchDetailPage() {
 
   return (
     <div className="whitespace-nowrap max-w-screen-lg mx-auto p-4">
-      <div className="text-lg mb-4 text-deepblue2">
+      <div className="text-3xl font-extrabold m-4 text-deepblue2">
         {' '}
         {keyword} 와 관련된 상품은요...
       </div>
