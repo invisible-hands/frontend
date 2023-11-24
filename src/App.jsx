@@ -15,6 +15,7 @@ import HotDetailPage from './pages/detail/HotDetailPage';
 import DeadlineDetailPage from './pages/detail/DeadlineDetailPage';
 import NewDetailPage from './pages/detail/NewDetailPage';
 import SearchDetailPage from './pages/detail/SearchDetailPage';
+import SellerDetailPage from './pages/SellerDetailPage';
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage/BidPage';
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: '/search',
         element: <SearchDetailPage />,
+      },
+      {
+        path: '/seller/:auctionId',
+        element: <SellerDetailPage />,
       },
       {
         path: '/profile/shopping',

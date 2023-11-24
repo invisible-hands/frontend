@@ -1,36 +1,53 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { TERipple } from 'tw-elements-react';
-// import { useMutation } from '@tanstack/react-query';
-// import { createAuction } from '../../queries/auctionQueries';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { RxDotFilled } from 'react-icons/rx';
 import useLoginStore from '../../stores/loginStore';
 
 export default function AuctionRegisterPage() {
   const { accessToken: token } = useLoginStore();
   const API_URL = import.meta.env.VITE_APP_URL;
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
-
   const [files, setFiles] = useState([]);
-  const [otherData, setOtherData] = useState({
-    title: '',
-    content: '',
-    itemCondition: '',
-    startPrice: '',
-    instantPrice: '',
-    duration: 'QUARTER',
-    tags: '',
-  });
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [itemCondition, setItemCondition] = useState('');
+  const [startPrice, setStartPrice] = useState('');
+  const [instantPrice, setInstantPrice] = useState('');
+  const [duration, setDuration] = useState('QUARTER');
+  const [tagItem, setTagItem] = useState('');
+  const [tagList, setTagList] = useState([]);
   const [isAgreed, setIsAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = e => {
-    setOtherData({
-      ...otherData,
-      [e.target.name]: e.target.value,
-    });
+  const fileInputRef = useRef(null);
+  const titleInputRef = useRef(null);
+  const contentInputRef = useRef(null);
+  const startPriceInputRef = useRef(null);
+  const instantPriceInputRef = useRef(null);
+  const itemConditionInputRef = useRef(null);
+  const agreedToTermsInputRef = useRef(null);
+
+  const handleTitleChange = e => {
+    setTitle(e.target.value);
+  };
+
+  const handleContentChange = e => {
+    setContent(e.target.value);
+  };
+
+  const handleStartPriceChange = e => {
+    const { value } = e.target;
+    const filteredValue = value.replace(/[^0-9]/g, '');
+    setStartPrice(filteredValue);
+  };
+
+  const handleInstantPriceChange = e => {
+    const { value } = e.target;
+    const filteredValue = value.replace(/[^0-9]/g, '');
+    setInstantPrice(filteredValue);
   };
 
   const handleOtherElementClick = () => {
@@ -38,15 +55,30 @@ export default function AuctionRegisterPage() {
   };
 
   const handleFilesChange = e => {
-    const fileList = e.target.files;
+    let fileList = e.target.files;
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    let fileSize = 0;
+    for (let i = 0; i < fileList.length; i += 1) {
+      fileSize += fileList[i].size;
+    }
+    if (fileSize > maxSize) {
+      alert('파일 첨부는 10MB 이하로 가능합니다.');
+      fileList = null;
+      fileInputRef.current.value = '';
+      return;
+    }
+    if (fileList.length > 5) {
+      alert('파일 첨부는 최대 5개까지 가능합니다.');
+      fileList = null;
+      fileInputRef.current.value = '';
+      return;
+    }
     if (fileList !== null) {
       setFiles(fileList);
     }
   };
 
   const createAuction = (imageFiles, data, accessToken) => {
-    const dataSet = { ...data, tags: data.tags.trim().split(' ') };
-
     const formData = new FormData();
     for (let i = 0; i < imageFiles.length; i += 1) {
       formData.append('images', imageFiles[i]);
@@ -54,9 +86,8 @@ export default function AuctionRegisterPage() {
 
     formData.append(
       'request',
-      new Blob([JSON.stringify(dataSet)], { type: 'application/json' }),
+      new Blob([JSON.stringify(data)], { type: 'application/json' }),
     );
-
     setLoading(true);
 
     axios
@@ -77,23 +108,100 @@ export default function AuctionRegisterPage() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    createAuction(files, otherData, token);
+
+    if (files.length === 0) {
+      alert('파일을 첨부해주세요');
+      fileInputRef.current.focus();
+      return;
+    }
+
+    if (title.trim().length === 0) {
+      alert('상품명을 입력해주세요');
+      titleInputRef.current.focus();
+      return;
+    }
+    if (content.trim().length === 0) {
+      alert('상품 설명을 입력해주세요');
+      contentInputRef.current.focus();
+      return;
+    }
+    if (itemCondition === '') {
+      alert('상품 상태를 선택해주세요');
+      itemConditionInputRef.current.focus();
+      return;
+    }
+
+    if (isAgreed === false) {
+      alert('약관에 동의해주세요');
+      agreedToTermsInputRef.current.focus();
+      return;
+    }
+
+    if (parseInt(instantPrice, 10) < parseInt(startPrice, 10) + 1000) {
+      alert('즉시거래가는 경매시작가 보다 최소 1000원 이상이어야 합니다.');
+      instantPriceInputRef.current.focus();
+      return;
+    }
+
+    const data = {
+      title,
+      content,
+      itemCondition,
+      startPrice,
+      instantPrice,
+      duration,
+      tags: tagList,
+    };
+    createAuction(files, data, token);
+  };
+  const handleKeySubmit = e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   };
 
-  useEffect(() => {
-    const { title, content, itemCondition, startPrice, instantPrice } =
-      otherData;
-    const isAnyFieldEmpty =
-      !title || !content || !itemCondition || !startPrice || !instantPrice;
+  // 태그 관련 함수
 
-    // 버튼을 활성화 또는 비활성화합니다.
-    console.log(isAnyFieldEmpty || !isAgreed);
-    setIsButtonDisabled(isAnyFieldEmpty || !isAgreed);
-  }, [otherData, isAgreed]);
+  const submitTagItem = () => {
+    const updatedTagList = [...tagList];
+    if (updatedTagList.length >= 5) {
+      alert('태그는 최대 5개까지만 가능합니다.');
+      setTagItem('');
+      return;
+    }
+    if (updatedTagList.includes(tagItem)) {
+      alert('이미 추가된 태그입니다.');
+      setTagItem('');
+      return;
+    }
+    if (tagItem.trim().length === 0) {
+      alert('빈 태그는 추가할 수 없습니다.');
+      setTagItem('');
+      return;
+    }
+    updatedTagList.push(tagItem);
+    setTagItem('');
+    setTagList(updatedTagList);
+  };
+  const deleteTagItem = tagToDelete => {
+    const filteredTagList = tagList.filter(tag => tag !== tagToDelete);
+    setTagList(filteredTagList);
+  };
+  const onKeyUp = e => {
+    if (e.target.value.length !== 0 && e.code === 'Space') {
+      e.preventDefault();
+      submitTagItem();
+    }
+  };
+  useEffect(() => {
+    if (token === null) {
+      navigate('/');
+    }
+  }, [token]);
 
   return (
     <div className="flex justify-center">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onKeyDown={handleKeySubmit}>
         <div className="w-full p-6 lg:w-[1024px]">
           <h1 className="text-4xl font-extrabold mb-4 text-deepblue2">
             상품 등록하기
@@ -118,17 +226,11 @@ export default function AuctionRegisterPage() {
                 />
               </div>
               <div>
-                {/* <label
-                  htmlFor="formFileMultiple"
-                  className="mb-2 inline-block text-neutral-700 dark:text-neutral-200"
-                >
-                  Multiple files input example
-                </label> */}
                 <input
                   className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                   type="file"
                   name="images"
-                  accept="image/*"
+                  accept="image/* "
                   id="formFileMultiple"
                   multiple
                   ref={fileInputRef}
@@ -138,31 +240,33 @@ export default function AuctionRegisterPage() {
             </div>
 
             {/* <!-- 상품정보 --> */}
-            <div className="space-y-5">
+            <div className="space-y-4">
               <div>
                 <label>
-                  상품명 <span>{otherData.title.length}/20</span>
+                  상품명 <span>{title.length}/20</span>
                 </label>
                 <br />
                 <input
                   name="title"
-                  className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded"
-                  value={otherData.title}
-                  onChange={handleChange}
+                  className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded focus:outline-none focus:ring focus:ring-danger"
+                  value={title}
+                  onChange={handleTitleChange}
+                  ref={titleInputRef}
                   maxLength={20}
                 />
               </div>
               <div>
                 <label>
-                  상품설명 <span>{otherData.content.length}/150</span>
+                  상품설명 <span>{content.length}/150</span>
                 </label>
                 <br />
                 <textarea
                   name="content"
-                  className="w-full bg-deepblue1 text-white h-16 mb-2 px-2 py-1 rounded resize-none  overflow-auto"
-                  value={otherData.content}
-                  onChange={handleChange}
+                  className="w-full bg-deepblue1 text-white h-16 mb-2 px-2 py-1 rounded resize-none  overflow-auto focus:outline-none focus:ring focus:ring-danger"
+                  value={content}
+                  onChange={handleContentChange}
                   maxLength={150}
+                  ref={contentInputRef}
                 />
               </div>
               <div className="flex flex-row space-x-10">
@@ -170,35 +274,37 @@ export default function AuctionRegisterPage() {
                   <label>경매시작가</label>
                   <br />
                   <input
-                    type="number"
+                    type="text"
                     name="startPrice"
-                    className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded"
-                    value={otherData.startPrice}
-                    onChange={handleChange}
+                    className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded focus:outline-none focus:ring focus:ring-danger"
+                    value={startPrice}
+                    onChange={handleStartPriceChange}
+                    ref={startPriceInputRef}
                   />
                 </div>
                 <div className="flex-1">
                   <label>즉시거래가</label>
                   <br />
                   <input
-                    type="number"
+                    type="text"
                     name="instantPrice"
-                    className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded"
-                    value={otherData.instantPrice}
-                    onChange={handleChange}
+                    className="w-full bg-deepblue1 text-white mb-2 px-2 py-1 rounded focus:outline-none focus:ring focus:ring-danger"
+                    value={instantPrice}
+                    onChange={handleInstantPriceChange}
+                    ref={instantPriceInputRef}
                   />
                 </div>
               </div>
               <div className="flex flex-row space-x-10">
                 <div className="flex-1">
-                  <span>경매 시간 선택</span>
+                  <span>경매 시간 선택(6/12/24)</span>
                   <div className="w-full">
                     <div className="relative mb-3">
                       <select
                         name="duration"
                         className="w-full border-blackish border-2"
-                        value={otherData.duration}
-                        onChange={handleChange}
+                        value={duration}
+                        onChange={e => setDuration(e.target.value)}
                       >
                         <option value="QUARTER">6시간</option>
                         <option value="HALF">12시간</option>
@@ -224,7 +330,8 @@ export default function AuctionRegisterPage() {
                           name="itemCondition"
                           id="inlineRadio1"
                           value="OLD"
-                          onChange={handleChange}
+                          onChange={e => setItemCondition(e.target.value)}
+                          ref={itemConditionInputRef}
                         />
                         중고상품
                       </label>
@@ -243,7 +350,7 @@ export default function AuctionRegisterPage() {
                           name="itemCondition"
                           id="inlineRadio2"
                           value="NEW"
-                          onChange={handleChange}
+                          onChange={e => setItemCondition(e.target.value)}
                         />
                         새상품
                       </label>
@@ -253,14 +360,37 @@ export default function AuctionRegisterPage() {
               </div>
 
               <div>
-                <label htmlFor="tags">태그</label>
+                <label htmlFor="tags">태그(최대 5개)</label>
                 <br />
-                <textarea
-                  id="tags"
-                  name="tags"
-                  className="w-full bg-deepblue1 rounded text-white mb-2 px-2 py-1 resize-none"
-                  onChange={handleChange}
-                />
+                <div>
+                  <input
+                    type="text"
+                    className="w-full bg-deepblue1 rounded text-white mb-2 px-2 py-1"
+                    placeholder="Press space to add tags"
+                    onChange={e => setTagItem(e.target.value)}
+                    value={tagItem}
+                    onKeyUp={onKeyUp}
+                  />
+                  <div>
+                    {tagList.map(tag => {
+                      return (
+                        <div
+                          className="inline-block m-1 p-1 bg-blue1 rounded text-white text-sm"
+                          key={tag}
+                        >
+                          {' '}
+                          <span>{tag}</span>
+                          <button
+                            type="button"
+                            onClick={() => deleteTagItem(tag)}
+                          >
+                            X
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -302,6 +432,7 @@ export default function AuctionRegisterPage() {
                   checked={isAgreed}
                   onChange={() => setIsAgreed(!isAgreed)}
                   id="checkboxDefault"
+                  ref={agreedToTermsInputRef}
                 />
               </label>
             </div>
@@ -310,7 +441,8 @@ export default function AuctionRegisterPage() {
             <TERipple rippleColor="white">
               <button
                 type="button"
-                className="inline-block rounded bg-deepblue1 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-deepblue2 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                className="inline-block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-300 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                onClick={() => navigate(-1)}
               >
                 입찰 안하기
               </button>
@@ -318,12 +450,9 @@ export default function AuctionRegisterPage() {
             <TERipple rippleColor="white">
               <button
                 type="submit"
-                className={`inline-block rounded ${
-                  isButtonDisabled
-                    ? `bg-danger hover-bg-danger-300`
-                    : `bg-deepblue1 hover:bg-deepblue2`
-                } px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
-                disabled={isButtonDisabled || loading}
+                className={`inline-block rounded bg-deepblue1 hover:bg-deepblue2
+                   px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
+                disabled={loading}
               >
                 상품 등록하기
               </button>
@@ -334,3 +463,99 @@ export default function AuctionRegisterPage() {
     </div>
   );
 }
+
+export function ImageSlider({ slides }) {
+  const [currentIndex, setcurrentIndex] = useState(0);
+  const prevSlide = () => {
+    const isFirstSlide = currentIndex === 0;
+    const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
+    setcurrentIndex(newIndex);
+  };
+
+  const nextSlide = () => {
+    const isLastSlide = currentIndex === slides.length - 1;
+    const newIndex = isLastSlide ? 0 : currentIndex + 1;
+    setcurrentIndex(newIndex);
+  };
+
+  const goToSlide = slideIndex => {
+    setcurrentIndex(slideIndex);
+  };
+  if (slides.length === 0) return null;
+
+  return (
+    <div className="w-96">
+      <div className="relative w-96 h-96 overflow-hidden">
+        <div
+          style={{ backgroundImage: `url(${slides[currentIndex].imageUrl})` }}
+          className="w-full h-full bg-center bg-cover duration-500"
+        />
+        <div className="flex justify-between absolute w-full left-0 top-1/2 transform -translate-y-1/2">
+          {/* Left Arrow */}
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="black"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="white"
+              className="w-12 h-12 cursor-pointer"
+              onClick={prevSlide}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          {/* Right Arrow */}
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="black"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="white"
+              className="w-12 h-12 cursor-pointer"
+              onClick={nextSlide}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div className="flex top-4 justify-center py-2">
+        {slides.map(({ imageId }, index) => (
+          <div
+            role="button"
+            key={imageId}
+            onClick={() => goToSlide(index)}
+            className="text-2xl cursor-pointer"
+          >
+            <RxDotFilled
+              className={
+                index === currentIndex ? 'text-deepblue1' : 'text-blue2'
+              }
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// 판매자 정보
+
+ImageSlider.propTypes = {
+  slides: PropTypes.arrayOf(
+    PropTypes.shape({
+      imageId: PropTypes.number.isRequired,
+      imageUrl: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
