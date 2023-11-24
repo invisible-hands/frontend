@@ -46,7 +46,7 @@ export default function InstantPurchaseModal({
       .then(res => {
         if (res.status === 200) {
           alert('즉시 구매가 완료되었습니다');
-          navigate('/');
+          navigate('/profile/shopping/purchase');
         }
       })
       .catch(err => {

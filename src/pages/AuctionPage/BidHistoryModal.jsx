@@ -18,6 +18,7 @@ import useLoginStore from '../../stores/loginStore';
 export default function BidHistoryModal({
   showModal,
   setShowModal,
+  auctionStatus,
   auctionId,
   sellerId,
 }) {
@@ -25,8 +26,9 @@ export default function BidHistoryModal({
   const { userId } = useLoginStore();
   // const [labels, setLabels] = useState([]);
   // const [chartData, setChartData] = useState([]);
+
   return (
-    <TEModal show={showModal} setShow={setShowModal} scrollable>
+    <TEModal show={showModal} setShow={setShowModal}>
       <TEModalDialog centered size="lg">
         <TEModalContent>
           <TEModalHeader>
@@ -62,7 +64,7 @@ export default function BidHistoryModal({
             <BidHistory auctionId={auctionId} />
           </TEModalBody>
           <TEModalFooter className="flex justify-center">
-            {sellerId !== userId && (
+            {sellerId !== userId && auctionStatus === 'AUCTION_PROGRESS' && (
               <TERipple rippleColor="light" rippleCentered>
                 <button
                   type="button"
@@ -83,6 +85,7 @@ export default function BidHistoryModal({
 BidHistoryModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   setShowModal: PropTypes.func.isRequired,
+  auctionStatus: PropTypes.string.isRequired,
   auctionId: PropTypes.string.isRequired,
   sellerId: PropTypes.number.isRequired,
 };

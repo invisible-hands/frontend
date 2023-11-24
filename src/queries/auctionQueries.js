@@ -1,4 +1,5 @@
 import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 
@@ -22,29 +23,6 @@ export async function createAuction(files, otherData, token) {
       'Content-Type': 'multipart/form-data',
     },
   });
-}
-
-export async function purchaseInstant(id, userToken) {
-  const url = `${API_URL}/api/auction/${id}/instant`;
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userToken}`,
-    },
-  };
-  await axios
-    .post(url, {}, config)
-    .then(res => {
-      if (res.status === 200) {
-        alert('즉시 구매가 완료되었습니다');
-      }
-      console.log(res);
-    })
-    .catch(err => {
-      if (err.response.data.status === 'NOT_ENOUGH_MONEY') {
-        alert('충전이 필요합니다');
-      }
-      console.log(err);
-    });
 }
 
 export async function fetchBidPage(auctionId, token) {
