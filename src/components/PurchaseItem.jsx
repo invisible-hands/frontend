@@ -117,8 +117,8 @@ export function AuctionItem({
   currentPrice,
   myBidPrice,
   status,
-  time,
   auctionId,
+  time,
 }) {
   const showConfirmPurchaseButton = status === 'AUCTION_PROGRESS';
   const displayStatus = auctionStatusOptions[status] || '알 수 없음';
@@ -240,8 +240,8 @@ AuctionItem.propTypes = {
   currentPrice: PropTypes.string.isRequired,
   myBidPrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
-  time: PropTypes.string.isRequired,
   auctionId: PropTypes.number.isRequired,
+  time: PropTypes.number.isRequired,
 };
 
 SellingItem.propTypes = {

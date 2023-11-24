@@ -16,6 +16,7 @@ import {
   AuctionItem,
   SellingItem,
 } from '../components/PurchaseItem';
+import { calculateRemainTime } from '../utils/timeUtils';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 
@@ -127,7 +128,7 @@ function DefaultContent() {
                       currentPrice={item.currentPrice}
                       myBidPrice={item.myBidPrice}
                       status={item.status}
-                      time={item.time}
+                      time={calculateRemainTime(item.endAuctionTime)}
                       // 여기에 endAuctionTime - 현재 시간 로직 추가
                     />
                   ))
