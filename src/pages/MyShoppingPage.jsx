@@ -16,6 +16,7 @@ import {
   AuctionItem,
   SellingItem,
 } from '../components/PurchaseItem';
+import { calculateRemainTime } from '../utils/timeUtils';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 
@@ -30,33 +31,35 @@ function DefaultContent() {
   const [items, setItems] = useState([]);
   const [sales, setSales] = useState([]);
   const { accessToken } = useLoginStore();
+  // const accessToken = import.meta.env.VITE_TOKEN;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const purchasesResponse = await axiosInstance.get(
-          `/api/deal/purchases?status=progress&startDate=2022-11-09&endDate=2023-11-09&page=0&size=1`,
+          `/api/deal/purchases?status=progress&page=0&size=1`,
           { headers: { Authorization: `Bearer ${accessToken}` } },
         );
         if (purchasesResponse.status === 200) {
           // API 성공 시 목 데이터 사용
           setPurchases(purchasesResponse.data.data.auctions);
+          console.log('되냐?', purchasesResponse.data.data.auctions);
         }
 
         // bids API 호출
         const response = await axiosInstance.get(
-          `/api/deal/bids?status=progress&startDate=2022-11-09&endDate=2023-11-13&page=0&size=8`,
+          `/api/deal/bids?status=progress&page=0&size=1`,
           { headers: { Authorization: `Bearer ${accessToken}` } },
         );
 
         if (response.status === 200) {
           setItems(response.data.data.auctions);
-          console.log('요청 성공', response.data.data.auctions);
+          console.log('소리 질러', response.data.data.auctions);
         }
 
         // sales API 호출
         const salesResponse = await axiosInstance.get(
-          '/api/deal/sales?status=before&startDate=2022-11-09&endDate=2023-11-09&page=0&size=1',
+          '/api/deal/sales?status=before&page=0&size=1',
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           },
@@ -64,8 +67,8 @@ function DefaultContent() {
         if (salesResponse.status === 200) {
           // API 성공 시 목 데이터 사용
           setSales(salesResponse.data.data.sales);
+          console.log('뒤질래?', salesResponse.data.data.sales);
         }
-        console.log('판매', salesResponse);
       } catch (error) {
         console.error('Fetching data failed', error);
         // API 요청에 실패하면 오류 처리를 해야 할 수도 있어
@@ -86,7 +89,9 @@ function DefaultContent() {
               <div className="text-sm font-bold mt-2 mb-4">
                 구매 확정 대기 상품
               </div>
-              {purchases.length > 0 ? (
+              {purchases.some(
+                item => item.status === 'PURCHASE_COMPLETE_WAITING',
+              ) ? (
                 purchases
                   .filter(item => item.status === 'PURCHASE_COMPLETE_WAITING')
                   .map(item => (
@@ -112,7 +117,7 @@ function DefaultContent() {
               <div className="text-sm font-bold mt-2 mb-4">
                 참여 중인 경매 목록
               </div>
-              {items.length > 0 ? (
+              {items.some(item => item.status === 'AUCTION_PROGRESS') ? (
                 items
                   .filter(item => item.status === 'AUCTION_PROGRESS')
                   .map(item => (
@@ -123,8 +128,8 @@ function DefaultContent() {
                       currentPrice={item.currentPrice}
                       myBidPrice={item.myBidPrice}
                       status={item.status}
-                      time={item.time}
-                      // endAuctionTime - 현재시간 현준님 코드 뽀려오기
+                      time={calculateRemainTime(item.endAuctionTime)}
+                      // 여기에 endAuctionTime - 현재 시간 로직 추가
                     />
                   ))
               ) : (
@@ -141,7 +146,7 @@ function DefaultContent() {
               <div className="text-sm font-bold mt-2 mb-4">
                 송장 번호 입력 상품
               </div>
-              {sales.length > 0 ? (
+              {sales.some(item => item.status === 'DELIVERY_WAITING') ? (
                 sales
                   .filter(item => item.status === 'DELIVERY_WAITING')
                   .map(item => (

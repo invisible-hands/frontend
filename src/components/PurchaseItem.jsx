@@ -117,8 +117,8 @@ export function AuctionItem({
   currentPrice,
   myBidPrice,
   status,
-  time,
   auctionId,
+  time,
 }) {
   const showConfirmPurchaseButton = status === 'AUCTION_PROGRESS';
   const displayStatus = auctionStatusOptions[status] || '알 수 없음';
@@ -194,13 +194,19 @@ export function SellingItem({
         {price}원
       </div>
       <div className="flex flex-col items-center">
-        <div className="pt-4 text-sm pr-12 text-danger">{displayStatus}</div>
+        <div
+          className={`pt-4 text-sm pr-12 text-danger ${
+            status === 'SALE_FAIL' ? 'mr-4' : ''
+          }`}
+        >
+          {displayStatus}
+        </div>
         <div className="flex flex-col items-center pt-1">
           {showConfirmPurchaseButton && (
             <>
               <button
                 type="button"
-                className="bg-grayish text-xs px-1 rounded ml-2"
+                className="bg-grayish text-xs px-1 rounded mr-12"
                 onClick={() => setInvoiceModalOpen(true)}
               >
                 송장 번호 입력
@@ -234,8 +240,8 @@ AuctionItem.propTypes = {
   currentPrice: PropTypes.string.isRequired,
   myBidPrice: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
-  time: PropTypes.string.isRequired,
   auctionId: PropTypes.number.isRequired,
+  time: PropTypes.number.isRequired,
 };
 
 SellingItem.propTypes = {
