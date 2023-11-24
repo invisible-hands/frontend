@@ -9,34 +9,103 @@ import {
   TEModalFooter,
 } from 'tw-elements-react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import useLoginStore from '../stores/loginStore';
+import AddPointButton from '../assets/payment_icon_yellow_medium.png';
 
 export default function PaymentModal({
   showModal,
   setShowModal,
-  money,
+  point,
   price,
 }) {
-  const [newPoint, setNewPoint] = useState(Number(price) + 1000);
+  const [newPoint, setNewPoint] = useState(
+    price + 1000 - point > 0 ? price + 1000 - point : 0,
+  );
   const [pointError, setPointError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { accessToken } = useLoginStore();
+  const API_URL = import.meta.env.VITE_APP_URL;
 
   const handleChange = e => {
-    const inputValue = e.target.value;
-    const regExp = /^[0-9\b]+$/;
-    if (regExp.test(inputValue)) {
+    let inputValue = e.target.value;
+    // 숫자 이외의 문자를 제거
+    inputValue = inputValue.replace(/[^0-9]/g, '');
+    // 앞에 0이 들어간 경우, 1초 후에 자동으로 지우기
+    if (inputValue.length > 1 && inputValue[0] === '0') {
+      setTimeout(() => {
+        inputValue = inputValue.slice(1); // 0 제거
+        setNewPoint(inputValue);
+      }, 500);
+    } else {
       setNewPoint(inputValue);
     }
+    if (inputValue === '') setNewPoint(0);
 
-    if (Number(inputValue) < Number(price) + 1000) {
-      setPointError(true);
-    } else {
-      setPointError(false);
+    if (!price) {
+      if (inputValue < price + 1000) {
+        setPointError(true);
+        setNewPoint(price + 1000);
+      } else {
+        setPointError(false);
+      }
     }
   };
 
+  const isMobile = () => {
+    const user = navigator.userAgent;
+    let isCheck = false;
+    if (user.indexOf('iPhone') > -1 || user.indexOf('Android') > -1) {
+      isCheck = true;
+    }
+    return isCheck;
+  };
+
+  const submitPayment = submitPoint => {
+    if (submitPoint === 0) {
+      alert('충전할 포인트를 입력해주세요');
+      return;
+    }
+
+    const url = `${API_URL}/api/payment/ready`;
+    const priceData = {
+      price: submitPoint,
+    };
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': `application/json`,
+      },
+    };
+
+    setLoading(true);
+    axios
+      .post(url, JSON.stringify(priceData), config)
+      .then(res => {
+        if (res.status === 200) {
+          console.log(res.data);
+          localStorage.setItem('tid', res.data.tid);
+          if (isMobile()) {
+            window.location.href = res.data.next_redirect_mobile_url;
+          } else {
+            window.location.href = res.data.next_redirect_pc_url;
+          }
+        }
+      })
+      .catch(err => {
+        alert(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  // 모달이 닫힐 때 newPoint를 초기화
   useEffect(() => {
-    setNewPoint(Number(price) + 1000);
-    console.log('값 초기화');
-  }, [showModal]);
+    return () => {
+      setNewPoint(Number(price) + 1000);
+    };
+  }, []);
 
   return (
     <div className="flex justify-center items-center min-h-full place-items-center">
@@ -80,9 +149,24 @@ export default function PaymentModal({
                   <h5 className="text-2xl font-extrabold mb-4">
                     충전 금액을 입력해주세요
                   </h5>
-                  <div>
-                    <p>필요한 포인트 {price + 1000 - money} point</p>
-                    <p>충전 후 포인트 {Number(newPoint) + money} point</p>
+                  <div className="flex flex-col w-full">
+                    <p className="flex justify-between">
+                      <span>보유중인 포인트</span>
+                      <span>{point} point</span>
+                    </p>
+                    {price !== 0 && (
+                      <p className="flex justify-between">
+                        <span>필요한 포인트</span>
+                        <span>{price + 1000 - point} point</span>
+                      </p>
+                    )}
+                    <p className="flex justify-between">
+                      <span>충전 후 포인트</span>{' '}
+                      <span>
+                        {(newPoint === '' ? 0 : parseInt(newPoint, 10)) + point}{' '}
+                        point
+                      </span>
+                    </p>
                   </div>
                   <div>
                     {pointError && (
@@ -92,18 +176,27 @@ export default function PaymentModal({
                     )}
                     <input
                       type="number"
-                      className="w-full bg-deepblue1 text-white px-2 py-1 rounded"
+                      className="w-full bg-deepblue1 text-white px-2 py-1 rounded text-right"
                       value={newPoint}
-                      onChange={e => {
-                        handleChange(e);
-                      }}
+                      onChange={handleChange}
                     />
                   </div>
-                  <div className="flex justify-between space-x-2 my-5">
+                  <div className="flex justify-between space-x-auto my-5">
                     <TERipple rippleColor="light" rippleCentered>
                       <button
                         type="button"
-                        className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-blue3 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+                        className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
+                        onClick={() =>
+                          setNewPoint(state => Number(state) + 10000)
+                        }
+                      >
+                        +10000
+                      </button>
+                    </TERipple>
+                    <TERipple rippleColor="light" rippleCentered>
+                      <button
+                        type="button"
+                        className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
                         onClick={() =>
                           setNewPoint(state => Number(state) + 20000)
                         }
@@ -114,7 +207,7 @@ export default function PaymentModal({
                     <TERipple rippleColor="light" rippleCentered>
                       <button
                         type="button"
-                        className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-blue3 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+                        className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
                         onClick={() =>
                           setNewPoint(state => Number(state) + 50000)
                         }
@@ -125,7 +218,7 @@ export default function PaymentModal({
                     <TERipple rippleColor="light" rippleCentered>
                       <button
                         type="button"
-                        className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-blue3 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+                        className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
                         onClick={() =>
                           setNewPoint(state => Number(state) + 100000)
                         }
@@ -141,9 +234,12 @@ export default function PaymentModal({
               <TERipple rippleColor="light" rippleCentered>
                 <button
                   type="button"
-                  className="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                  disabled={loading}
+                  onClick={() => {
+                    submitPayment(newPoint);
+                  }}
                 >
-                  즉시결제
+                  <img src={AddPointButton} alt="충전하기" />
                 </button>
               </TERipple>
             </TEModalFooter>
@@ -157,6 +253,6 @@ export default function PaymentModal({
 PaymentModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   setShowModal: PropTypes.func.isRequired,
-  money: PropTypes.number.isRequired,
+  point: PropTypes.number.isRequired,
   price: PropTypes.number.isRequired,
 };

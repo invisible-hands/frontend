@@ -20,6 +20,7 @@ import ProtectedRoute from './ProtectedRoute';
 import MainPage from './pages/MainPage';
 import BidPage from './pages/BidPage/BidPage';
 import MyShoppingPage from './pages/MyShoppingPage';
+import PayResultPage from './pages/PayResultPage';
 
 const router = createBrowserRouter([
   {
@@ -106,6 +107,10 @@ const router = createBrowserRouter([
             <MyShoppingPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: '/pay/:result',
+        element: <PayResultPage />,
       },
     ],
   },
