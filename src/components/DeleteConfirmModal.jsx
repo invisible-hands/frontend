@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../stores/loginStore';
 
 export default function DeleteConfirmModal({
-  showModal,
   setShowModal,
   auctionName,
   auctionId,
@@ -26,7 +25,7 @@ export default function DeleteConfirmModal({
 
   const deleteAuction = async (id, accessToken) => {
     await axios
-      .delete(`${API_URL}/auction/${id}`, {
+      .delete(`${API_URL}/api/auction/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -48,7 +47,7 @@ export default function DeleteConfirmModal({
   };
 
   return (
-    <TEModal show={showModal} setShow={setShowModal}>
+    <TEModal setShow={setShowModal}>
       <TEModalDialog centered>
         <TEModalContent>
           <TEModalHeader>
@@ -103,7 +102,6 @@ export default function DeleteConfirmModal({
 }
 
 DeleteConfirmModal.propTypes = {
-  showModal: PropTypes.bool.isRequired,
   setShowModal: PropTypes.func.isRequired,
   auctionName: PropTypes.string.isRequired,
   auctionId: PropTypes.number.isRequired,

@@ -7,8 +7,10 @@ import { AuctionContainer } from './ShoppingContainer';
 import { AuctionDropdown } from './DropDown';
 import { calculateRemainTime } from '../utils/timeUtils';
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const axiosInstance = axios.create({
-  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+  baseURL: API_URL,
 });
 
 function AuctionRecord() {

@@ -6,6 +6,7 @@ import ItemDetail from '../../components/ItemDetail.jsx';
 
 function SearchDetailPage() {
   const location = useLocation();
+  const API_URL = import.meta.env.VITE_APP_URL;
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const keyword = searchParams.get('keyword');
@@ -18,7 +19,7 @@ function SearchDetailPage() {
     const fetchSearchResults = async () => {
       try {
         const response = await axios.get(
-          `https://ka1425de5708ea.user-app.krampoline.com/api/auction/search?keyword=${keyword}&page=${page}&size=20&progressFilter=false`,
+          `${API_URL}/api/auction/search?keyword=${keyword}&page=${page}&size=20&progressFilter=false`,
         );
 
         if (response.data.status === 'Success') {

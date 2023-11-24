@@ -16,7 +16,7 @@ export async function createAuction(files, otherData, token) {
     new Blob([JSON.stringify(dataSet)], { type: 'application/json' }),
   );
 
-  axios.post(`${API_URL}/auction`, formData, {
+  axios.post(`${API_URL}/api/auction`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data',
@@ -25,7 +25,7 @@ export async function createAuction(files, otherData, token) {
 }
 
 export async function purchaseInstant(id, userToken) {
-  const url = `${API_URL}/auction/${id}/instant`;
+  const url = `${API_URL}/api/auction/${id}/instant`;
   const config = {
     headers: {
       Authorization: `Bearer ${userToken}`,
@@ -34,6 +34,9 @@ export async function purchaseInstant(id, userToken) {
   await axios
     .post(url, {}, config)
     .then(res => {
+      if (res.status === 200) {
+        alert('즉시 구매가 완료되었습니다');
+      }
       console.log(res);
     })
     .catch(err => {
@@ -45,18 +48,18 @@ export async function purchaseInstant(id, userToken) {
 }
 
 export async function fetchBidPage(auctionId, token) {
-  const { data } = await axios.get(`${API_URL}/auction/${auctionId}/bid`, {
+  const { data } = await axios.get(`${API_URL}/api/auction/${auctionId}/bid`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  return data;
+  return data.data;
 }
 
 // 입찰하기
-export async function bid(auctionId, price) {
-  return axios.post(`${API_URL}/auction/${auctionId}/bid`, { price });
-}
+// export async function bid(auctionId, price) {
+//   return axios.post(`${API_URL}/auction/${auctionId}/bid`, { price });
+// }
 
 // 특저 쿠키 값을 읽는 함수
 export function getCookieValue(name) {
@@ -70,7 +73,7 @@ export function getCookieValue(name) {
 
 // 경매 상세 정보 조회
 export async function fetchAuctionInfo(auctionId) {
-  const { data } = await axios.get(`${API_URL}/auction/${auctionId}`);
+  const { data } = await axios.get(`${API_URL}/api/auction/${auctionId}`);
   return data;
 }
 
@@ -78,7 +81,7 @@ export async function fetchAuctionInfo(auctionId) {
 export async function deleteAuction(auctionId, token) {
   await axios
     .delete(
-      `${API_URL}/auction/${auctionId}`,
+      `${API_URL}/api/auction/${auctionId}`,
       {},
       {
         headers: {
@@ -96,14 +99,30 @@ export async function deleteAuction(auctionId, token) {
 
 // 판매자 정보 조회
 export async function fetchSellerInfo(auctionId) {
-  const { data } = await axios.get(`${API_URL}/auction/${auctionId}/seller`);
+  const { data } = await axios.get(
+    `${API_URL}/api/auction/${auctionId}/seller`,
+  );
   return data;
 }
 
 // 입찰 내역 조회
 export async function fetchBidHistory(auctionId) {
   const { data } = await axios.get(
-    `${API_URL}/auction/${auctionId}/bidHistory?page=0&size=1`,
+    `${API_URL}/api/auction/${auctionId}/bidHistory?page=0&size=10`,
   );
   return data;
+}
+
+export async function fetchBidsTime(auctionId) {
+  const response = await axios.get(
+    `${API_URL}/api/auction/${auctionId}/bidHistory?page=0&size=10`,
+  );
+  return response.data.data.bids.map(bid => bid.bidTime);
+}
+
+export async function fetchBidsPrice(auctionId) {
+  const response = await axios.get(
+    `${API_URL}/api/auction/${auctionId}/bidHistory?page=0&size=10`,
+  );
+  return response.data.data.bids.map(bid => bid.bidPrice);
 }

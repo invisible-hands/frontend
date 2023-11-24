@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_APP_URL;
 
 export function updateBidPrice(auctionId, newPrice, token) {
   return axios.post(
-    `${API_URL}/auction/${auctionId}/bid`,
+    `${API_URL}/api/auction/${auctionId}/bid`,
     {
       price: newPrice,
     },
@@ -18,7 +18,7 @@ export function updateBidPrice(auctionId, newPrice, token) {
 
 export function updateBidPriceOther(auctionId, price, token) {
   return axios.post(
-    `${API_URL}/auction/${auctionId}/bid`,
+    `${API_URL}/api/auction/${auctionId}/bid`,
     {
       price,
     },

@@ -13,13 +13,11 @@ function ItemDetail({ item, onClick }) {
       const difference = endTime - now;
 
       if (difference > 0) {
-        let hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        let hours = Math.floor(difference / (1000 * 60 * 60));
         let minutes = Math.floor((difference / 1000 / 60) % 60);
         let seconds = Math.floor((difference / 1000) % 60);
 
-        if (hours === 0) {
-          setIsLessThanAnHour(true);
-        }
+        setIsLessThanAnHour(hours === 0);
 
         hours = hours < 10 ? `0${hours}` : `${hours}`;
         minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
@@ -61,10 +59,12 @@ function ItemDetail({ item, onClick }) {
         <span className="hidden md:inline">현재 입찰 </span>
         <span className="font-bold">{currentPrice}</span> 원
       </div>
-      <div className="text-xs font-bold text-deepblue1 truncate md:text-lg">
-        <span className="hidden md:inline">즉시구매 </span>
-        <span className="font-bold">{instantPrice}</span> 원
-      </div>
+      {instantPrice && (
+        <div className="text-xs font-bold text-deepblue1 truncate md:text-lg">
+          <span className="hidden md:inline">즉시구매 </span>
+          <span className="font-bold">{instantPrice}</span> 원
+        </div>
+      )}
     </div>
   );
 }

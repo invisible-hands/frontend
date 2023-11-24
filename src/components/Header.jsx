@@ -55,10 +55,10 @@ function Header() {
           />
 
           {/* 검색창 */}
-          <div className="flex items-stretch transition-all ease-in-out duration-200 w-48 h-8 text-xs md:w-72 md:h-12 md:text-base">
+          <div className="relative flex items-stretch transition-all ease-in-out duration-200 w-48 h-8 text-xs md:w-72 md:h-12 md:text-base lg:w-96">
             <input
               type="search"
-              className="hidden md:block -mr-0.5 w-full rounded-l-xl border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out border-r-0 truncate"
+              className="w-full hidden md:block rounded-full border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out truncate"
               placeholder="고르고 입찰하고 쟁취하세요!"
               aria-label="Search-md"
               value={searchKeyword}
@@ -66,19 +66,17 @@ function Header() {
             />
             <input
               type="search"
-              className="block md:hidden -mr-0.5 w-full rounded-l-xl border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out border-r-0 truncate"
+              className="w-full block md:hidden border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out truncate"
               placeholder="상품 검색"
               aria-label="Search"
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
             />
             <button
-              className="transition-all ease-in-out duration-300 z-10 flex items-center rounded-r-xl p-2 font-medium leading-tight text-blue1 border-2 border-blue3 border-l-0 focus:outline-none"
+              className="absolute right-0 top-0 flex items-center justify-center p-2 font-medium text-blue1 focus:outline-none md:top-1 md:right-1"
               type="button"
               onClick={handleSearch}
               id="button-addon1"
-              data-te-ripple-init
-              data-te-ripple-color="light"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

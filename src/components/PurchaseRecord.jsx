@@ -6,8 +6,10 @@ import { PurchaseItem } from './PurchaseItem';
 import { PurchaseContainer } from './ShoppingContainer';
 import { PurchaseDropdown } from './DropDown';
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const axiosInstance = axios.create({
-  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+  baseURL: API_URL,
 });
 
 function PurchaseRecord() {

@@ -8,12 +8,13 @@ import ItemDetail from '../ItemDetail';
 function NewPreview() {
   const navigate = useNavigate();
   const [newItems, setNewItems] = useState([]);
+  const API_URL = import.meta.env.VITE_APP_URL;
 
   useEffect(() => {
     const fetchNewItems = async () => {
       try {
         const response = await axios.get(
-          'https://ka1425de5708ea.user-app.krampoline.com/api/auction?page=0&size=3&sort=latest,asc&progressFilter=true',
+          `${API_URL}/api/auction?page=0&size=3&sort=latest,desc&progressFilter=true`,
         );
         setNewItems(response.data.data.items);
       } catch (error) {
