@@ -59,10 +59,12 @@ function ItemDetail({ item, onClick }) {
         <span className="hidden md:inline">현재 입찰 </span>
         <span className="font-bold">{currentPrice}</span> 원
       </div>
-      <div className="text-xs font-bold text-deepblue1 truncate md:text-lg">
-        <span className="hidden md:inline">즉시구매 </span>
-        <span className="font-bold">{instantPrice}</span> 원
-      </div>
+      {instantPrice && (
+        <div className="text-xs font-bold text-deepblue1 truncate md:text-lg">
+          <span className="hidden md:inline">즉시구매 </span>
+          <span className="font-bold">{instantPrice}</span> 원
+        </div>
+      )}
     </div>
   );
 }

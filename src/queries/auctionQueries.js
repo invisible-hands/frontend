@@ -53,7 +53,7 @@ export async function fetchBidPage(auctionId, token) {
       Authorization: `Bearer ${token}`,
     },
   });
-  return data;
+  return data.data;
 }
 
 // 입찰하기
