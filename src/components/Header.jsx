@@ -58,7 +58,7 @@ function Header() {
           <div className="relative flex items-stretch transition-all ease-in-out duration-200 w-48 h-8 text-xs md:w-72 md:h-12 md:text-base lg:w-96">
             <input
               type="search"
-              className="w-full hidden md:block rounded-full border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out truncate"
+              className="w-full hidden md:block rounded-full border-2 border-blue3 bg-transparent pl-3 pr-10 text-deepblue1 outline-none transition duration-200 ease-in-out truncate"
               placeholder="고르고 입찰하고 쟁취하세요!"
               aria-label="Search-md"
               value={searchKeyword}
@@ -66,7 +66,7 @@ function Header() {
             />
             <input
               type="search"
-              className="w-full block md:hidden border-2 border-blue3 bg-transparent pl-3 text-deepblue1 outline-none transition duration-200 ease-in-out truncate"
+              className="w-full block md:hidden rounded-full border-2 border-blue3 bg-transparent pl-3 pr-10 text-deepblue1 outline-none transition duration-200 ease-in-out truncate"
               placeholder="상품 검색"
               aria-label="Search"
               value={searchKeyword}
