@@ -160,7 +160,10 @@ export default function PaymentModal({
                     {price !== 0 && (
                       <p className="flex justify-between">
                         <span>필요한 포인트</span>
-                        <span>{price + 1000 - point} point</span>
+                        <span>
+                          {price + 1000 - point < 0 ? 0 : price + 1000 - point}{' '}
+                          point
+                        </span>
                       </p>
                     )}
                     <p className="flex justify-between">
