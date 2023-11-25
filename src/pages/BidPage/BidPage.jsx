@@ -50,7 +50,7 @@ export default function BidPage() {
 
   const handleNewPriceChange = e => {
     const { value } = e.target;
-    const filteredValue = value.replace(/[^0-9]/g, '');
+    const filteredValue = parseInt(value.replace(/[^0-9]/g, ''), 10);
     setNewPrice(filteredValue);
   };
   const handleAgreedToTermsChange = e => {

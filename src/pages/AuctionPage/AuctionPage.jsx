@@ -51,7 +51,7 @@ export default function AuctionPage() {
   if (auctionQuery.data) {
     console.log(auctionQuery.data.data);
     return (
-      <div className="flex justify-center overflow-y-auto">
+      <div className="flex justify-center">
         <div className="w-full lg:w-[1024px] p-6">
           <div className="flex flex-row space-x-12">
             {/* <!-- 상품이미지 --> */}
