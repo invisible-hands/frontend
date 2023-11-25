@@ -9,7 +9,10 @@ function CustomDatePicker({ startDate, setStartDate }) {
       <DatePicker
         className="form-input rounded-lg border border-gray-300 text-center bg-gray-200"
         selected={startDate}
-        onChange={date => setStartDate(date)}
+        onChange={date => {
+          setStartDate(date);
+        }}
+        dateFormat="MM/dd/yyyy"
       />
     </div>
   );
@@ -21,3 +24,7 @@ CustomDatePicker.propTypes = {
 };
 
 export default CustomDatePicker;
+
+// 'error' is assigned a value but never used.
+// 'hadleDateChage' is assigned a value but never used.
+// 'isValidDate' was used before it was defined.

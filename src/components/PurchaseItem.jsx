@@ -175,7 +175,7 @@ export function SellingItem({
 
   console.log('옥션 아이디', auctionId);
   return (
-    <div className="flex justify-between items-center mb-4 pl-12 pt-2 mr-8">
+    <div className="flex justify-between items-center mb-4 pl-8 mt-2 mr-10">
       <button
         type="button"
         onClick={goToPage}
@@ -190,12 +190,10 @@ export function SellingItem({
       >
         제품명: {truncateProductName(title)}
       </div>
-      <div className="pt-3 text-sm font-bold text-blackish pl-1 ">
-        {price}원
-      </div>
+      <div className="pt-3 text-sm font-bold text-blackish pl-2">{price}원</div>
       <div className="flex flex-col items-center">
         <div
-          className={`pt-4 text-sm pr-12 text-danger ${
+          className={`pt-4 text-sm pl-3 text-danger ${
             status === 'SALE_FAIL' ? 'mr-4' : ''
           }`}
         >
@@ -206,7 +204,7 @@ export function SellingItem({
             <>
               <button
                 type="button"
-                className="bg-grayish text-xs px-1 rounded mr-12"
+                className="bg-grayish text-xs px-1 rounded ml-3"
                 onClick={() => setInvoiceModalOpen(true)}
               >
                 송장 번호 입력
