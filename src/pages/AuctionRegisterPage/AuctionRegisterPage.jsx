@@ -146,9 +146,12 @@ export default function AuctionRegisterPage() {
         },
       })
       .then(res => {
-        console.log(res.status, res.data);
-        alert('상품이 등록되었습니다.');
-        navigate('/');
+        if (res.status === 200) {
+          alert('상품이 등록되었습니다.');
+          navigate('/profile/shopping/selling');
+        } else {
+          alert(`상품 등록에 실패했습니다. 이유: ${res.data.message}`);
+        }
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
@@ -267,7 +270,7 @@ export default function AuctionRegisterPage() {
                   })}
                 >
                   <input {...getInputProps()} ref={fileInputRef} />
-                  <p>{`Drag 'n' drop some files here, or click to select files`}</p>
+                  <p>+ 이미지 추가하기</p>
                 </div>
                 <aside className="flex flex-row flex-wrap mt-2">{thumbs}</aside>
               </section>

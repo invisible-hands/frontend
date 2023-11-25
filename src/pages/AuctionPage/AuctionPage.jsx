@@ -49,7 +49,6 @@ export default function AuctionPage() {
   }, [auctionQuery.data]);
 
   if (auctionQuery.data) {
-    console.log(auctionQuery.data.data);
     return (
       <div className="flex justify-center">
         <div className="w-full lg:w-[1024px] p-6">
