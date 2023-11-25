@@ -28,6 +28,7 @@ function AuctionRecord() {
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [dateError, setDateError] = useState('');
   const { accessToken } = useLoginStore();
 
   // 현재 페이지에 표시할 아이템의 시작 인덱스
@@ -81,6 +82,36 @@ function AuctionRecord() {
     return item.status === statusFilter;
   });
 
+  const handleStartDateChange = date => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    if (date.getFullYear() > currentYear) {
+      setDateError('미래의 날짜는 선택할 수 없습니다.');
+    } else if (date.getFullYear() < 1900 || date.getFullYear() > currentYear) {
+      setDateError('유효하지 않은 연도입니다.');
+    } else if (date > endDate) {
+      setDateError('시작 날짜가 종료 날짜보다 뒤에 있을 수 없습니다.');
+    } else {
+      setStartDate(date);
+      setDateError(''); // 에러 메시지 초기화
+    }
+  };
+
+  const handleEndDateChange = date => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    if (date.getFullYear() > currentYear) {
+      setDateError('미래의 날짜는 선택할 수 없습니다.');
+    } else if (date.getFullYear() < 1900 || date.getFullYear() > currentYear) {
+      setDateError('유효하지 않은 연도입니다.');
+    } else if (date < startDate) {
+      setDateError('종료 날짜가 시작 날짜보다 앞에 있을 수 없습니다.');
+    } else {
+      setEndDate(date);
+      setDateError(''); // 에러 메시지 초기화
+    }
+  };
+
   // 페이지 번호 버튼을 렌더링하는 함수
   const renderPageNumbers = () => {
     const pages = [];
@@ -111,15 +142,20 @@ function AuctionRecord() {
                   setStatusFilter={setStatusFilter}
                   dealStatusOptions={auctionStatusOptions}
                 />
-                <div className="flex space-x-2 pl-2">
-                  <CustomDatePicker
-                    startDate={startDate}
-                    setStartDate={setStartDate}
-                  />
-                  <CustomDatePicker
-                    startDate={endDate}
-                    setStartDate={setEndDate}
-                  />
+                <div className="flex flex-col space-y-2">
+                  <div className="flex space-x-2 pl-2">
+                    <CustomDatePicker
+                      startDate={startDate}
+                      setStartDate={handleStartDateChange}
+                    />
+                    <CustomDatePicker
+                      startDate={endDate}
+                      setStartDate={handleEndDateChange}
+                    />
+                  </div>
+                  {dateError && (
+                    <div className="text-red-500 text-xs ml-3">{dateError}</div>
+                  )}
                 </div>
               </div>
               {items.length > 0 ? (
