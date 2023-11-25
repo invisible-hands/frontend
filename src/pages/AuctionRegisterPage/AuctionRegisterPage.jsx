@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { TERipple } from 'tw-elements-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDropzone } from 'react-dropzone';
 import useLoginStore from '../../stores/loginStore';
 
 export default function AuctionRegisterPage() {
@@ -20,13 +21,89 @@ export default function AuctionRegisterPage() {
   const [isAgreed, setIsAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const fileInputRef = useRef(null);
   const titleInputRef = useRef(null);
   const contentInputRef = useRef(null);
   const startPriceInputRef = useRef(null);
   const instantPriceInputRef = useRef(null);
   const itemConditionInputRef = useRef(null);
   const agreedToTermsInputRef = useRef(null);
+
+  // 이미지 업로드 관련 코드
+
+  const { getRootProps, getInputProps, inputRef } = useDropzone({
+    accept: {
+      'image/*': [],
+    },
+    maxFiles: 5,
+    maxSize: 1024 * 1024 * 2,
+    onDrop: acceptedFiles => {
+      const totalFiles = files.length + acceptedFiles.length;
+      if (totalFiles <= 5) {
+        // 총 파일 개수가 5개 이하인 경우에만 파일 추가
+        const newFiles = acceptedFiles.map(file =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        );
+        setFiles(prevFiles => [...prevFiles, ...newFiles]);
+      } else {
+        // 여기에 파일 개수 초과에 대한 사용자 피드백을 제공할 수 있습니다.
+        alert('최대 5개의 파일만 업로드할 수 있습니다.');
+      }
+    },
+    onDropRejected: () => {
+      alert('파일 사이즈는 개당 2MB 이하로 가능합니다.');
+    },
+  });
+
+  // 이미지 제거 함수
+  const removeFile = fileName => {
+    setFiles(files.filter(file => file.name !== fileName));
+  };
+
+  const thumbs = files.map(file => (
+    <div
+      className="relative inline-flex rounded border border-gray-200 mb-2 mr-2 w-24 h-24 p-1 box-border"
+      key={file.name}
+    >
+      <div
+        className="absolute top-0 right-0 bg-white rounded-full cursor-pointer"
+        role="button"
+        onClick={() => removeFile(file.name)}
+      >
+        <svg
+          className="w-4 h-4 m-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
+      <div className="flex min-w-0 overflow-hidden">
+        <img
+          src={file.preview}
+          className="block w-auto h-full"
+          alt={file.name}
+          onLoad={() => {
+            URL.revokeObjectURL(file.preview);
+          }}
+        />
+      </div>
+    </div>
+  ));
+
+  useEffect(() => {
+    return () => files.forEach(file => URL.revokeObjectURL(file.preview));
+  }, [files]);
+
+  // 이미지 업로드 관련 코드 끝
 
   const handleTitleChange = e => {
     setTitle(e.target.value);
@@ -46,34 +123,6 @@ export default function AuctionRegisterPage() {
     const { value } = e.target;
     const filteredValue = value.replace(/[^0-9]/g, '');
     setInstantPrice(filteredValue);
-  };
-
-  const handleOtherElementClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleFilesChange = e => {
-    let fileList = e.target.files;
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    let fileSize = 0;
-    for (let i = 0; i < fileList.length; i += 1) {
-      fileSize += fileList[i].size;
-    }
-    if (fileSize > maxSize) {
-      alert('파일 첨부는 10MB 이하로 가능합니다.');
-      fileList = null;
-      fileInputRef.current.value = '';
-      return;
-    }
-    if (fileList.length > 5) {
-      alert('파일 첨부는 최대 5개까지 가능합니다.');
-      fileList = null;
-      fileInputRef.current.value = '';
-      return;
-    }
-    if (fileList !== null) {
-      setFiles(fileList);
-    }
   };
 
   const createAuction = (imageFiles, data, accessToken) => {
@@ -96,9 +145,12 @@ export default function AuctionRegisterPage() {
         },
       })
       .then(res => {
-        console.log(res.status, res.data);
-        alert('상품이 등록되었습니다.');
-        navigate('/');
+        if (res.status === 200) {
+          alert('상품이 등록되었습니다.');
+          navigate('/profile/shopping/selling');
+        } else {
+          alert(`상품 등록에 실패했습니다. 이유: ${res.data.message}`);
+        }
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
@@ -109,7 +161,7 @@ export default function AuctionRegisterPage() {
 
     if (files.length === 0) {
       alert('파일을 첨부해주세요');
-      fileInputRef.current.focus();
+      inputRef.current.focus();
       return;
     }
 
@@ -191,11 +243,10 @@ export default function AuctionRegisterPage() {
       submitTagItem();
     }
   };
-  useEffect(() => {
-    if (token === null) {
-      navigate('/');
-    }
-  }, [token]);
+
+  if (!token) {
+    return <div>{}</div>;
+  }
 
   return (
     <div className="flex justify-center">
@@ -207,34 +258,20 @@ export default function AuctionRegisterPage() {
           <div className="flex flex-row space-x-5">
             {/* <!-- 상품이미지 --> */}
             <div className="w-96">
-              <label>상품 이미지</label>
-              <div className="relative w-96 h-96 overflow-hidden">
-                <button
-                  type="button"
-                  className="flex w-full h-full justify-center items-center border-solid border-2"
-                  onClick={handleOtherElementClick}
-                >
-                  파일 추가하기 +
-                </button>
+              <label>{`상품 이미지 ${files.length}/5`}</label>
+              {/* 이미지 업로드 */}
+              <section className="container">
                 <div
-                  style={{
-                    backgroundImage: `url(https://picsum.photos/seed/picsum/200/300)`,
-                  }}
-                  className="w-full h-full bg-center bg-cover duration-500 "
-                />
-              </div>
-              <div>
-                <input
-                  className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
-                  type="file"
-                  name="images"
-                  accept="image/* "
-                  id="formFileMultiple"
-                  multiple
-                  ref={fileInputRef}
-                  onChange={handleFilesChange}
-                />
-              </div>
+                  {...getRootProps({
+                    className:
+                      'dropzone border-dashed border-2 border-gray-300 flex flex-col justify-center items-center cursor-pointer w-full h-72',
+                  })}
+                >
+                  <input {...getInputProps()} />
+                  <p>+이미지 추가하기</p>
+                </div>
+                <aside className="flex flex-row flex-wrap mt-2">{thumbs}</aside>
+              </section>
             </div>
 
             {/* <!-- 상품정보 --> */}
@@ -363,7 +400,7 @@ export default function AuctionRegisterPage() {
                 <div>
                   <input
                     type="text"
-                    className="w-full bg-deepblue1 rounded text-white mb-2 px-2 py-1"
+                    className="w-full bg-deepblue1 rounded text-white mb-2 px-2 py-1 focus:outline-none focus:ring focus:ring-danger"
                     placeholder="Press space to add tags"
                     onChange={e => setTagItem(e.target.value)}
                     value={tagItem}
@@ -442,7 +479,7 @@ export default function AuctionRegisterPage() {
                 className="inline-block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-300 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                 onClick={() => navigate(-1)}
               >
-                입찰 안하기
+                등록 취소하기
               </button>
             </TERipple>
             <TERipple rippleColor="white">

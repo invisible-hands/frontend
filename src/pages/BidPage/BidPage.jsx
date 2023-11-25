@@ -50,7 +50,7 @@ export default function BidPage() {
 
   const handleNewPriceChange = e => {
     const { value } = e.target;
-    const filteredValue = value.replace(/[^0-9]/g, '');
+    const filteredValue = parseInt(value.replace(/[^0-9]/g, ''), 10);
     setNewPrice(filteredValue);
   };
   const handleAgreedToTermsChange = e => {
@@ -315,10 +315,11 @@ export default function BidPage() {
       </div>
     );
   }
+  // loading 중에 보여지는 화면
   return (
     <div className="flex justify-center">
       <div className="w-full p-6 lg:w-[1024px]">
-        <div>로딩중</div>
+        <div>{}</div>
       </div>
     </div>
   );
