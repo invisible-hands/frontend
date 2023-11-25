@@ -36,6 +36,14 @@ function AuctionRecord() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
+    const currentDate = new Date();
+    const initialStartDate = new Date(
+      currentDate.setMonth(currentDate.getMonth() - 1),
+    );
+    setStartDate(initialStartDate);
+  }, []);
+
+  useEffect(() => {
     const fetchItems = async () => {
       try {
         // const accessToken = import.meta.env.VITE_TOKEN;

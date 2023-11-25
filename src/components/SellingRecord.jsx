@@ -37,6 +37,14 @@ function SellingRecord() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
+    const currentDate = new Date();
+    const initialStartDate = new Date(
+      currentDate.setMonth(currentDate.getMonth() - 1),
+    );
+    setStartDate(initialStartDate);
+  }, []);
+
+  useEffect(() => {
     const fetchItems = async () => {
       try {
         const formattedStartDate = startDate.toISOString().split('T')[0];
