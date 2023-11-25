@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { TERipple } from 'tw-elements-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { RxDotFilled } from 'react-icons/rx';
 import useLoginStore from '../../stores/loginStore';
 
 export default function AuctionRegisterPage() {
@@ -463,99 +461,3 @@ export default function AuctionRegisterPage() {
     </div>
   );
 }
-
-export function ImageSlider({ slides }) {
-  const [currentIndex, setcurrentIndex] = useState(0);
-  const prevSlide = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
-    setcurrentIndex(newIndex);
-  };
-
-  const nextSlide = () => {
-    const isLastSlide = currentIndex === slides.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setcurrentIndex(newIndex);
-  };
-
-  const goToSlide = slideIndex => {
-    setcurrentIndex(slideIndex);
-  };
-  if (slides.length === 0) return null;
-
-  return (
-    <div className="w-96">
-      <div className="relative w-96 h-96 overflow-hidden">
-        <div
-          style={{ backgroundImage: `url(${slides[currentIndex].imageUrl})` }}
-          className="w-full h-full bg-center bg-cover duration-500"
-        />
-        <div className="flex justify-between absolute w-full left-0 top-1/2 transform -translate-y-1/2">
-          {/* Left Arrow */}
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="black"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="white"
-              className="w-12 h-12 cursor-pointer"
-              onClick={prevSlide}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          {/* Right Arrow */}
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="black"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="white"
-              className="w-12 h-12 cursor-pointer"
-              onClick={nextSlide}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div className="flex top-4 justify-center py-2">
-        {slides.map(({ imageId }, index) => (
-          <div
-            role="button"
-            key={imageId}
-            onClick={() => goToSlide(index)}
-            className="text-2xl cursor-pointer"
-          >
-            <RxDotFilled
-              className={
-                index === currentIndex ? 'text-deepblue1' : 'text-blue2'
-              }
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// 판매자 정보
-
-ImageSlider.propTypes = {
-  slides: PropTypes.arrayOf(
-    PropTypes.shape({
-      imageId: PropTypes.number.isRequired,
-      imageUrl: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-};
