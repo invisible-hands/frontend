@@ -21,7 +21,6 @@ export default function AuctionRegisterPage() {
   const [isAgreed, setIsAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const fileInputRef = useRef(null);
   const titleInputRef = useRef(null);
   const contentInputRef = useRef(null);
   const startPriceInputRef = useRef(null);
@@ -30,13 +29,13 @@ export default function AuctionRegisterPage() {
   const agreedToTermsInputRef = useRef(null);
 
   // 이미지 업로드 관련 코드
-  const { getRootProps, getInputProps } = useDropzone({
+
+  const { getRootProps, getInputProps, inputRef } = useDropzone({
     accept: {
       'image/*': [],
     },
     maxFiles: 5,
     maxSize: 1024 * 1024 * 2,
-
     onDrop: acceptedFiles => {
       const totalFiles = files.length + acceptedFiles.length;
       if (totalFiles <= 5) {
@@ -162,7 +161,7 @@ export default function AuctionRegisterPage() {
 
     if (files.length === 0) {
       alert('파일을 첨부해주세요');
-      fileInputRef.current.focus();
+      inputRef.current.focus();
       return;
     }
 
@@ -244,11 +243,10 @@ export default function AuctionRegisterPage() {
       submitTagItem();
     }
   };
-  useEffect(() => {
-    if (token === null) {
-      navigate('/');
-    }
-  }, [token]);
+
+  if (!token) {
+    return <div>{}</div>;
+  }
 
   return (
     <div className="flex justify-center">
@@ -266,11 +264,11 @@ export default function AuctionRegisterPage() {
                 <div
                   {...getRootProps({
                     className:
-                      'dropzone border-dashed border-2 border-gray-300 p-4 flex justify-center items-center cursor-pointer w-full h-72',
+                      'dropzone border-dashed border-2 border-gray-300 flex flex-col justify-center items-center cursor-pointer w-full h-72',
                   })}
                 >
-                  <input {...getInputProps()} ref={fileInputRef} />
-                  <p>+ 이미지 추가하기</p>
+                  <input {...getInputProps()} />
+                  <p>+이미지 추가하기</p>
                 </div>
                 <aside className="flex flex-row flex-wrap mt-2">{thumbs}</aside>
               </section>
@@ -402,7 +400,7 @@ export default function AuctionRegisterPage() {
                 <div>
                   <input
                     type="text"
-                    className="w-full bg-deepblue1 rounded text-white mb-2 px-2 py-1"
+                    className="w-full bg-deepblue1 rounded text-white mb-2 px-2 py-1 focus:outline-none focus:ring focus:ring-danger"
                     placeholder="Press space to add tags"
                     onChange={e => setTagItem(e.target.value)}
                     value={tagItem}
