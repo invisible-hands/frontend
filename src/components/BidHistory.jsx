@@ -1,42 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
 import { useQuery } from '@tanstack/react-query';
 import { fetchBidHistory } from '../queries/auctionQueries';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-);
-
-// export const useBidsQuery = (auctionId, select) => {
-//   useQuery({
-//     queryKey: ['bidHistoryData', auctionId],
-//     queryFn: fetchBidHistory(auctionId),
-//     select,
-//   });
-// };
-
-// export const useBidsPrice = auctionId =>
-//   useBidsQuery(auctionId, data => data.data.bids.map(bid => bid.bidPrice));
-
-// export const useBidsTime = auctionId =>
-//   useBidsQuery(auctionId, data => data.data.bids.map(bid => bid.bidTime));
 
 export default function BidHistory({ auctionId }) {
   const bidHistory = useQuery({
@@ -45,57 +10,9 @@ export default function BidHistory({ auctionId }) {
     staleTime: 10 * 1000,
   });
 
-  // const labels = [
-  //   '2023-10-20 13:35:10',
-  //   '2023-10-20 13:36:10',
-  //   '2023-10-20 13:38:10',
-  //   '2023-10-20 13:39:10',
-  //   '2023-10-20 13:40:10',
-  //   '2023-10-20 13:55:10',
-  //   '2023-10-20 13:56:10',
-  // ];
-
-  const chartData = {
-    lables: [],
-    datasets: [
-      {
-        label: '경매가',
-        chartData: [],
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: false,
-        text: 'Chart.js Line Chart',
-      },
-    },
-    scales: {
-      x: {
-        ticks: {
-          display: false,
-        },
-      },
-    },
-  };
-
   if (bidHistory.data) {
-    console.log(bidHistory.data);
     return (
       <div className="flex flex-row space-x-5 h-96">
-        {/* bid chart */}
-        <div className="flex-1">
-          <Line options={options} data={chartData} />
-        </div>
-        {/* bid table */}
         <div className="flex-1 flex flex-col">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full max-h-screen overflow-y-auto py-2 sm:px-6 lg:px-8">
@@ -118,6 +35,16 @@ export default function BidHistory({ auctionId }) {
                     </tr>
                   </thead>
                   <tbody>
+                    {bidHistory.data.data.bids.length === 0 && (
+                      <tr className="border-b bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
+                        <td
+                          colSpan={4}
+                          className="whitespace-nowrap px-6 py-4 font-medium text-center"
+                        >
+                          입찰 내역이 없습니다.
+                        </td>
+                      </tr>
+                    )}
                     {bidHistory.data.data.bids.map((bid, index) => (
                       <tr
                         className="border-b bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700"
@@ -133,7 +60,7 @@ export default function BidHistory({ auctionId }) {
                           {bid.bidderNickname.slice(0, 2) + '*'.repeat(4)}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {bid.bidPrice}
+                          {bid.bidPrice.toLocaleString()}
                         </td>
                       </tr>
                     ))}

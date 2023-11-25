@@ -7,6 +7,7 @@ import { FaTimes } from 'react-icons/fa';
 import useLoginStore from '../stores/loginStore';
 import profileImg from '../assets/bettingground.png';
 import Sidebar from '../components/Sidebar';
+import PaymentModal from '../components/PaymentModal';
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ function ProfilePage() {
   ];
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
-  const [chargeAmount, setChargeAmount] = useState('');
+  // const [chargeAmount, setChargeAmount] = useState('');
 
   // 모달 열기
   const openAddressModal = () => {
@@ -307,18 +308,18 @@ function ProfilePage() {
     setIsChargeModalOpen(true);
   };
 
-  // 가상 머니 충전 모달 닫기
-  const closeChargeModal = () => {
-    setIsChargeModalOpen(false);
-    setChargeAmount(''); // 모달 닫을 때 입력값 초기화
-  };
+  // // 가상 머니 충전 모달 닫기
+  // const closeChargeModal = () => {
+  //   setIsChargeModalOpen(false);
+  //   setChargeAmount(''); // 모달 닫을 때 입력값 초기화
+  // };
 
   // 가상 머니 충전 처리 함수 (실제 API 요청 로직은 구현 필요)
-  const handleCharge = async () => {
-    // API 요청 로직으로 가상 머니 충전 처리
-    console.log(`충전 금액: ${chargeAmount}`);
-    closeChargeModal();
-  };
+  // const handleCharge = async () => {
+  //   // API 요청 로직으로 가상 머니 충전 처리
+  //   console.log(`충전 금액: ${chargeAmount}`);
+  //   closeChargeModal();
+  // };
 
   const canActivateAccount = () => {
     const formIsValid =
@@ -601,6 +602,15 @@ function ProfilePage() {
           </div>
           {/* 가상 머니 충전 모달 */}
           {isChargeModalOpen && (
+            <PaymentModal
+              showModal={isChargeModalOpen}
+              setShowModal={setIsChargeModalOpen}
+              point={parseInt(virtualMoney, 10)}
+              price={0}
+            />
+          )}
+
+          {/* (
             <div className="fixed inset-0 flex items-center justify-center z-50">
               <div className="modal max-w-md bg-white p-4 rounded shadow-lg flex flex-col">
                 <button
@@ -626,7 +636,7 @@ function ProfilePage() {
                 </button>
               </div>
             </div>
-          )}
+          )} */}
           <div>
             <input
               type="text"

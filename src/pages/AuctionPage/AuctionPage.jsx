@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TERipple } from 'tw-elements-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -6,7 +6,7 @@ import { RxDotFilled } from 'react-icons/rx';
 import { useQuery } from '@tanstack/react-query';
 import useLoginStore from '../../stores/loginStore';
 import useModalStore from '../../stores/modalStore';
-import PaymentConfirmModal from './PaymentConfirmModal';
+import InstantPurchaseModal from './InstantPurchaseModal';
 import PaymentModal from '../../components/PaymentModal';
 import {
   isWithinFiveMinute,
@@ -28,23 +28,38 @@ export default function AuctionPage() {
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPayModal, setShowPayModal] = useState(false);
-
+  const [timeLeft, setTimeLeft] = useState('00:00:00');
   const auctionQuery = useQuery({
     queryKey: ['auctionInfo', auctionId],
     queryFn: () => fetchAuctionInfo(auctionId),
   });
 
+  useEffect(() => {
+    if (auctionQuery.data) {
+      const timer = setInterval(() => {
+        setTimeLeft(
+          calculateRemainTime(
+            auctionQuery.data.data.auctionInfo.endAuctionTime,
+          ),
+        );
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+    return () => {};
+  }, [auctionQuery.data]);
+
   if (auctionQuery.data) {
-    console.log(auctionQuery.data);
+    console.log(auctionQuery.data.data);
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center overflow-y-auto">
         <div className="w-full lg:w-[1024px] p-6">
           <div className="flex flex-row space-x-12">
             {/* <!-- 상품이미지 --> */}
             <div className="relative">
               <ImageSlider slides={auctionQuery.data.data.images} />
-              {auctionQuery.data.data.auctionInfo.auctionStatus ===
-                ('AUCTION_FAIL' || 'AUCTION_SUCCESS') && (
+              {['AUCTION_FAIL', 'AUCTION_SUCCESS'].includes(
+                auctionQuery.data.data.auctionInfo.auctionStatus,
+              ) && (
                 <div className="absolute top-0 left-0 w-full h-96 bg-blackish bg-opacity-50 text-whitish text-2xl text-center flex items-center justify-center">
                   <p>종료된 경매입니다</p>
                 </div>
@@ -66,24 +81,28 @@ export default function AuctionPage() {
               </p>
               <p>{}</p>
               <p>
-                현재 입찰가{' '}
-                <span className="text-2xl font-extrabold mb-4">
-                  {auctionQuery.data.data.auctionInfo.currentPrice}
-                </span>{' '}
+                <span>
+                  현재 입찰가{'  '}
+                  <span className="text-2xl font-extrabold mb-4">
+                    {auctionQuery.data.data.auctionInfo.currentPrice.toLocaleString()}
+                  </span>
+                </span>
+                {`  `}
                 바로 구매가{' '}
                 <span className="text-2xl font-extrabold mb-4">
-                  {auctionQuery.data.data.auctionInfo.instantPrice}
+                  {auctionQuery.data.data.auctionInfo.instantPrice.toLocaleString()}
                 </span>
               </p>
               <p>
                 {auctionQuery.data.data.auctionInfo.bidderCnt}명 경매 참여중
               </p>
-              <p>
-                남은 시간 :{' '}
-                {calculateRemainTime(
-                  auctionQuery.data.data.auctionInfo.endAuctionTime,
-                )}
-              </p>
+              {auctionQuery.data.data.auctionInfo.auctionStatus ===
+              'AUCTION_PROGRESS' ? (
+                <p>남은 시간 : {timeLeft}</p>
+              ) : (
+                <p>남은 시간 : 00:00:00</p>
+              )}
+
               <p>
                 상품 상태 :{' '}
                 {auctionQuery.data.data.auctionInfo.itemCondition === 'NEW'
@@ -162,11 +181,13 @@ export default function AuctionPage() {
             </div>
           </div>
           {/* <!-- 상품설명 --> */}
-          <div className="space-y-5 my-5">
-            <h2 className="text-2xl font-extrabold mb-4 text-deepblue2">
-              상품 정보
-            </h2>
-            <p>{auctionQuery.data.data.auctionInfo.content}</p>
+          <div className="space-y-5 my-8">
+            <div>
+              <h2 className="text-2xl font-extrabold mb-4 text-deepblue2">
+                상품 정보
+              </h2>
+              <p>{auctionQuery.data.data.auctionInfo.content}</p>
+            </div>
             <div>
               <h2 className="text-2xl font-extrabold mb-4 text-deepblue2">
                 태그
@@ -189,11 +210,15 @@ export default function AuctionPage() {
               </p>
             </div>
           </div>
-          <SellerInfo auctionId={auctionId} />
+          <hr />
+          <div className="my-8">
+            <SellerInfo auctionId={auctionId} />
+          </div>
         </div>
         {/* 게시글 삭제 확정 모달  */}
         {showDeleteConfirmModal && (
           <DeleteConfirmModal
+            showModal={showDeleteConfirmModal}
             setShowModal={setShowDeleteConfirmModal}
             auctionName={auctionQuery.data.data.auctionInfo.title}
             auctionId={auctionQuery.data.data.auctionInfo.auctionId}
@@ -205,6 +230,7 @@ export default function AuctionPage() {
           <BidHistoryModal
             showModal={showBidHistoryModal}
             setShowModal={setShowBidHistoryModal}
+            auctionStatus={auctionQuery.data.data.auctionInfo.auctionStatus}
             auctionId={auctionId}
             sellerId={auctionQuery.data.data.auctionInfo.sellerId}
           />
@@ -212,10 +238,9 @@ export default function AuctionPage() {
 
         {/* 결제 확정 모달  */}
         {showConfirmModal && (
-          <PaymentConfirmModal
+          <InstantPurchaseModal
             showModal={showConfirmModal}
             setShowModal={setShowConfirmModal}
-            setShowPayModal={setShowPayModal}
             point={{
               currentPoint: auctionQuery.data.data.auctionInfo.currentPrice,
               instantPoint: auctionQuery.data.data.auctionInfo.instantPrice,
@@ -227,7 +252,12 @@ export default function AuctionPage() {
 
         {/* 포인트 충전 모달  */}
         {showPayModal && (
-          <PaymentModal setShowModal={setShowPayModal} money={0} price={0} />
+          <PaymentModal
+            showModal={showPayModal}
+            setShowModal={setShowPayModal}
+            money={0}
+            price={0}
+          />
         )}
       </div>
     );
@@ -260,48 +290,55 @@ export function ImageSlider({ slides }) {
   return (
     <div className="w-96">
       <div className="relative w-96 h-96 overflow-hidden">
-        <div
-          style={{ backgroundImage: `url(${slides[currentIndex].imageUrl})` }}
-          className="w-full h-full bg-center bg-cover duration-500"
-        />
-        <div className="flex justify-between absolute w-full left-0 top-1/2 transform -translate-y-1/2">
-          {/* Left Arrow */}
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="black"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="white"
-              className="w-12 h-12 cursor-pointer"
-              onClick={prevSlide}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+        {slides.length === 0 ? (
+          <div className="w-full h-full">이미지가 없습니다</div>
+        ) : (
+          <div
+            style={{ backgroundImage: `url(${slides[currentIndex].imageUrl})` }}
+            className="w-full h-full bg-center bg-cover duration-500"
+          />
+        )}
+
+        {slides.length > 1 && (
+          <div className="flex justify-between absolute w-full left-0 top-1/2 transform -translate-y-1/2">
+            {/* Left Arrow */}
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="black"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="white"
+                className="w-12 h-12 cursor-pointer"
+                onClick={prevSlide}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            {/* Right Arrow */}
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="black"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="white"
+                className="w-12 h-12 cursor-pointer"
+                onClick={nextSlide}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
           </div>
-          {/* Right Arrow */}
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="black"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="white"
-              className="w-12 h-12 cursor-pointer"
-              onClick={nextSlide}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-        </div>
+        )}
       </div>
       <div className="flex top-4 justify-center py-2">
         {slides.map(({ imageId }, index) => (

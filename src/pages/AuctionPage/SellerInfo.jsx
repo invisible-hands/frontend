@@ -18,7 +18,7 @@ export default function SellerInfo({ auctionId }) {
         <h3 className="text-2xl font-extrabold mb-4 text-deepblue2">
           판매자 정보
         </h3>
-        <div className="flex">
+        <div className="flex mb-4">
           <div>
             <img
               src={data.data.profileImage}
@@ -35,7 +35,8 @@ export default function SellerInfo({ auctionId }) {
             </p>
           </div>
         </div>
-        <div className="flex justify-end">
+        <hr />
+        <div className="flex justify-end mt-2">
           <a
             href={`/seller/${auctionId}`}
             className="cursor-pointer text-sm"
@@ -67,7 +68,9 @@ export default function SellerInfo({ auctionId }) {
 
                   <div className="w-72 p-6">
                     <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                      {auction.title}
+                      {auction.title.length < 12
+                        ? auction.title
+                        : auction.title.substring(0, 11).concat('...')}
                     </h5>
                     <p className="flex justify-between mb-4 text-xs text-neutral-600 dark:text-neutral-200">
                       <span>{auction.currentPrice} 원</span>
@@ -83,7 +86,11 @@ export default function SellerInfo({ auctionId }) {
                 </TERipple>
               </div>
             );
-          })}
+          }) && (
+          <div className="flex justify-center items-center h-32">
+            현재 진행중인 경매가 없습니다
+          </div>
+        )}
       </>
     );
   }

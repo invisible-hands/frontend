@@ -288,7 +288,7 @@ export default function BidPage() {
           <PaymentModal
             showModal={showPayModal}
             setShowModal={setShowPayModal}
-            money={data.money}
+            point={data.money}
             price={data.currentPrice}
           />
         )}
@@ -304,7 +304,6 @@ export default function BidPage() {
     );
   }
   if (error) {
-    console.log(error);
     if (error.status === '401 UNAUTHORIZED') {
       // 토큰을 재발급하는 과정
     }
