@@ -46,6 +46,9 @@ export default function PaymentModal({
       if (inputValue < price + 1000) {
         setPointError(true);
         setNewPoint(price + 1000);
+      } else if (inputValue > 1000000) {
+        setPointError(true);
+        setNewPoint(1000000);
       } else {
         setPointError(false);
       }
@@ -169,10 +172,16 @@ export default function PaymentModal({
                     </p>
                   </div>
                   <div>
-                    {pointError && (
+                    {pointError && newPoint === 1000 && (
                       <p className="text-sm text-danger">{`추가적인 포인트 충전이 필요합니다 (최소 ${
                         price + 1000
                       } point 이상)`}</p>
+                    )}
+                    {pointError && newPoint === 1000000 && (
+                      <p className="text-sm text-danger">
+                        추가적인 포인트 충전이 불가능합니다 (최대 1,000,000
+                        point 이하)
+                      </p>
                     )}
                     <input
                       type="number"

@@ -218,6 +218,7 @@ export default function AuctionPage() {
         {/* 게시글 삭제 확정 모달  */}
         {showDeleteConfirmModal && (
           <DeleteConfirmModal
+            showModal={showDeleteConfirmModal}
             setShowModal={setShowDeleteConfirmModal}
             auctionName={auctionQuery.data.data.auctionInfo.title}
             auctionId={auctionQuery.data.data.auctionInfo.auctionId}

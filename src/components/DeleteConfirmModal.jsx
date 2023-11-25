@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../stores/loginStore';
 
 export default function DeleteConfirmModal({
+  showModal,
   setShowModal,
   auctionName,
   auctionId,
@@ -47,7 +48,7 @@ export default function DeleteConfirmModal({
   };
 
   return (
-    <TEModal setShow={setShowModal}>
+    <TEModal show={showModal} setShow={setShowModal}>
       <TEModalDialog centered>
         <TEModalContent>
           <TEModalHeader>
@@ -102,6 +103,7 @@ export default function DeleteConfirmModal({
 }
 
 DeleteConfirmModal.propTypes = {
+  showModal: PropTypes.bool.isRequired,
   setShowModal: PropTypes.func.isRequired,
   auctionName: PropTypes.string.isRequired,
   auctionId: PropTypes.number.isRequired,
