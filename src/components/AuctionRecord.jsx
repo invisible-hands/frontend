@@ -44,12 +44,19 @@ function AuctionRecord() {
     setStartDate(initialStartDate);
   }, []);
 
+  // 한국 시간대에 맞게 날짜를 포맷하는 함수
+  function formatKST(date) {
+    const offset = 9; // 한국 시간대는 UTC+9
+    const kstDate = new Date(date.getTime() + offset * 60 * 60 * 1000);
+    return kstDate.toISOString().split('T')[0];
+  }
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
         // const accessToken = import.meta.env.VITE_TOKEN;
-        const formattedStartDate = startDate.toISOString().split('T')[0];
-        const formattedEndDate = endDate.toISOString().split('T')[0];
+        const formattedStartDate = formatKST(startDate);
+        const formattedEndDate = formatKST(endDate);
         const response = await axiosInstance.get(
           `/api/deal/bids?status=all&startDate=${formattedStartDate}&endDate=${formattedEndDate}&page=${currentPage}&size=8`,
           { headers: { Authorization: `Bearer ${accessToken}` } },

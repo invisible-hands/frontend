@@ -37,13 +37,18 @@ function DefaultContent() {
     const fetchData = async () => {
       try {
         const purchasesResponse = await axiosInstance.get(
-          `/api/deal/purchases?status=progress&page=0&size=1`,
+          `/api/deal/purchases?status=waiting&page=0&size=1`,
           { headers: { Authorization: `Bearer ${accessToken}` } },
         );
         if (purchasesResponse.status === 200) {
           // API 성공 시 목 데이터 사용
-          setPurchases(purchasesResponse.data.data.auctions);
-          console.log('되냐?', purchasesResponse.data.data.auctions);
+          // setPurchases(purchasesResponse.data.data.auctions);
+          // console.log('되냐?', purchasesResponse.data.data.auctions);
+          const filteredAuctions = purchasesResponse.data.data.auctions.filter(
+            auctions => auctions.status === 'PURCHASE_COMPLETE_WAITING',
+          );
+          setPurchases(filteredAuctions);
+          console.log('필터링된 데이터:', filteredAuctions);
         }
 
         // bids API 호출
@@ -151,7 +156,7 @@ function DefaultContent() {
                   .filter(item => item.status === 'DELIVERY_WAITING')
                   .map(item => (
                     <SellingItem
-                      key={item.auctionId}
+                      auctionId={item.auctionId}
                       imageUrl={item.imageUrl}
                       title={item.title}
                       price={item.price}

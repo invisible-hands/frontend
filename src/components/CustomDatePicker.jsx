@@ -24,7 +24,3 @@ CustomDatePicker.propTypes = {
 };
 
 export default CustomDatePicker;
-
-// 'error' is assigned a value but never used.
-// 'hadleDateChage' is assigned a value but never used.
-// 'isValidDate' was used before it was defined.
