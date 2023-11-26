@@ -16,6 +16,8 @@ function SearchDetailPage() {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
+    setSearchResults([]);
+    setPage(0);
     const fetchSearchResults = async () => {
       try {
         const response = await axios.get(
