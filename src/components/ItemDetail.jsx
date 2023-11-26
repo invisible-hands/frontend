@@ -2,38 +2,52 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 function ItemDetail({ item, onClick }) {
-  const { title, currentPrice, instantPrice, imageUrl, endAuctionTime } = item;
+  const {
+    title,
+    currentPrice,
+    instantPrice,
+    imageUrl,
+    endAuctionTime,
+    auctionStatus,
+  } = item;
   const [timeLeft, setTimeLeft] = useState('');
   const [isLessThanAnHour, setIsLessThanAnHour] = useState(false);
 
   useEffect(() => {
+    if (auctionStatus === 'AUCTION_SUCCESS') {
+      setTimeLeft('경매 마감');
+      return; // 이 return 문으로 인해 더 이상의 코드 실행이 중단됩니다.
+    }
+
     const calculateTimeLeft = () => {
       const endTime = new Date(endAuctionTime).getTime();
       const now = new Date().getTime();
       const difference = endTime - now;
 
-      if (difference > 0) {
-        let hours = Math.floor(difference / (1000 * 60 * 60));
-        let minutes = Math.floor((difference / 1000 / 60) % 60);
-        let seconds = Math.floor((difference / 1000) % 60);
-
-        setIsLessThanAnHour(hours === 0);
-
-        hours = hours < 10 ? `0${hours}` : `${hours}`;
-        minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-        seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-
-        return `${hours}:${minutes}:${seconds}`;
+      if (difference <= 0) {
+        return '경매 마감';
       }
-      return '경매 마감';
+
+      let hours = Math.floor(difference / (1000 * 60 * 60));
+      let minutes = Math.floor((difference / 1000 / 60) % 60);
+      let seconds = Math.floor((difference / 1000) % 60);
+
+      setIsLessThanAnHour(hours === 0);
+
+      hours = hours < 10 ? `0${hours}` : `${hours}`;
+      minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+      seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+      return `${hours}:${minutes}:${seconds}`;
     };
 
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
+    // eslint-disable-next-line consistent-return
     return () => clearInterval(timer);
-  }, [endAuctionTime]);
+  }, [endAuctionTime, auctionStatus]);
 
   const timeStyle = isLessThanAnHour
     ? 'absolute top-1 right-1 bg-danger/20 text-danger text-xs px-2 py-1 rounded md:text-lg md:top-2 md:right-2'
@@ -76,6 +90,7 @@ ItemDetail.propTypes = {
     instantPrice: PropTypes.number.isRequired,
     imageUrl: PropTypes.string,
     endAuctionTime: PropTypes.string.isRequired,
+    auctionStatus: PropTypes.string.isRequired,
   }).isRequired,
   onClick: PropTypes.func,
 };
