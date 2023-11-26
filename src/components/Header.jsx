@@ -10,6 +10,12 @@ function Header() {
   const { isModalOpen, openModal, closeModal } = useModalStore();
   const { loggedIn, nickName, logOut } = useLoginStore();
 
+  const handleKeyDown = e => {
+    if (e.key === 'Enter' && searchKeyword.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(searchKeyword)}`);
+    }
+  };
+
   const handleLogoClick = () => {
     navigate('/');
   };
@@ -63,6 +69,7 @@ function Header() {
               aria-label="Search-md"
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <input
               type="search"
@@ -71,6 +78,7 @@ function Header() {
               aria-label="Search"
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <button
               className="absolute right-0 top-0 flex items-center justify-center p-2 font-medium text-blue1 focus:outline-none md:top-1 md:right-1"
