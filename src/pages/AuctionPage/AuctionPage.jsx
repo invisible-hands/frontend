@@ -56,9 +56,10 @@ export default function AuctionPage() {
             {/* <!-- 상품이미지 --> */}
             <div className="relative">
               <ImageSlider slides={auctionQuery.data.data.images} />
-              {['AUCTION_FAIL', 'AUCTION_SUCCESS'].includes(
+              {(['AUCTION_FAIL', 'AUCTION_SUCCESS'].includes(
                 auctionQuery.data.data.auctionInfo.auctionStatus,
-              ) && (
+              ) ||
+                timeLeft === '00:00:00') && (
                 <div className="absolute top-0 left-0 w-full h-96 bg-blackish bg-opacity-50 text-whitish text-2xl text-center flex items-center justify-center">
                   <p>종료된 경매입니다</p>
                 </div>

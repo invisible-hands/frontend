@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   TERipple,
   TEModal,
@@ -10,9 +10,16 @@ import {
 } from 'tw-elements-react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import resetCSSBody from '../utils/modalCloseUtils';
 
 export default function BidSuccessModal({ showModal, setShowModal }) {
   const navigate = useNavigate();
+  useEffect(() => {
+    return () => {
+      resetCSSBody();
+    };
+  }, []);
+
   return (
     <TEModal show={showModal} setShow={setShowModal}>
       <TEModalDialog centered>

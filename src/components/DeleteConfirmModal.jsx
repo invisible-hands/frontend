@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   TERipple,
   TEModal,
@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../stores/loginStore';
+import resetCSSBody from '../utils/modalCloseUtils';
 
 export default function DeleteConfirmModal({
   showModal,
@@ -46,6 +47,12 @@ export default function DeleteConfirmModal({
     console.log('handle', userToken);
     deleteAuction(id, userToken);
   };
+
+  useEffect(() => {
+    return () => {
+      resetCSSBody();
+    };
+  }, []);
 
   return (
     <TEModal show={showModal} setShow={setShowModal}>

@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import useLoginStore from '../stores/loginStore';
 import AddPointButton from '../assets/payment_icon_yellow_medium.png';
+import resetCSSBody from '../utils/modalCloseUtils';
 
 export default function PaymentModal({
   showModal,
@@ -97,6 +98,7 @@ export default function PaymentModal({
     return () => {
       setNewPoint(Number(price) + 1000);
       setPointError(false);
+      resetCSSBody();
     };
   }, []);
 
