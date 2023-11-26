@@ -31,27 +31,12 @@ export default function PaymentModal({
     let inputValue = e.target.value;
     // 숫자 이외의 문자를 제거
     inputValue = inputValue.replace(/[^0-9]/g, '');
-    // 앞에 0이 들어간 경우, 1초 후에 자동으로 지우기
-    if (inputValue.length > 1 && inputValue[0] === '0') {
-      setTimeout(() => {
-        inputValue = inputValue.slice(1); // 0 제거
-        setNewPoint(inputValue);
-      }, 500);
-    } else {
+    if (inputValue > 1000000 || inputValue < 1000) {
+      setPointError(true);
       setNewPoint(inputValue);
-    }
-    if (inputValue === '') setNewPoint(0);
-
-    if (!price) {
-      if (inputValue < price + 1000) {
-        setPointError(true);
-        setNewPoint(price + 1000);
-      } else if (inputValue > 1000000) {
-        setPointError(true);
-        setNewPoint(1000000);
-      } else {
-        setPointError(false);
-      }
+    } else {
+      setPointError(false);
+      setNewPoint(inputValue);
     }
   };
 
@@ -67,6 +52,10 @@ export default function PaymentModal({
   const submitPayment = submitPoint => {
     if (submitPoint === 0) {
       alert('충전할 포인트를 입력해주세요');
+      return;
+    }
+    if (pointError) {
+      alert('충전할 포인트를 확인해주세요');
       return;
     }
 
@@ -107,6 +96,7 @@ export default function PaymentModal({
   useEffect(() => {
     return () => {
       setNewPoint(Number(price) + 1000);
+      setPointError(false);
     };
   }, []);
 
@@ -175,12 +165,12 @@ export default function PaymentModal({
                     </p>
                   </div>
                   <div>
-                    {pointError && newPoint === 1000 && (
-                      <p className="text-sm text-danger">{`추가적인 포인트 충전이 필요합니다 (최소 ${
-                        price + 1000
-                      } point 이상)`}</p>
+                    {pointError && newPoint < 1000 && (
+                      <p className="text-sm text-danger">
+                        1000 point 이상 충전이 가능합니다.
+                      </p>
                     )}
-                    {pointError && newPoint === 1000000 && (
+                    {pointError && newPoint > 1000000 && (
                       <p className="text-sm text-danger">
                         추가적인 포인트 충전이 불가능합니다 (최대 1,000,000
                         point 이하)
