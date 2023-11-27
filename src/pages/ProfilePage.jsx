@@ -150,7 +150,7 @@ function ProfilePage() {
     };
 
     fetchProfileData();
-  }, []);
+  }, [isChargeModalOpen]);
 
   const handleNicknameChange = value => {
     setNickname(value);

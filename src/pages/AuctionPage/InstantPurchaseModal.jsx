@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TERipple,
   TEModal,
@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchBidPage } from '../../queries/auctionQueries';
 import useLoginStore from '../../stores/loginStore';
 import PaymentModal from '../../components/PaymentModal';
+import resetCSSBody from '../../utils/modalCloseUtils';
 
 export default function InstantPurchaseModal({
   showModal,
@@ -33,6 +34,11 @@ export default function InstantPurchaseModal({
     enabled: !!token,
   });
   const [showPayModal, setShowPayModal] = useState(false);
+  useEffect(() => {
+    return () => {
+      resetCSSBody();
+    };
+  }, []);
 
   function purchaseInstant(id, userToken) {
     const url = `${API_URL}/api/auction/${id}/instant`;

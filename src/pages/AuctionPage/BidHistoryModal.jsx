@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   TERipple,
   TEModal,
@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import BidHistory from '../../components/BidHistory';
 import useLoginStore from '../../stores/loginStore';
+import resetCSSBody from '../../utils/modalCloseUtils';
 
 // 가로선 - 시간의 흐름을 보여주자
 
@@ -26,6 +27,11 @@ export default function BidHistoryModal({
   const { userId } = useLoginStore();
   // const [labels, setLabels] = useState([]);
   // const [chartData, setChartData] = useState([]);
+  useEffect(() => {
+    return () => {
+      resetCSSBody();
+    };
+  }, []);
 
   return (
     <TEModal show={showModal} setShow={setShowModal}>

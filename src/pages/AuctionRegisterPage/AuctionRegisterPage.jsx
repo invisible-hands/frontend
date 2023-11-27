@@ -34,11 +34,10 @@ export default function AuctionRegisterPage() {
     accept: {
       'image/*': [],
     },
-    maxFiles: 5,
     maxSize: 1024 * 1024 * 2,
     onDrop: acceptedFiles => {
-      const totalFiles = files.length + acceptedFiles.length;
-      if (totalFiles <= 5) {
+      const totalFilesLength = files.length + acceptedFiles.length;
+      if (totalFilesLength <= 5) {
         // 총 파일 개수가 5개 이하인 경우에만 파일 추가
         const newFiles = acceptedFiles.map(file =>
           Object.assign(file, {
@@ -47,6 +46,18 @@ export default function AuctionRegisterPage() {
         );
         setFiles(prevFiles => [...prevFiles, ...newFiles]);
       } else {
+        if (files.length === 5) {
+          alert('최대 5개의 파일만 업로드할 수 있습니다.');
+          return;
+        }
+        // 총 파일 개수가 5개를 초과하는 경우, 초과하는 파일 개수만큼 제외하고 추가
+        const allowedFiles = 5 - files.length;
+        const newFiles = acceptedFiles.slice(0, allowedFiles).map(file =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        );
+        setFiles(prevFiles => [...prevFiles, ...newFiles]);
         // 여기에 파일 개수 초과에 대한 사용자 피드백을 제공할 수 있습니다.
         alert('최대 5개의 파일만 업로드할 수 있습니다.');
       }
@@ -205,7 +216,8 @@ export default function AuctionRegisterPage() {
     createAuction(files, data, token);
   };
   const handleKeySubmit = e => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+      // 기본 동작(폼 제출)을 방지
       e.preventDefault();
     }
   };
@@ -269,6 +281,7 @@ export default function AuctionRegisterPage() {
                 >
                   <input {...getInputProps()} />
                   <p>+이미지 추가하기</p>
+                  <p>(개당 2MB, 최대 5개)</p>
                 </div>
                 <aside className="flex flex-row flex-wrap mt-2">{thumbs}</aside>
               </section>
@@ -277,7 +290,7 @@ export default function AuctionRegisterPage() {
             {/* <!-- 상품정보 --> */}
             <div className="space-y-4">
               <div>
-                <label>
+                <label htmlFor="title">
                   상품명 <span>{title.length}/20</span>
                 </label>
                 <br />
@@ -291,7 +304,7 @@ export default function AuctionRegisterPage() {
                 />
               </div>
               <div>
-                <label>
+                <label htmlFor="content">
                   상품설명 <span>{content.length}/150</span>
                 </label>
                 <br />
@@ -306,7 +319,7 @@ export default function AuctionRegisterPage() {
               </div>
               <div className="flex flex-row space-x-10">
                 <div className="flex-1">
-                  <label>경매시작가</label>
+                  <label htmlFor="startPrice">경매시작가</label>
                   <br />
                   <input
                     type="text"
@@ -414,7 +427,7 @@ export default function AuctionRegisterPage() {
                           key={tag}
                         >
                           {' '}
-                          <span>{tag}</span>
+                          <span>#{tag}</span>
                           <button
                             type="button"
                             onClick={() => deleteTagItem(tag)}
