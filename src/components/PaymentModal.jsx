@@ -41,6 +41,16 @@ export default function PaymentModal({
     }
   };
 
+  function updatePoints(addPoints) {
+    setNewPoint(state => {
+      const updatedPoints = Number(state) + addPoints;
+      if (updatedPoints >= 1000000) {
+        setPointError(true);
+      }
+      return updatedPoints;
+    });
+  }
+
   const isMobile = () => {
     const user = navigator.userAgent;
     let isCheck = false;
@@ -190,9 +200,7 @@ export default function PaymentModal({
                       <button
                         type="button"
                         className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
-                        onClick={() =>
-                          setNewPoint(state => Number(state) + 10000)
-                        }
+                        onClick={() => updatePoints(10000)}
                       >
                         +10000
                       </button>
@@ -201,9 +209,7 @@ export default function PaymentModal({
                       <button
                         type="button"
                         className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
-                        onClick={() =>
-                          setNewPoint(state => Number(state) + 20000)
-                        }
+                        onClick={() => updatePoints(20000)}
                       >
                         +20000
                       </button>
@@ -212,9 +218,7 @@ export default function PaymentModal({
                       <button
                         type="button"
                         className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
-                        onClick={() =>
-                          setNewPoint(state => Number(state) + 50000)
-                        }
+                        onClick={() => updatePoints(50000)}
                       >
                         +50000
                       </button>
@@ -223,9 +227,7 @@ export default function PaymentModal({
                       <button
                         type="button"
                         className="inline-block rounded bg-blackish px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-whitish transition duration-150 ease-in-out hover:bg-deepblue2"
-                        onClick={() =>
-                          setNewPoint(state => Number(state) + 100000)
-                        }
+                        onClick={() => updatePoints(100000)}
                       >
                         +100000
                       </button>

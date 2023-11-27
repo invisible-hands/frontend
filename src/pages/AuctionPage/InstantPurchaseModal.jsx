@@ -51,15 +51,17 @@ export default function InstantPurchaseModal({
       .post(url, {}, config)
       .then(res => {
         if (res.status === 200) {
-          alert('즉시 구매가 완료되었습니다');
+          alert('즉시 구매가 완료되었습니다.');
           navigate('/profile/shopping/purchase');
         }
       })
       .catch(err => {
-        if (err.response.data.status === 'NOT_ENOUGH_MONEY') {
-          alert('충전이 필요합니다');
-        }
-        console.log(err);
+        alert(err.response.data.message);
+        // if (err.response.data.status === 'NOT_ENOUGH_MONEY') {
+        //   alert(err.response.data.message);
+        // } else if (err.response.data.status === 'AUCTION_SOLD_OUT') {
+        //   alert(err.response.data.message);
+        // }
       });
   }
 

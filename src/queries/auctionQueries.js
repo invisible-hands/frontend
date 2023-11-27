@@ -51,8 +51,10 @@ export function getCookieValue(name) {
 
 // 경매 상세 정보 조회
 export async function fetchAuctionInfo(auctionId) {
-  const { data } = await axios.get(`${API_URL}/api/auction/${auctionId}`);
-  return data;
+  const res = await axios.get(`${API_URL}/api/auction/${auctionId}`, {
+    withCredentials: true,
+  });
+  return res.data;
 }
 
 // 경매 삭제
