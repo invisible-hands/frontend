@@ -28,7 +28,7 @@ export default function AuctionPage() {
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPayModal, setShowPayModal] = useState(false);
-  const [timeLeft, setTimeLeft] = useState('00:00:00');
+  const [timeLeft, setTimeLeft] = useState(null);
   const auctionQuery = useQuery({
     queryKey: ['auctionInfo', auctionId],
     queryFn: () => fetchAuctionInfo(auctionId),
@@ -36,6 +36,9 @@ export default function AuctionPage() {
 
   useEffect(() => {
     if (auctionQuery.data) {
+      setTimeLeft(
+        calculateRemainTime(auctionQuery.data.data.auctionInfo.endAuctionTime),
+      );
       const timer = setInterval(() => {
         setTimeLeft(
           calculateRemainTime(
