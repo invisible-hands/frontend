@@ -4,12 +4,12 @@ import { TERipple } from 'tw-elements-react';
 import DaumPostcode from 'react-daum-postcode';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
-import useLoginStore from '../stores/loginStore';
-import profileImg from '../assets/bettingground.png';
-import Sidebar from '../components/Sidebar';
-import PaymentModal from '../components/PaymentModal';
+import useLoginStore from '../../stores/loginStore';
+import profileImg from '../../assets/bettingground.png';
+import Sidebar from './Sidebar';
+import PaymentModal from '../../components/PaymentModal';
 
-function ProfilePage() {
+function MyPage() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_APP_URL;
   const [originalNickname, setOriginalNickname] = useState('');
@@ -711,4 +711,4 @@ function ProfilePage() {
   );
 }
 
-export default ProfilePage;
+export default MyPage;

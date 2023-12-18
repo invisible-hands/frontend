@@ -10,7 +10,7 @@ import {
 } from 'tw-elements-react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import resetCSSBody from '../utils/modalCloseUtils';
+import resetCSSBody from '../../utils/modalCloseUtils';
 
 export default function BidSuccessModal({ showModal, setShowModal }) {
   const navigate = useNavigate();

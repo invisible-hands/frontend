@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useLoginStore from '../stores/loginStore';
+import useLoginStore from '../../../stores/loginStore.js';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 

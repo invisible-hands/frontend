@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import PaymentModal from '../../components/PaymentModal';
-import BidSuccessModal from '../../components/BidSuccessModal';
+import BidSuccessModal from './BidSuccessModal';
 import { fetchBidPage } from '../../queries/auctionQueries';
 import { calculateRemainTime } from '../../utils/timeUtils';
 import useLoginStore from '../../stores/loginStore';

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import useLoginStore from '../stores/loginStore';
+import useLoginStore from '../../../stores/loginStore';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 

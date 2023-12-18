@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import useLoginStore from '../stores/loginStore';
-import CustomDatePicker from './CustomDatePicker';
-import { SellingItem } from './PurchaseItem';
-import { SellingContainer } from './ShoppingContainer';
-import { SellingDropdown } from './DropDown';
+import useLoginStore from '../../../stores/loginStore.js';
+import CustomDatePicker from './CustomDatePicker.jsx';
+import { SellingItem } from './PurchaseItem.jsx';
+import { SellingContainer } from './ShoppingContainer.jsx';
+import { SellingDropdown } from './DropDown.jsx';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 

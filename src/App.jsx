@@ -3,23 +3,23 @@ import ReactDOM from 'react-dom/client';
 import 'tw-elements-react/dist/css/tw-elements-react.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import SignupPage from './pages/SignupPage';
+import SignupPage from './pages/LoginPage/SignupPage';
 import AuctionPage from './pages/AuctionPage/AuctionPage';
 import AuctionRegisterPage from './pages/AuctionRegisterPage/AuctionRegisterPage';
-import ProfilePage from './pages/ProfilePage';
+import MyPage from './pages/MyPage/MyPage';
 import './index.css';
 import Main from './main';
 import ErrorPage from './pages/ErrorPage';
-import Redirection from './pages/Redirection';
-import HotDetailPage from './pages/detail/HotDetailPage';
-import DeadlineDetailPage from './pages/detail/DeadlineDetailPage';
-import NewDetailPage from './pages/detail/NewDetailPage';
-import SearchDetailPage from './pages/detail/SearchDetailPage';
-import SellerDetailPage from './pages/SellerDetailPage';
+import Redirection from './pages/LoginPage/Redirection';
+import HotDetailPage from './pages/DetailPage/HotDetailPage';
+import DeadlineDetailPage from './pages/DetailPage/DeadlineDetailPage';
+import NewDetailPage from './pages/DetailPage/NewDetailPage';
+import SearchDetailPage from './pages/DetailPage/SearchDetailPage';
+import SellerDetailPage from './pages/DetailPage/SellerDetailPage';
 import ProtectedRoute from './ProtectedRoute';
-import MainPage from './pages/MainPage';
+import MainPage from './pages/MainPage/MainPage';
 import BidPage from './pages/BidPage/BidPage';
-import MyShoppingPage from './pages/MyShoppingPage';
+import MyShoppingPage from './pages/MyPage/MyShoppingPage/MyShoppingPage';
 import PayResultPage from './pages/PayResultPage';
 
 const router = createBrowserRouter([
@@ -52,13 +52,13 @@ const router = createBrowserRouter([
         path: '/profile',
         element: (
           <ProtectedRoute>
-            <ProfilePage />
+            <MyPage />
           </ProtectedRoute>
         ),
       },
       {
         path: '/profile/:id',
-        element: <ProfilePage />,
+        element: <MyPage />,
       },
       {
         path: '/redirection',

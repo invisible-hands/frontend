@@ -14,7 +14,7 @@ import {
   calculateRemainTime,
 } from '../../utils/timeUtils';
 import BidHistoryModal from './BidHistoryModal';
-import DeleteConfirmModal from '../../components/DeleteConfirmModal';
+import DeleteConfirmModal from './DeleteConfirmModal';
 import SellerInfo from './SellerInfo';
 import { fetchAuctionInfo } from '../../queries/auctionQueries';
 

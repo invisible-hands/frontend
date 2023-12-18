@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import useLoginStore from '../stores/loginStore';
-import Sidebar from '../components/Sidebar';
-import PurchaseRecord from '../components/PurchaseRecord';
-import SellingRecord from '../components/SellingRecord';
-import AuctionRecord from '../components/AuctionRecord';
+import useLoginStore from '../../../stores/loginStore';
+import Sidebar from '../Sidebar';
+import PurchaseRecord from './PurchaseRecord';
+import SellingRecord from './SellingRecord';
+import AuctionRecord from './AuctionRecord';
 import {
   PurchaseContainer,
   AuctionContainer,
   SellingContainer,
-} from '../components/ShoppingContainer';
-import {
-  PurchaseItem,
-  AuctionItem,
-  SellingItem,
-} from '../components/PurchaseItem';
-import { calculateRemainTime } from '../utils/timeUtils';
+} from './ShoppingContainer';
+import { PurchaseItem, AuctionItem, SellingItem } from './PurchaseItem';
+import { calculateRemainTime } from '../../../utils/timeUtils';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 

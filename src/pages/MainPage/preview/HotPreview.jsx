@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BsFillArrowRightCircleFill as RightArrowIcon } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import detailBackground from '../../assets/detailBackground.jpg';
-import ItemDetail from '../ItemDetail';
+import detailBackground from '../../../assets/detailBackground.jpg';
+import ItemDetail from '../../../components/ItemDetail';
 
 function HotPreview() {
   const navigate = useNavigate();

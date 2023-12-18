@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import useLoginStore from '../stores/loginStore';
+import useLoginStore from '../../../stores/loginStore';
 import CustomDatePicker from './CustomDatePicker';
 import { AuctionItem } from './PurchaseItem';
 import { AuctionContainer } from './ShoppingContainer';
 import { AuctionDropdown } from './DropDown';
-import { calculateRemainTime } from '../utils/timeUtils';
+import { calculateRemainTime } from '../../../utils/timeUtils';
 
 const API_URL = import.meta.env.VITE_APP_URL;
 

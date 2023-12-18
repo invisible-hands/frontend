@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginModal from './LoginModal';
+import LoginModal from '../pages/LoginPage/LoginModal';
 import useModalStore from '../stores/modalStore';
 import useLoginStore from '../stores/loginStore';
 

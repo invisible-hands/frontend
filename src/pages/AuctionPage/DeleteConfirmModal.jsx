@@ -11,8 +11,8 @@ import {
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useLoginStore from '../stores/loginStore';
-import resetCSSBody from '../utils/modalCloseUtils';
+import useLoginStore from '../../stores/loginStore';
+import resetCSSBody from '../../utils/modalCloseUtils';
 
 export default function DeleteConfirmModal({
   showModal,
