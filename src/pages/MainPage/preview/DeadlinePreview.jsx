@@ -47,7 +47,7 @@ function HotPreview() {
           />
         ))}
         {/* 더보기 상품 */}
-        <div className="text-center border p-1 rounded-md relative">
+        <div className="text-center border p-1 rounded-md relative md:p-2 lg:p-3">
           <div className=" blur-sm">
             {/* 타이머 */}
             <div className="absolute top-1 right-1 danger/20 text-danger text-xs px-2 py-1 rounded md:text-lg md:top-2 md:right-2">
