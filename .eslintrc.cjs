@@ -19,5 +19,7 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'react/require-default-props': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
+    'react/jsx-props-no-spreading': 'off',
   },
 };

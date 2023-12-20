@@ -2,8 +2,10 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const axiosInstance = axios.create({
-  baseURL: 'https://ka1425de5708ea.user-app.krampoline.com',
+  baseURL: API_URL,
 });
 
 const useLoginStore = create(
@@ -73,10 +75,6 @@ const useLoginStore = create(
         }
       },
     }),
-    {
-      name: 'login-storage',
-      storage: createJSONStorage(() => localStorage),
-    },
     {
       name: 'login-storage',
       storage: createJSONStorage(() => localStorage),

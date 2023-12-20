@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   TERipple,
   TEModal,
@@ -11,21 +11,30 @@ import {
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import BidHistory from '../../components/BidHistory';
+import useLoginStore from '../../stores/loginStore';
+import resetCSSBody from '../../utils/modalCloseUtils';
 
 // 가로선 - 시간의 흐름을 보여주자
 
 export default function BidHistoryModal({
   showModal,
   setShowModal,
+  auctionStatus,
   auctionId,
+  sellerId,
 }) {
   const navigate = useNavigate();
-
+  const { userId } = useLoginStore();
   // const [labels, setLabels] = useState([]);
   // const [chartData, setChartData] = useState([]);
+  useEffect(() => {
+    return () => {
+      resetCSSBody();
+    };
+  }, []);
 
   return (
-    <TEModal show={showModal} setShow={setShowModal} scrollable>
+    <TEModal show={showModal} setShow={setShowModal}>
       <TEModalDialog centered size="lg">
         <TEModalContent>
           <TEModalHeader>
@@ -61,15 +70,17 @@ export default function BidHistoryModal({
             <BidHistory auctionId={auctionId} />
           </TEModalBody>
           <TEModalFooter className="flex justify-center">
-            <TERipple rippleColor="light" rippleCentered>
-              <button
-                type="button"
-                className="inline-block rounded-full bg-deepblue1 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                onClick={() => navigate(`/bid/${auctionId}`)}
-              >
-                입찰하기
-              </button>
-            </TERipple>
+            {sellerId !== userId && auctionStatus === 'AUCTION_PROGRESS' && (
+              <TERipple rippleColor="light" rippleCentered>
+                <button
+                  type="button"
+                  className="inline-block rounded-full bg-deepblue1 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                  onClick={() => navigate(`/bid/${auctionId}`)}
+                >
+                  입찰하기
+                </button>
+              </TERipple>
+            )}
           </TEModalFooter>
         </TEModalContent>
       </TEModalDialog>
@@ -80,5 +91,7 @@ export default function BidHistoryModal({
 BidHistoryModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   setShowModal: PropTypes.func.isRequired,
+  auctionStatus: PropTypes.string.isRequired,
   auctionId: PropTypes.string.isRequired,
+  sellerId: PropTypes.number.isRequired,
 };
