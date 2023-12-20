@@ -36,8 +36,10 @@ function HotPreview() {
   };
 
   return (
-    <div className="w-full px-6 mb-4">
-      <div className="text-lg font-extrabold mb-2 text-deepblue2">인기상품</div>
+    <div className="w-full px-6 mb-4 select-none">
+      <div className="text-2xl font-extrabold mb-2 text-deepblue2">
+        인기 상품
+      </div>
       <div className="grid grid-cols-4 gap-4">
         {hotItems.map(item => (
           <ItemDetail
@@ -74,7 +76,7 @@ function HotPreview() {
           <div className="absolute inset-0 flex justify-center items-center">
             <RightArrowIcon
               size={48}
-              className="cursor-pointer text-blue1 duration-300 bg-whitish rounded-full hover:text-deepblue1"
+              className="cursor-pointer text-blue1 duration-300 bg-whitish border-2 rounded-full hover:text-deepblue1"
               onClick={handleRightArrowClick}
             />
           </div>

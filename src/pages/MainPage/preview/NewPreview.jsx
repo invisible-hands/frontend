@@ -32,9 +32,9 @@ function NewPreview() {
     navigate('/new');
   };
   return (
-    <div className="w-full px-6 mb-4">
-      <div className="text-lg font-extrabold mb-2 text-deepblue2">
-        신병받아라
+    <div className="w-full px-6 mb-4 select-none">
+      <div className="text-2xl font-extrabold mb-2 text-deepblue2">
+        신병 받아라
       </div>
       <div className="grid grid-cols-4 gap-4">
         {newItems.map(item => (
@@ -72,7 +72,7 @@ function NewPreview() {
           <div className="absolute inset-0 flex justify-center items-center">
             <RightArrowIcon
               size={48}
-              className="cursor-pointer text-blue1 duration-300 bg-whitish rounded-full hover:text-deepblue1"
+              className="cursor-pointer text-blue1 duration-300 bg-whitish border-2 rounded-full hover:text-deepblue1"
               onClick={handleRightArrowClick}
             />
           </div>
