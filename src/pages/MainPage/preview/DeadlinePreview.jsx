@@ -58,14 +58,14 @@ function HotPreview() {
               alt="더보기 상품 샘플"
               className="w-full h-20 object-cover mb-4 rounded-md md:h-30 lg:h-40"
             />
-            <div className="text-xs font-bold mb-2 truncate">
+            <div className="text-xs font-bold mb-2 truncate md:text-lg lg:text-xl">
               미네랄사이다 지라치 봉제인형
             </div>
-            <div className="text-xs mb-1 truncate">
+            <div className="text-xs mb-1 truncate md:text-lg">
               <span className="hidden md:inline">현재 입찰 </span>
-              <span className="text-xs font-bold">10000</span> 원
+              <span className="font-bold">10000</span> 원
             </div>
-            <div className="text-xs font-bold text-deepblue1 truncate">
+            <div className="text-xs font-bold text-deepblue1 truncate md:text-lg">
               <span className="hidden md:inline">즉시구매 </span>
               <span className="text-xs font-bold">77000</span> 원
             </div>
