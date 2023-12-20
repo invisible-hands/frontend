@@ -1,8 +1,8 @@
-import bannerMain from '../../assets/banner-main.jpg';
-import bannerHot from '../../assets/banner-hot.jpg';
-import bannerDeadline from '../../assets/banner-deadline.jpg';
-import bannerNew from '../../assets/banner-new.jpg';
-import bannerUpload from '../../assets/banner-upload.jpg';
+import bannerMain from '../../assets/banner-main.png';
+import bannerHot from '../../assets/banner-hot.png';
+import bannerDeadline from '../../assets/banner-deadline.png';
+import bannerNew from '../../assets/banner-new.png';
+import bannerUpload from '../../assets/banner-upload.png';
 
 const slidesData = [
   {
