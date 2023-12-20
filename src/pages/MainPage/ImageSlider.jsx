@@ -1,16 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs';
 import { RxDotFilled } from 'react-icons/rx';
 
 function ImageSlider({ slides }) {
+  const navigate = useNavigate();
+
   const [currentId, setcurrentId] = useState(0);
   const [isAnimationInProgress, setIsAnimationInProgress] = useState(false);
+
+  const handleImageClick = () => {
+    // backgroundImage 클릭 시에만 navigate 함수 호출
+    if (!isAnimationInProgress) {
+      switch (currentId) {
+        case 1:
+          navigate('/hot');
+          break;
+        case 2:
+          navigate('/deadline');
+          break;
+        case 3:
+          navigate('/new');
+          break;
+        case 4:
+          navigate('/auction/register');
+          break;
+        default:
+          break;
+      }
+    }
+  };
 
   const prevSlide = () => {
     if (!isAnimationInProgress) {
       const isFirstSlide = currentId === 0;
       const newIndex = isFirstSlide ? slides.length - 1 : currentId - 1;
+
       setcurrentId(newIndex);
       setIsAnimationInProgress(true);
 
@@ -25,6 +51,7 @@ function ImageSlider({ slides }) {
     if (!isAnimationInProgress) {
       const isLastSlide = currentId === slides.length - 1;
       const newIndex = isLastSlide ? 0 : currentId + 1;
+
       setcurrentId(newIndex);
       setIsAnimationInProgress(true);
 
@@ -59,8 +86,12 @@ function ImageSlider({ slides }) {
   return (
     <div className="w-full h-52 mx-auto mb-4 p-4 relative group md:h-72 lg:h-80">
       <div
+        role="button"
+        onClick={handleImageClick}
         style={{ backgroundImage: `url(${slides[currentId].url})` }}
-        className="w-full h-full rounded-2xl bg-center bg-cover duration-500"
+        className={`w-full h-full rounded-2xl bg-center bg-cover duration-500 ${
+          currentId === 0 ? 'cursor-default' : ''
+        }`}
       />
       {/* Left Arrow */}
       <div
