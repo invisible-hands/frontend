@@ -662,19 +662,35 @@ function MyPage() {
               약관에 동의합니다
             </label>
           </div>
-          <div className="w-fit mx-auto mb-4">
-            <TERipple rippleColor="light" rippleCentered>
-              <button
-                type="submit"
-                disabled={!canActivateAccount() || isUserRole}
-                onClick={activateAccount}
-                className={`bg-deepblue2 text-whitish px-4 py-2 rounded ${
-                  !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {isUserRole ? '약관 동의 완료' : '계정 활성화'}
-              </button>
-            </TERipple>
+          <div className="flex">
+            <div className="flex-1" />
+
+            <div className="flex-1 flex justify-center">
+              <TERipple rippleColor="light" rippleCentered>
+                <button
+                  type="submit"
+                  disabled={!canActivateAccount() || isUserRole}
+                  onClick={activateAccount}
+                  className={`bg-deepblue2 text-whitish px-4 py-2 rounded ${
+                    !canActivateAccount() ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {isUserRole ? '약관 동의 완료' : '계정 활성화'}
+                </button>
+              </TERipple>
+            </div>
+
+            {/* 회원탈퇴 버튼 (오른쪽) */}
+            <div className="flex-1 flex justify-end">
+              <TERipple rippleColor="light" rippleCentered>
+                <button
+                  type="button"
+                  className="bg-transparent text-deepblue2 px-4 py-2 rounded"
+                >
+                  회원탈퇴
+                </button>
+              </TERipple>
+            </div>
           </div>
         </div>
       </div>
